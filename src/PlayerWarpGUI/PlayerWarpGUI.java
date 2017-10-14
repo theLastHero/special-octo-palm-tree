@@ -2,91 +2,167 @@ package PlayerWarpGUI;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 import Handlers.ConfigHandler;
-import Handlers.ErrorHandler;
-import Handlers.FileHandler;
+import Handlers.LanguageHandler;
 import Handlers.MessageHandler;
-import Handlers.PlayerWarpsHandler;
-import Handlers.VaultHandler;
 
 public class PlayerWarpGUI extends JavaPlugin {
 
-	public static PlayerWarpGUI instance;
-	private PlayerWarpGUI plugin;
+	public static PlayerWarpGUI plugin;
+
+	public String pathMain = this.getDataFolder().toString();
+	public String pathLangs = pathMain + File.separator + "languages" + File.separator;
+	public String configName = "config.yml";
+	public String pathConfig = pathMain + File.separator + configName;
 
 	public PluginDescriptionFile pdf = this.getDescription(); // Gets plugin.yml
 	public String PlayerWarpGUIVersion = pdf.getVersion();
-
-
-	public MessageHandler messageHandler = new MessageHandler(this);
-	public ConfigHandler configHandler = new ConfigHandler(this);
-	public PlayerWarpsHandler playerwarpsHandler = new PlayerWarpsHandler();
-	public ErrorHandler errorHandler = new ErrorHandler(this);
-	public VaultHandler vaultHandler = new VaultHandler(this);
-	public FileHandler fileHandler = new FileHandler(this);
-
-	public ArrayList<String> EnableErrors = new ArrayList<String>();
+	public ConfigHandler configHandler;
 	
-	public String dataFolder = this.getDataFolder() + File.separator; 
-	public String configFolder = dataFolder;
-	public String configFile = "config.yml"; // main config file location
-	public String languageFolder = dataFolder + "languages" + File.separator; // main config file location
-	public String defaultConfigFile = "defaultConfig.yml";
-	
-	public ResourceBundle messageResourceBundle;
-	public MessageFormat formatter = new MessageFormat("");
-	public String locale = "en_US";
-	
-	@SuppressWarnings("unused")
+	public MessageHandler messages;
+
+	public String defaultLocale = "en_US";
+	public Locale locale = null;
+	public ResourceBundle resourceBundle = null;
+	public File langanugeFile = null;
+	public ClassLoader classLoader = null;
+	public MessageFormat languageFormat = null;
+	public LanguageHandler languageHandler;
+
 	@Override
 	public void onEnable() {
 
-		instance = this;
-
-		//check and create locale files
-		fileHandler.checkFileExsists(languageFolder,"messages_en_US.properties", "messages_en_US.properties");
+		plugin = this;
 		
-		//startup procedure
-		configHandler.loadLocale();
-		configHandler.loadConfig();
-		playerwarpsHandler.loadPlayerWarps();
-		vaultHandler.setupVaultHook();
-		errorHandler.displayConsoleTitle();
+		//configHandler.setUp();
+		messages = new MessageHandler(this);
+		configHandler = new ConfigHandler(this);
+		languageHandler = new LanguageHandler(this);
 
-	}
-
-	public String getLanguageFolder() {
-		return languageFolder;
-	}
-
-	public void setLanguageFolder(String languageFolder) {
-		this.languageFolder = languageFolder;
-	}
-
-	@Override
-	public void onDisable() {
-		
-	}
-
-
-	public String getConfigFile() {
-		return configFolder+configFile;
-	}
-
-	public void setConfigFile(String configFile) {
-		this.configFile = configFile;
 	}
 	
+	public void killPlugin() {
+		Bukkit.getPluginManager().disablePlugin(this);
+		Bukkit.getLogger().info("plugin diabled");
+	}
+
+	/*
+	 * private boolean checkPluginExsist(String pn) { Plugin p =
+	 * Bukkit.getPluginManager().getPlugin(pn); if ((p != null) && (p.isEnabled()))
+	 * { return true; } return false; }
+	 */
+
+	public String getConfigName() {
+		return configName;
+	}
+
+	public void setConfigName(String configName) {
+		this.configName = configName;
+	}
+
+	public ConfigHandler getConfigHandler() {
+		return configHandler;
+	}
+
+	public void setConfigHandler(ConfigHandler configHandler) {
+		this.configHandler = configHandler;
+	}
+
+	public MessageHandler getMessages() {
+		return messages;
+	}
+
+	public void setMessages(MessageHandler messages) {
+		this.messages = messages;
+	}
+
+
+	public String getDefaultLocale() {
+		return defaultLocale;
+	}
+
+	public void setDefaultLocale(String defaultLocale) {
+		this.defaultLocale = defaultLocale;
+	}
+
+	public LanguageHandler getLanguageHandler() {
+		return languageHandler;
+	}
+
+	public void setLanguageHandler(LanguageHandler languageHandler) {
+		this.languageHandler = languageHandler;
+	}
+
+	public MessageFormat getLanguageFormat() {
+		return languageFormat;
+	}
+
+	public void setLanguageFormat(MessageFormat languageFormat) {
+		this.languageFormat = languageFormat;
+	}
+
+	public ClassLoader getClassLoaderThis() {
+		return classLoader;
+	}
+
+	public void setClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
+
+	public ResourceBundle getResourceBundle() {
+		return resourceBundle;
+	}
+
+	public void setResourceBundle(ResourceBundle resourceBundle) {
+		this.resourceBundle = resourceBundle;
+	}
+
+	public File getLanganugeFile() {
+		return langanugeFile;
+	}
+
+	public void setLanganugeFile(File langanugeFile) {
+		this.langanugeFile = langanugeFile;
+	}
+
+	public String getPathMain() {
+		return pathMain;
+	}
+
+	public void setPathMain(String pathMain) {
+		this.pathMain = pathMain;
+	}
+
+	public String getPathLangs() {
+		return pathLangs;
+	}
+
+	public void setPathLangs(String pathLangs) {
+		this.pathLangs = pathLangs;
+	}
+
+	public String getPathConfig() {
+		return pathConfig;
+	}
+
+	public void setPathConfig(String pathConfig) {
+		this.pathConfig = pathConfig;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
 	public PluginDescriptionFile getPdf() {
 		return pdf;
@@ -102,97 +178,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 	public void setPlayerWarpGUIVersion(String playerWarpGUIVersion) {
 		PlayerWarpGUIVersion = playerWarpGUIVersion;
-	}
-
-	public MessageHandler getMessageHandler() {
-		return messageHandler;
-	}
-
-	public void setMessageHandler(MessageHandler messageHandler) {
-		this.messageHandler = messageHandler;
-	}
-
-	public ConfigHandler getConfigHandler() {
-		return configHandler;
-	}
-
-	public void setConfigHandler(ConfigHandler configHandler) {
-		this.configHandler = configHandler;
-	}
-
-	public PlayerWarpsHandler getPlayerwarpsHandler() {
-		return playerwarpsHandler;
-	}
-
-	public void setPlayerwarpsHandler(PlayerWarpsHandler playerwarpsHandler) {
-		this.playerwarpsHandler = playerwarpsHandler;
-	}
-
-	public ErrorHandler getEnableHandler() {
-		return errorHandler;
-	}
-
-	public void setEnableHandler(ErrorHandler enableHandler) {
-		this.errorHandler = enableHandler;
-	}
-
-	public VaultHandler getVaultHandler() {
-		return vaultHandler;
-	}
-
-	public void setVaultHandler(VaultHandler vaultHandler) {
-		this.vaultHandler = vaultHandler;
-	}
-
-	public ArrayList<String> getEnableErrors() {
-		return EnableErrors;
-	}
-
-	public void setEnableErrors(ArrayList<String> enableErrors) {
-		EnableErrors = enableErrors;
-	}
-
-	public String getDefaultConfigFile() {
-		return defaultConfigFile;
-	}
-
-	public void setDefaultConfigFile(String defaultConfigFile) {
-		this.defaultConfigFile = defaultConfigFile;
-	}
-
-	public ResourceBundle getMessageResourceBundle() {
-		return messageResourceBundle;
-	}
-
-	public void setMessageResourceBundle(ResourceBundle messageResourceBundle) {
-		this.messageResourceBundle = messageResourceBundle;
-	}
-
-	public MessageFormat getFormatter() {
-		return formatter;
-	}
-
-	public void setFormatter(MessageFormat formatter) {
-		this.formatter = formatter;
-	}
-
-	public String getLocale() {
-		return locale;
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
-
-	public static void setInstance(PlayerWarpGUI instance) {
-		PlayerWarpGUI.instance = instance;
-	}
-
-	// -------------------------------------------------------------------------------------
-	// getInstance
-	// -------------------------------------------------------------------------------------
-	public static Plugin getInstance() {
-		return instance;
 	}
 
 	/**
