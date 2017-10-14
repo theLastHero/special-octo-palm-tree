@@ -2,6 +2,7 @@ package PlayerWarpGUI;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -10,8 +11,15 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import Handlers.ConfigHandler;
+import Handlers.HookHandler;
 import Handlers.LanguageHandler;
 import Handlers.MessageHandler;
+import Hooks.GriefProtectionHook;
+import Hooks.VaultHook;
+import Hooks.WorldGuardHook;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class PlayerWarpGUI extends JavaPlugin {
 
@@ -24,9 +32,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 	public PluginDescriptionFile pdf = this.getDescription(); // Gets plugin.yml
 	public String PlayerWarpGUIVersion = pdf.getVersion();
+
+	public VaultHook vaultHandler;
 	public ConfigHandler configHandler;
-	
 	public MessageHandler messages;
+
+	public HookHandler hookHandler =  new HookHandler(this);
+	public WorldGuardHook worldGuardHook;
+	public GriefProtectionHook greifProtectionHook;
 
 	public String defaultLocale = "en_US";
 	public Locale locale = null;
@@ -36,21 +49,32 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public MessageFormat languageFormat = null;
 	public LanguageHandler languageHandler;
 
+	public static Economy econ = null;
+	public static Permission perms = null;
+
+	public ArrayList<String> criticalErrors = new ArrayList<String>();
+	public ArrayList<String> nonCriticalErrors = new ArrayList<String>();
+
 	@Override
 	public void onEnable() {
 
-		plugin = this;
-		
-		//configHandler.setUp();
+		setPlugin(this);
 		messages = new MessageHandler(this);
 		configHandler = new ConfigHandler(this);
 		languageHandler = new LanguageHandler(this);
-
+		
+		//hooks
+		vaultHandler = new VaultHook(this);
+		greifProtectionHook = new GriefProtectionHook(this);
+		worldGuardHook =  new WorldGuardHook(this);
+		
+		//console stuff
+		messages.sendTitle();
+		
 	}
-	
+
 	public void killPlugin() {
 		Bukkit.getPluginManager().disablePlugin(this);
-		Bukkit.getLogger().info("plugin diabled");
 	}
 
 	/*
@@ -58,6 +82,46 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 * Bukkit.getPluginManager().getPlugin(pn); if ((p != null) && (p.isEnabled()))
 	 * { return true; } return false; }
 	 */
+
+	public ArrayList<String> getNonCriticalErrors() {
+		return nonCriticalErrors;
+	}
+
+	public void setNonCriticalErrors(ArrayList<String> nonCriticalErrors) {
+		this.nonCriticalErrors = nonCriticalErrors;
+	}
+
+	public VaultHook getVaultHandler() {
+		return vaultHandler;
+	}
+
+	public void setVaultHandler(VaultHook vaultHandler) {
+		this.vaultHandler = vaultHandler;
+	}
+
+	public static Economy getEcon() {
+		return econ;
+	}
+
+	public static void setEcon(Economy econ) {
+		PlayerWarpGUI.econ = econ;
+	}
+
+	public static Permission getPerms() {
+		return perms;
+	}
+
+	public static void setPerms(Permission perms) {
+		PlayerWarpGUI.perms = perms;
+	}
+
+	public ArrayList<String> getCriticalErrors() {
+		return criticalErrors;
+	}
+
+	public void setCriticalErrors(ArrayList<String> criticalErrors) {
+		this.criticalErrors = criticalErrors;
+	}
 
 	public String getConfigName() {
 		return configName;
@@ -82,7 +146,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public void setMessages(MessageHandler messages) {
 		this.messages = messages;
 	}
-
 
 	public String getDefaultLocale() {
 		return defaultLocale;

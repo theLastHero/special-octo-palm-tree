@@ -44,7 +44,7 @@ public class ConfigHandler {
 		if (config.exists()) {
 			try {
 				pl.getConfig().load(config);
-				pl.messages.sendConsoleMessage("Loading Config >> " + pl.getConfigName());
+				pl.messages.sendConsoleMessage("Loaded Config >> " + pl.getConfigName());
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,36 +57,40 @@ public class ConfigHandler {
 			}
 
 		}
-		setDefault("config-version", Double.valueOf(1.1D), "Dont touch <3");
+		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \n DO NOT MODIFY");
 		setDefault("language", "en_US", "Available: en_US, en_AU");
-		setDefault("GUI", null,"+-----+#\n" +
-				"| GUI |#\n" +
-				 "+-----+#\n"+
-				"rows: the number of inventory rows that will be displayed when \n"+
-				"      displayed warps. Total number of warps listed at a time will\n"+
-				"      be number of (rows * 9) eg: rows: 6 will be (6 * 9) = 54, so 54\n"+
-				"      warps will be shown per page.\n"+
-				"\n"+
-				"nextPageIcon: What icon/material to show in /pwarp as the next page\n"+
-				"              icon. Use minecraft ID. eg '35:8' will be grey wool.\n"+
-				"\n"+
-				"DefaultWarpIcon: What icon will show as a player warp icon.\n"+
-				"\n"+
-				"usePlayerHead: Show players head, instead of WarpIcon.\n"+
-				"               Overwrites DefaultWarpIcon if True.\n"+
-				"\n"+
-				"chestText: Text that will be displayed as the /pwarp inventory title.\n"+
-				"\n"+
-				"playerWarpText: Text that will be displayed when you hover over a\n"+
-				"                playerWarp icon as default. Can be overwritten by each\n"+
-				"                user with /pwarp title <Titletexthere>\n" );
+		setDefault("GUI", null,
+				"+-----+#\n" + "| GUI |#\n" + "+-----+#\n"
+						+ "rows: the number of inventory rows that will be displayed when \n"
+						+ "      displayed warps. Total number of warps listed at a time will\n"
+						+ "      be number of (rows * 9) eg: rows: 6 will be (6 * 9) = 54, so 54\n"
+						+ "      warps will be shown per page.\n" + "\n"
+						+ "nextPageIcon: What icon/material to show in /pwarp as the next page\n"
+						+ "              icon. Use minecraft ID. eg '35:8' will be grey wool.\n" + "\n"
+						+ "DefaultWarpIcon: What icon will show as a player warp icon.\n" + "\n"
+						+ "usePlayerHead: Show players head, instead of WarpIcon.\n"
+						+ "               Overwrites DefaultWarpIcon if True.\n" + "\n"
+						+ "chestText: Text that will be displayed as the /pwarp inventory title.\n" + "\n"
+						+ "playerWarpText: Text that will be displayed when you hover over a\n"
+						+ "                playerWarp icon as default. Can be overwritten by each\n"
+						+ "                user with /pwarp title <Titletexthere>\n");
+
+		setDefault("GUI.rows", Integer.valueOf(5), null);
+		setDefault("GUI.other", Integer.valueOf(5), null);
+		setDefault("GUI.otherother", Integer.valueOf(5), null);
+
+		// GreifProtection
+		setDefault("GriefProtection", null, "\n");
+		setDefault("GriefProtection.enabled", Boolean.valueOf(false), null);
+
+
+		// RedProtect
+		setDefault("RedProtect", null, "\n");
+		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
 		
-		
-		setDefault("GUI.rows", Integer.valueOf(5),"");
-		
-		setDefault("region-settings.allow-sign-interact-tags",
-				Arrays.asList(new String[] { "Admin Shop", "{membername}" }),
-				"Allow players without permissions to interact with signs starting with this tags.");
+		// WorldGuard
+		setDefault("WorldGuard", null, "\n");
+		setDefault("WorldGuard.enabled", Boolean.valueOf(false), null);
 		/*
 		 * setDefault("flat-file", null, "If file-type: yml, configuration:");
 		 * setDefault("flat-file.region-per-file", Boolean.valueOf(false),
@@ -397,7 +401,6 @@ public class ConfigHandler {
 		 * "Allow war clans to pvp on #server# regions?");
 		 */
 
-		
 	}
 
 	private void setDefault(String key, Object def, String comment) {
@@ -417,17 +420,14 @@ public class ConfigHandler {
 		StringBuilder b = new StringBuilder();
 		pl.getConfig().options().header(null);
 
-		b.append( "# +--------------------------------------------------------------------+ #\n"
+		b.append("# +--------------------------------------------------------------------+ #\n"
 				+ "# <                 PlayerWarpGUI configuration File                   > #\n"
 				+ "# <--------------------------------------------------------------------> #\n"
 				+ "# <       This is the configuration file, feel free to edit it.        > #\n"
 				+ "# <        For more info about cmds and flags, check our Wiki:         > #\n"
 				+ "# <         https://github.com/FabioZumbi12/RedProtect/wiki            > #\n"
-				+ "# +--------------------------------------------------------------------+ #\n"
-				+ "#\n"
-				+ "# Notes:\n"
-				+ "# Lists are [object1, object2, ...]\n"
-				+ "# Strings containing the char & always need to be quoted")
+				+ "# +--------------------------------------------------------------------+ #\n" + "#\n" + "# Notes:\n"
+				+ "# Lists are [object1, object2, ...]\n" + "# Strings containing the char & always need to be quoted")
 
 				.append('\n');
 		for (String line : pl.getConfig().getKeys(true)) {
