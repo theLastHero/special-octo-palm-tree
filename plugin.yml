@@ -7,6 +7,19 @@ website: http://thelasthero.net
 main: PlayerWarpGUI.PlayerWarpGUI
 softdepend: [GriefPrevention, worldguard, WorldGuard, RedProtect, Vault]
 commands:
-   playerwarps:
-      description: Set and go to player warps.
-      aliases: [pwarps, pwarp, playerwarp]  
+  playerwarps:
+    description: Set and go to player warps.
+    aliases: [pwarps, pwarp, playerwarp]
+permissions:
+  playerwarpgui.set:
+    description: Allows the player to set a warp
+    default: op
+  playerwarpgui.list:
+    description: Allows the player list there warps
+    default: op
+  playerwarpgui.show:
+    description: Allows the player view warps gui
+    default: op
+  playerwarpgui.title:
+    description: Allows the player to set a title for there warp
+    default: op

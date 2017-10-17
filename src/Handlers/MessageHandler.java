@@ -2,6 +2,7 @@ package Handlers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import PlayerWarpGUI.PlayerWarpGUI;
 
@@ -11,48 +12,51 @@ public class MessageHandler {
 
 	public MessageHandler(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
-		
+
 	}
-	
+
+	public void sendPlayerMessage(Player player, String msg) {
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+				pl.getLanguageHandler().getMessage("MESSAGE_PREFIX") + msg));
+	}
+
 	public void sendConsoleMessage(String msg) {
-		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "[PlayerWarpGUI] " + msg));
+		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+				pl.getLanguageHandler().getMessage("CONSOLE_MSG_PREFIX") + msg));
 	}
-	
+
 	public void sendConsoleMessageBare(String msg) {
-		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',  msg));
+		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
-	
+
 	public void sendTitle() {
-		sendConsoleMessageBare("&b.-. .   .-. . . .-. .-. &3. . . .-. .-. .-. &7.-. . . .-. ");
-		sendConsoleMessageBare("&b|-' |   |-|  |  |-  |(  &3| | | |-| |(  |-' &7|.. | |  |  ");
-		sendConsoleMessageBare("&b'   `-' ` '  `  `-' ' ' &3`.'.' ` ' ' ' '   &7`-' `-' `-' ");
+		sendConsoleMessageBare("&b.-. .   .-. . . .-. .-. &3. . . .-. .-. .-. &a.-. . . .-. ");
+		sendConsoleMessageBare("&b|-' |   |-|  |  |-  |(  &3| | | |-| |(  |-' &a|.. | |  |  ");
+		sendConsoleMessageBare("&b'   `-' ` '  `  `-' ' ' &3`.'.' ` ' ' ' '   &a`-' `-' `-' ");
 		startupStatus();
 		showErrors();
 	}
-	
+
 	public void showErrors() {
-		
+
 		if (!pl.getNonCriticalErrors().isEmpty()) {
 			for (String error : pl.getNonCriticalErrors()) {
-				sendConsoleMessage("&4[NON CRITICAL ERROR] " + error);
+				sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_NONCRITIAL_ERROR_PREFIX") + error);
 			}
 		}
-			
+
 		if (!pl.getCriticalErrors().isEmpty()) {
 			for (String error : pl.getCriticalErrors()) {
-				sendConsoleMessage("&4[CRITICAL ERROR] " + error);
+				sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CRITIAL_ERROR_PREFIX") + error);
 			}
 			pl.killPlugin();
 		}
-		
-		
+
 	}
-	
+
 	public void startupStatus() {
-		if(pl.getCriticalErrors().isEmpty()) {
-			sendConsoleMessageBare("&aPlayerWarpGUI v " + pl.getPlayerWarpGUIVersion() + " >> SUCCESSFUL.");
-			return;
-		} 
-		sendConsoleMessageBare("&cPlayerWarpGUI v " + pl.getPlayerWarpGUIVersion() + " >> FAILED.");
+		sendConsoleMessageBare(pl.getLanguageHandler().getMessage("CONSOLE_MSG_FINAL", pl.getPlayerWarpGUIVersion(),
+				pl.getLanguageHandler().statusValue(pl.getCriticalErrors().isEmpty())));
 	}
+
 }

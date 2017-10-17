@@ -1,0 +1,12 @@
+
+# Allow use of /pwarps & pwarps show
+playerwarpgui.show
+
+# Allows the use of  pwarps list
+playerwarpgui.list
+
+# Allows the use od /pwarps set & /pwarps delete
+playerwarpgui.set
+
+# Allows the use of /pwarps title
+playerwarpgui.title 

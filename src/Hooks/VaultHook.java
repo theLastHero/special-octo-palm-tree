@@ -1,7 +1,5 @@
 package Hooks;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -12,25 +10,27 @@ import net.milkbowl.vault.permission.Permission;
 
 public class VaultHook {
 
+	public String plName;
 	public static PlayerWarpGUI pl;
 	
 	@SuppressWarnings("unchecked")
 	public VaultHook(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
+		plName = "Vault";
 		checkVault();
 	}
 	
 	  private void checkVault()
 	  {
-	    Plugin pVT = Bukkit.getPluginManager().getPlugin("Vault");
+	    Plugin pVT = Bukkit.getPluginManager().getPlugin(plName);
 	    if ((pVT != null) && (pVT.isEnabled())) {
-	    	pl.messages.sendConsoleMessage("Hooking Vault >> Success");
+	    	pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName, pl.getLanguageHandler().getMessage("SUCCESS")));
 	    	setupEconomy();
-	    	setupPermissions();
+	    	//setupPermissions();
 	    	return;
 	    }
-	    pl.messages.sendConsoleMessage("Hooking Vault >> Failed");
-	    pl.getCriticalErrors().add("&cVault was not found. ");
+	    pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName, pl.getLanguageHandler().getMessage("FAILED")));
+	    pl.getCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_CRITIAL_ERROR_HOOK", plName));
 	  }
 	  
 	private boolean setupEconomy() {

@@ -1,8 +1,5 @@
 package Hooks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
-
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class RedProtectHook {

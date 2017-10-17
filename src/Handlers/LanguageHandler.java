@@ -26,8 +26,6 @@ public class LanguageHandler {
 	public LanguageHandler(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
 
-		checkLanguageFileExsists("en_US");
-		setupLocale(pl.getConfig().getString("language"));
 	}
 
 	// sets plugin locale
@@ -43,14 +41,14 @@ public class LanguageHandler {
 			rb = ResourceBundle.getBundle("lang", pl.getLocale(), pl.getClassLoaderThis());
 		} catch (MissingResourceException e) {
 			// TODO Auto-generated catch block
-			pl.messages.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
-			pl.messages.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
+			//pl.messageHandler.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
+			//pl.messageHandler.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
 			setupLocale(pl.getDefaultLocale());
 		}
 
 		if (!rb.getLocale().toString().equals(pl.getLocale().toString())) {
-			pl.messages.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
-			pl.messages.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
+			//pl.messageHandler.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
+			//pl.messageHandler.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
 			setLocale(pl.getDefaultLocale());
 		}
 
@@ -86,7 +84,16 @@ public class LanguageHandler {
 		setClassLoader();
 		setResourceBundle();
 		setFormatterLocale();
-		pl.messages.sendConsoleMessage("Loaded language file >> " + pl.getLocale().toString());
+		pl.messageHandler.sendConsoleMessage( getMessage("CONSOLE_MSG_LANGUAGE_FILE", pl.getLocale().toString()));
+	}
+	
+	public void setupLocaleSilent(String s) {
+		setLocale(s);
+		setFormatter();
+		setLanguageFile();
+		setClassLoader();
+		setResourceBundle();
+		setFormatterLocale();
 	}
 
 	public String getMessage(String key, Object... args) {
@@ -101,11 +108,20 @@ public class LanguageHandler {
 
 		// Check it exsists
 		if (!languageFile.exists()) {
-			pl.messages.sendConsoleMessage("Creating language file >> " + fn);
+			//Bukkit.getConsoleSender().sendMessage("Creating language file >> " + fn);
 			languageFile.getParentFile().mkdirs();
 			copy(pl.getResource("defaults/" + fileName), languageFile);
 
 		}
+
+	}
+	
+	public String statusValue(boolean compare) {
+		String status = pl.getLanguageHandler().getMessage("SUCCESS");
+		if (!compare) {
+			status = pl.getLanguageHandler().getMessage("FAILED");
+		}
+		return status;
 
 	}
 

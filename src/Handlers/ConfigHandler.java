@@ -1,17 +1,17 @@
 package Handlers;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ConfigHandler {
@@ -24,13 +24,20 @@ public class ConfigHandler {
 	public ConfigHandler(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
 		this.comments = new HashMap();
-		setUp();
+	}
+	
+	public void msg() {
+		if(pl.getConfig() != null) {
+		pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getConfigName()));
+		} else {
+			pl.getCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_ERROR_CRITIAL_FILENOTFOUND", pl.getConfigName()));
+			pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getLanguageHandler().getMessage("FAILED")));	
+		}
 	}
 
 	public void setUp() {
 		File config = new File(pl.getPathConfig());
 		if (!config.exists()) {
-			pl.messages.sendConsoleMessage("Creating config file >> " + pl.getConfigName());
 			config.getParentFile().mkdirs();
 		}
 
@@ -44,7 +51,6 @@ public class ConfigHandler {
 		if (config.exists()) {
 			try {
 				pl.getConfig().load(config);
-				pl.messages.sendConsoleMessage("Loaded Config >> " + pl.getConfigName());
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,40 +63,40 @@ public class ConfigHandler {
 			}
 
 		}
-		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \n DO NOT MODIFY");
-		setDefault("language", "en_US", "Available: en_US, en_AU");
-		setDefault("GUI", null,
-				"+-----+#\n" + "| GUI |#\n" + "+-----+#\n"
-						+ "rows: the number of inventory rows that will be displayed when \n"
-						+ "      displayed warps. Total number of warps listed at a time will\n"
-						+ "      be number of (rows * 9) eg: rows: 6 will be (6 * 9) = 54, so 54\n"
-						+ "      warps will be shown per page.\n" + "\n"
-						+ "nextPageIcon: What icon/material to show in /pwarp as the next page\n"
-						+ "              icon. Use minecraft ID. eg '35:8' will be grey wool.\n" + "\n"
-						+ "DefaultWarpIcon: What icon will show as a player warp icon.\n" + "\n"
-						+ "usePlayerHead: Show players head, instead of WarpIcon.\n"
-						+ "               Overwrites DefaultWarpIcon if True.\n" + "\n"
-						+ "chestText: Text that will be displayed as the /pwarp inventory title.\n" + "\n"
-						+ "playerWarpText: Text that will be displayed when you hover over a\n"
-						+ "                playerWarp icon as default. Can be overwritten by each\n"
-						+ "                user with /pwarp title <Titletexthere>\n");
-
-		setDefault("GUI.rows", Integer.valueOf(5), null);
-		setDefault("GUI.other", Integer.valueOf(5), null);
-		setDefault("GUI.otherother", Integer.valueOf(5), null);
-
-		// GreifProtection
-		setDefault("GriefProtection", null, "\n");
-		setDefault("GriefProtection.enabled", Boolean.valueOf(false), null);
-
-
-		// RedProtect
-		setDefault("RedProtect", null, "\n");
-		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
 		
-		// WorldGuard
-		setDefault("WorldGuard", null, "\n");
+		//config version
+		
+		setDefault("language", "en_US", "Available: en_US, en_AU");
+
+		setDefault("metrics", null, "Metrics");
+		setDefault("metrics.enabled", Boolean.valueOf(true), null);
+		
+		setDefault("gui", Integer.valueOf(9), "GUI");
+		setDefault("gui.rows", Integer.valueOf(9), null);
+		setDefault("gui.title", "&2PlayerWarps", null);
+		setDefault("gui.default-playerwarp-icon", "35:9", null);
+		setDefault("gui.default-playerwarp-title", "Go to &6[playername]s &fwarp", null);
+		setDefault("gui.use-playerheads-as-icons", Boolean.valueOf(true), null);
+		setDefault("gui.nextpage-icon", "35:8", null);
+
+		setDefault("teleport", Boolean.valueOf(true), "Teleport");
+		setDefault("teleport.cancel-on-movement", Boolean.valueOf(true), null);
+		setDefault("teleport.movement-cooldown", Integer.valueOf(9), null);
+		setDefault("teleport.use-safelocation", Boolean.valueOf(true), null);
+		setDefault("teleport.unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" }), null);
+		setDefault("teleport.blocked-world", Arrays.asList(new String[] { "world_nether","world_end" }), null);
+		
+		
+		setDefault("GriefProtection", null, "GreifProtection");
+		setDefault("GriefProtection.enabled", Boolean.valueOf(false), null);
+		
+		setDefault("RedProtect", null, "RedProtect");
+		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
+
+		setDefault("WorldGuard", null, "WorldGuard");
 		setDefault("WorldGuard.enabled", Boolean.valueOf(false), null);
+		
+		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \nDO NOT MODIFY");
 		/*
 		 * setDefault("flat-file", null, "If file-type: yml, configuration:");
 		 * setDefault("flat-file.region-per-file", Boolean.valueOf(false),
@@ -454,7 +460,7 @@ public class ConfigHandler {
 					b.append(spaces + key[(key.length - 1)] + ": '" + value + "'\n");
 				} else if ((value instanceof List)) {
 					b.append(spaces + key[(key.length - 1)] + ":\n");
-					for (Object lineCfg : (List) value) {
+					for (Object lineCfg : (List<?>) value) {
 						if ((lineCfg instanceof String)) {
 							b.append(spaces + "- '" + lineCfg + "'\n");
 						} else {
