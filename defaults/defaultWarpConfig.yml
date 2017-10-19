@@ -8,24 +8,3 @@ playerData:
   UUID:
 
 warps:
-  warp0:
-    location:
-    name:
-  warp1:
-    location:
-    name:
-  
-  
-  
-  
-  
-location:
-icon:
-title:
-lore:
-    - ''
-    - ''
-    - ''
-    
-settings:
-  enabled:

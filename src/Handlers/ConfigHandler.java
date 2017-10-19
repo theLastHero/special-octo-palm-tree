@@ -79,6 +79,12 @@ public class ConfigHandler {
 		setDefault("gui.use-playerheads-as-icons", Boolean.valueOf(true), null);
 		setDefault("gui.nextpage-icon", "35:8", null);
 
+		
+		setDefault("settings", "35:9", null);
+		setDefault("settings.set-warp-cost", Integer.valueOf(400), null);
+		setDefault("settings.max-title-text-size", Integer.valueOf(40), null);
+		setDefault("settings.max-lore-text-size", Integer.valueOf(40), null);
+		
 		setDefault("teleport", Boolean.valueOf(true), "Teleport");
 		setDefault("teleport.cancel-on-movement", Boolean.valueOf(true), null);
 		setDefault("teleport.movement-cooldown", Integer.valueOf(9), null);
@@ -87,14 +93,21 @@ public class ConfigHandler {
 		setDefault("teleport.blocked-world", Arrays.asList(new String[] { "world_nether","world_end" }), null);
 		
 		
-		setDefault("GriefProtection", null, "GreifProtection");
-		setDefault("GriefProtection.enabled", Boolean.valueOf(false), null);
+		setDefault("GriefPrevention", null, "GreifProtection");
+		setDefault("GriefPrevention.enabled", Boolean.valueOf(false), null);
+		setDefault("GriefPrevention.owner-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("GriefPrevention.trusted-player-can-set-warp", Boolean.valueOf(true) , null);
 		
 		setDefault("RedProtect", null, "RedProtect");
-		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
+		setDefault("RedProtect.enabled", Boolean.valueOf(true), null);
+		setDefault("RedProtect.leader-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("RedProtect.admin-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("RedProtect.member-player-can-set-warp", Boolean.valueOf(true) , null);
 
 		setDefault("WorldGuard", null, "WorldGuard");
 		setDefault("WorldGuard.enabled", Boolean.valueOf(false), null);
+		setDefault("WorldGuard.owner-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("WorldGuard.member-player-can-set-warp", Boolean.valueOf(true) , null);
 		
 		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \nDO NOT MODIFY");
 		/*

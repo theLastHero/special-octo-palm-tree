@@ -18,6 +18,7 @@ public class PlayerWarpObject {
 	private String title;
 	private String icon;
 	private ArrayList<String> loreList;
+	private ArrayList<String> banList;
 	
 	// +-------------------------------------------------------------------------------------
 	// | Constructor
@@ -26,7 +27,7 @@ public class PlayerWarpObject {
 		pl = playerWarpGUI;
 	}
 	
-	public PlayerWarpObject(UUID playerUUID,String warpName, String warpLocation, String title, String icon, ArrayList<String> loreList) {
+	public PlayerWarpObject(UUID playerUUID,String warpName, String warpLocation, String title, String icon, ArrayList<String> loreList, ArrayList<String> banList) {
 
 		this.setPlayerUUID(playerUUID);
 		this.setWarpName(warpName);
@@ -34,6 +35,7 @@ public class PlayerWarpObject {
 		this.setTitle(title);
 		this.setIcon(icon);
 		this.setLoreList(loreList);
+		this.setBanList(banList);
 		
 		PlayerWarpGUI.playerWarpObjects.add(this);
 
@@ -98,6 +100,14 @@ public class PlayerWarpObject {
 	}
 	public void setLoreList(ArrayList<String> loreList) {
 		this.loreList = loreList;
+	}
+
+	public ArrayList<String> getBanList() {
+		return banList;
+	}
+
+	public void setBanList(ArrayList<String> banList) {
+		this.banList = banList;
 	}
 
 

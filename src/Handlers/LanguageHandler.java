@@ -12,8 +12,6 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.bukkit.Bukkit;
-
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class LanguageHandler {
@@ -110,7 +108,7 @@ public class LanguageHandler {
 		if (!languageFile.exists()) {
 			//Bukkit.getConsoleSender().sendMessage("Creating language file >> " + fn);
 			languageFile.getParentFile().mkdirs();
-			copy(pl.getResource("defaults/" + fileName), languageFile);
+			pl.getOtherFunctions().copy(pl.getResource("defaults/" + fileName), languageFile);
 
 		}
 
@@ -125,20 +123,5 @@ public class LanguageHandler {
 
 	}
 
-	public void copy(InputStream in, File file) {
-
-		try {
-			OutputStream out = new FileOutputStream(file);
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			out.close();
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

@@ -6,7 +6,13 @@ playerwarpgui.show
 playerwarpgui.list
 
 # Allows the use od /pwarps set & /pwarps delete
-playerwarpgui.set
+playerwarpgui.setwarp
 
 # Allows the use of /pwarps title
-playerwarpgui.title 
+playerwarpgui.settitle 
+
+# Allows the use of /pwarps setlore
+playerwarpgui.setlore 
+
+# Allows the use of /pwarps ban & unban 
+playerwarpgui.ban 

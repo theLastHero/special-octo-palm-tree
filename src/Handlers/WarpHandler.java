@@ -1,10 +1,10 @@
 package Handlers;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class WarpHandler {
@@ -37,7 +37,7 @@ public class WarpHandler {
 
 	}
 	
-	public static boolean isBlockedWorld(Location location) {
+	public boolean isBlockedWorld(Location location) {
 		
 		for (int i = 0; i < pl.getConfig().getStringList("teleport.blocked-world").size(); i++) {
 			if (pl.getConfig().getStringList("teleport.blocked-world").get(i).equalsIgnoreCase(location.getWorld().getName().toString())) {
@@ -56,7 +56,7 @@ public class WarpHandler {
 	 *            Location to check
 	 * @return True if location is safe
 	 */
-	public static boolean isSafeLocation(Location location) {
+	public boolean isSafeLocation(Location location) {
 		if (!pl.getConfig().getBoolean("teleport.use-safelocation")) {
 			return true;
 		}

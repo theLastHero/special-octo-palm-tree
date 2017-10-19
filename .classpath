@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/GriefPrevention(1).jar"/>
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/RedProtect-Spigot-7.2.2-b435.jar"/>
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/worldguard-6.2.1(1).jar"/>
+	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/worldedit-bukkit-6.1.7.3(1).jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -69,14 +68,14 @@ public class GUIObject {
 		// loop through all for the page
 		for (int i = 0; i < loopSize; i++) {
 			int objNum = startNum + i;
-			
-			// warp title
-			// ============================
-			String playerWarpTitle = getWarpTitle(playerWarpObjects.get(objNum));
-			
+
 			// warp icon
 			// ============================
 			ItemStack playerWarpItemStack = getWarpIcon(playerWarpObjects.get(objNum));
+
+			// warp title
+			// ============================
+			String playerWarpTitle = getWarpTitle(playerWarpObjects.get(objNum));
 
 			// warp lore
 			// ===========================
@@ -84,8 +83,8 @@ public class GUIObject {
 
 			// meta
 			// ===========================
-			playerWarpItemStack.setItemMeta(getWarpMeta(playerWarpTitle, lore));
-			
+			playerWarpItemStack.setItemMeta(getWarpMeta(playerWarpItemStack, playerWarpTitle, lore));
+
 			inv.setItem(i, playerWarpItemStack);
 			// i++;
 
@@ -103,12 +102,12 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	public static ItemMeta getWarpMeta(String playerWarpTitle, ArrayList<String> lore) {
-		ItemMeta playerWarpMeta = new ItemStack(Material.SKULL_ITEM, 1, (short) 3).getItemMeta();
+	public static ItemMeta getWarpMeta(ItemStack playerWarpItemStack, String playerWarpTitle, ArrayList<String> lore) {
+		ItemMeta playerWarpMeta = playerWarpItemStack.getItemMeta();
 		playerWarpMeta.setDisplayName(playerWarpTitle);
 		playerWarpMeta.setLore(lore);
 		playerWarpMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		
+
 		return playerWarpMeta;
 	}
 
@@ -116,13 +115,16 @@ public class GUIObject {
 	//
 	// -------------------------------------------------------------------------------------
 	public static ArrayList<String> getWarpLore(PlayerWarpObject pwo) {
-		
+
 		ArrayList<String> lore = new ArrayList<String>();
 		ArrayList<String> loreList = pwo.getLoreList();
-		lore.add(pl.getOtherFunctions().replaceColorVariables(loreList.get(0)));
-		lore.add(pl.getOtherFunctions().replaceColorVariables(loreList.get(1)));
-		lore.add(pl.getOtherFunctions().replaceColorVariables(loreList.get(2)));
-		lore.add(ChatColor.DARK_GRAY + "Warp ID: " + pwo.getUid());
+		for (int i = 0; i < loreList.size(); i++) {
+			lore.add(pl.getOtherFunctions().replaceColorVariables(loreList.get(i)));
+		}
+		lore.add(pl.getOtherFunctions()
+				.replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT") + pwo.getUid()));
+		lore.add(pl.getOtherFunctions().replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_OWNER_TEXT")
+				+ Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName()));
 		return lore;
 
 	}
@@ -134,8 +136,8 @@ public class GUIObject {
 		if (!(pwo.getTitle() == null) && !(pwo.getTitle().length() == 0)) {
 			return pl.getOtherFunctions().replaceColorVariables(pwo.getTitle());
 		}
-		
-		return  pl.getOtherFunctions().replaceHolders(
+
+		return pl.getOtherFunctions().replaceHolders(
 				pl.getOtherFunctions().replaceColorVariables(pl.getConfig().getString("gui.default-playerwarp-title")),
 				Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName());
 

@@ -12,6 +12,7 @@ public class VaultHook {
 
 	public String plName;
 	public static PlayerWarpGUI pl;
+	public static Economy econ = null;
 	
 	@SuppressWarnings("unchecked")
 	public VaultHook(PlayerWarpGUI playerWarpGUI) {
@@ -26,13 +27,21 @@ public class VaultHook {
 	    if ((pVT != null) && (pVT.isEnabled())) {
 	    	pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName, pl.getLanguageHandler().getMessage("SUCCESS")));
 	    	setupEconomy();
-	    	//setupPermissions();
+	    	setupPermissions();
 	    	return;
 	    }
 	    pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName, pl.getLanguageHandler().getMessage("FAILED")));
 	    pl.getCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_CRITIAL_ERROR_HOOK", plName));
 	  }
 	  
+	public static Economy getEcon() {
+		return econ;
+	}
+
+	public static void setEcon(Economy econ) {
+		VaultHook.econ = econ;
+	}
+
 	private boolean setupEconomy() {
 		if (pl.getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;

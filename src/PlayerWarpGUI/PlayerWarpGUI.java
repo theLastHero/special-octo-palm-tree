@@ -19,7 +19,7 @@ import Handlers.PlayerWarpFileHandler;
 import Handlers.PlayerWarpObjectHandler;
 import Handlers.TeleportHandler;
 import Handlers.WarpHandler;
-import Hooks.GriefProtectionHook;
+import Hooks.GriefPreventionHook;
 import Hooks.RedProtectHook;
 import Hooks.VaultHook;
 import Hooks.WorldGuardHook;
@@ -51,19 +51,20 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public ConfigHandler configHandler;
 	public MessageHandler messageHandler;
 	public HookHandler hookHandler = new HookHandler(this);
-	public PlayerWarpFileHandler playerWarpHandler;
 	public PlayerWarpObjectHandler playerWarpObjectHandler;
 	public WarpHandler warpHandler = new WarpHandler(this);
 	public TeleportHandler teleportHandler = new TeleportHandler(this);
+	public PlayerWarpFileHandler playerWarpFileHandler;
 
-		// others
+
+	// others
 	public OtherFunctions otherFunctions = new OtherFunctions(this);
 	public GUIObject guiObject = new GUIObject(this);
 	
 	// hooks
 	public VaultHook vaultHook;
 	public WorldGuardHook worldGuardHook;
-	public GriefProtectionHook greifProtectionHook;
+	public GriefPreventionHook greifPrevetionHook;
 	public RedProtectHook redProtectHook;
 
 	// locales
@@ -112,11 +113,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 		
 		//messageHandler = new MessageHandler(this);
 		playerWarpObjectHandler = new PlayerWarpObjectHandler(this);
-		playerWarpHandler = new PlayerWarpFileHandler(this);
+		
+		playerWarpFileHandler = new PlayerWarpFileHandler(this);
+		playerWarpFileHandler.checkWarpFolder();
+		playerWarpFileHandler.createAllFromWarpFiles(true);
 
 		// hooks
 		vaultHook = new VaultHook(this);
-		greifProtectionHook = new GriefProtectionHook(this);
+		greifPrevetionHook = new GriefPreventionHook(this);
 		redProtectHook = new RedProtectHook(this);
 		worldGuardHook = new WorldGuardHook(this);
 
@@ -144,6 +148,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 				getNonCriticalErrors().add(languageHandler.getMessage("CONSOLE_NONCRITIAL_ERROR"));
 			}
 		}
+	}
+	
+	public PlayerWarpFileHandler getPlayerWarpFileHandler() {
+		return playerWarpFileHandler;
+	}
+
+	public void setPlayerWarpFileHandler(PlayerWarpFileHandler playerWarpFileHandler) {
+		this.playerWarpFileHandler = playerWarpFileHandler;
 	}
 	
 	public WarpHandler getWarpHandler() {
@@ -206,13 +218,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 		this.warpsName = warpsName;
 	}
 
-	public PlayerWarpFileHandler getPlayerWarpHandler() {
-		return playerWarpHandler;
-	}
-
-	public void setPlayerWarpHandler(PlayerWarpFileHandler playerWarpHandler) {
-		this.playerWarpHandler = playerWarpHandler;
-	}
 
 	public String getPathWarps() {
 		return pathWarps;
@@ -254,12 +259,12 @@ public class PlayerWarpGUI extends JavaPlugin {
 		this.worldGuardHook = worldGuardHook;
 	}
 
-	public GriefProtectionHook getGreifProtectionHook() {
-		return greifProtectionHook;
+	public GriefPreventionHook getGreifProtectionHook() {
+		return greifPrevetionHook;
 	}
 
-	public void setGreifProtectionHook(GriefProtectionHook greifProtectionHook) {
-		this.greifProtectionHook = greifProtectionHook;
+	public void setGreifProtectionHook(GriefPreventionHook greifProtectionHook) {
+		this.greifPrevetionHook = greifProtectionHook;
 	}
 
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects() {

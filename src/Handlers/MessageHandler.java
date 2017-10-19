@@ -19,6 +19,10 @@ public class MessageHandler {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&',
 				pl.getLanguageHandler().getMessage("MESSAGE_PREFIX") + msg));
 	}
+	
+	public void sendPlayerMessageBare(Player player, String msg) {
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&',msg));
+	}
 
 	public void sendConsoleMessage(String msg) {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',

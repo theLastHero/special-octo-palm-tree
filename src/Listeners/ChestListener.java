@@ -1,16 +1,11 @@
 package Listeners;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +14,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import Objects.PlayerWarpObject;
 import PlayerWarpGUI.PlayerWarpGUI;
@@ -42,6 +36,7 @@ public class ChestListener implements Listener {
 		// was it a player
 		if (e.getWhoClicked() instanceof Player) {
 
+			Player player = (Player) e.getWhoClicked();
 			// does it match the right inventory name
 			if (e.getInventory().getName()
 					.contains(pl.getOtherFunctions().replaceColorVariables(pl.getConfig().getString("gui.title")))) {
@@ -59,32 +54,36 @@ public class ChestListener implements Listener {
 				if (isNextPageIcon(e.getCurrentItem().getItemMeta().getDisplayName())
 						&& (getNextPageNumber(e.getCurrentItem().getItemMeta().getDisplayName()) > 0)) {
 
-					closeInv(e.getWhoClicked());
+					closeInv(player);
 					// open new inventory from next page
-					pl.getGuiObject().openGUI((Player) e.getWhoClicked(),
-							getNextPageNumber(e.getCurrentItem().getItemMeta().getDisplayName()));
+					pl.getGuiObject().openGUI(player, getNextPageNumber(e.getCurrentItem().getItemMeta().getDisplayName()));
 					// exit
 					return;
 				}
 
 				// get warp Object
-				PlayerWarpObject pwo = pl.getPlayerWarpObjects().get(getWarpID(e.getCurrentItem()) - 1);
+				PlayerWarpObject pwo = pl.getPlayerWarpObjects().get(getWarpID(e.getCurrentItem())-1);
 
+				//check ban list
+				if(pl.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(), player.getUniqueId().toString())) {
+					pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER"));
+					closeInv(player);
+					return;
+				}
+				
 				// do safeWarp checking
-				String errorMsg = pl.getWarpHandler().canTeleport((Player) e.getWhoClicked(),
-						pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
+				String errorMsg = pl.getWarpHandler().canTeleport(player, pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
-					pl.getMessageHandler().sendPlayerMessage((Player) e.getWhoClicked(), errorMsg);
-					closeInv(e.getWhoClicked());
+					pl.getMessageHandler().sendPlayerMessage(player, errorMsg);
+					closeInv(player);
 					return;
 				}
 
 				//start teleport
-				pl.teleportHandler.startTeleport((Player) e.getWhoClicked(),
-						pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
+				pl.teleportHandler.startTeleport(player, pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
 
 				// close inventory
-				closeInv(e.getWhoClicked());
+				closeInv(player);
 
 			}
 		}
@@ -113,15 +112,21 @@ public class ChestListener implements Listener {
 		return false;
 	}
 
-	public void closeInv(HumanEntity humanEntity) {
-		humanEntity.closeInventory();
+	public void closeInv(Player player) {
+		player.closeInventory();
 	}
 
 	public static int getWarpID(ItemStack itemStack) {
+		int warpID = 0;
 		List<String> loreList = new ArrayList<String>();
 		loreList = itemStack.getItemMeta().getLore();
-		int warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace("Warp ID: ", "")));
-
+		
+		for(int i = 0; i < loreList.size(); i++) {
+			if(loreList.get(i).contains(ChatColor.stripColor(pl.otherFunctions.replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT"))))){
+				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(pl.otherFunctions.replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT")), "")));	
+			}
+		}
+		
 		return warpID;
 	}
 

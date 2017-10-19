@@ -1,13 +1,15 @@
 package PlayerWarpGUI;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 public class OtherFunctions {
 
@@ -24,7 +26,7 @@ public class OtherFunctions {
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	public static boolean isInt(String s) // assuming integer is in decimal number system
+	public boolean isInt(String s) // assuming integer is in decimal number system
 	{
 		for (int a = 0; a < s.length(); a++) {
 			if (a == 0 && s.charAt(a) == '-')
@@ -68,6 +70,13 @@ public class OtherFunctions {
 			return new ItemStack(Material.getMaterial(matId), 1, data);
 		}
 		return new ItemStack(Material.getMaterial(matId));
+	}
+	
+	public String parseStringFromItemStack(ItemStack iStack) {
+
+		int iconID = iStack.getTypeId();
+		int iconData = iStack.getData().getData();
+		return "" + iconID + ":" + iconData;
 	}
 
 	// -------------------------------------------------------------------------------------
@@ -130,5 +139,21 @@ public class OtherFunctions {
 	public String loc2str(Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ() + ":"
 				+ (float) loc.getYaw() + ":" + (float) loc.getPitch();
+	}
+	
+	public void copy(InputStream in, File file) {
+
+		try {
+			OutputStream out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
