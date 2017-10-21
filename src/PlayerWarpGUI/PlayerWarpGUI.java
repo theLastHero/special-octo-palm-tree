@@ -357,7 +357,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 		this.vaultHook = vaultHandler;
 	}
 
-	public static Economy getEcon() {
+	public Economy getEcon() {
 		return econ;
 	}
 

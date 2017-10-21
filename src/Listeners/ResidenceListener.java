@@ -35,7 +35,7 @@ public class ResidenceListener implements Listener {
 				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();
 
-				if (pl.getResidenceHook().isInClaim(loc) != null) {
+				if (pl.getResidenceHook().getLocationData(loc) != null) {
 					pl.getPlayerWarpFileHandler().removeSingleWarpValue(
 							pl.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 

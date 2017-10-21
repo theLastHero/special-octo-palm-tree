@@ -1,5 +1,6 @@
 package Hooks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldguard.bukkit.WGBukkit;
@@ -7,8 +8,10 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import Listeners.GriefPreventionListener;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Response;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class WorldGuardHook {
 
@@ -21,75 +24,87 @@ public class WorldGuardHook {
 	// +-----------------------------------------------------------------------------------
 	public WorldGuardHook(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
-		check();
+		setEnabled();
+		//registerListener();
 	}
 
-	private void check() {
+	/**
+	 * 
+	 */
+	private void setEnabled() {
 		if (pl.getConfig().getBoolean("WorldGuard.enabled")) {
 			setEnabled(pl.getHookHandler().checkHook("WorldGuard"));
 		}
 	}
-
-	public WorldGuardPlugin getWg() {
-		return wg;
+	
+	/**
+	 * @param enabled
+	 */
+	private void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
-	public void setWg(WorldGuardPlugin wg) {
-		this.wg = wg;
-	}
-
-	public boolean isEnabled() {
+	/**
+	 * @return
+	 */
+	private boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		if (enabled) {
+
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unused")
+	private void registerListener() {
+		if (this.enabled) {
 			wg = WGBukkit.getPlugin();
+			//Bukkit.getServer().getPluginManager().registerEvents(new WorldGuardListener(pl), pl);
 		}
 	}
 
-	public boolean configEnabled(String configMaker) {
-		if (pl.getConfig().getBoolean(configMaker)) {
-			return true;
-		}
-		return false;
-	}
-
-	public ApplicableRegionSet isInClaim(Player player) {
-		ApplicableRegionSet set = getWg().getRegionManager(player.getLocation().getWorld())
+	
+	/**
+	 * @param player
+	 * @return
+	 */
+	public ApplicableRegionSet getLocationData(Player player) {
+		return wg.getRegionManager(player.getLocation().getWorld())
 				.getApplicableRegions(player.getLocation());
-		return set;
 	}
 
-	public Response checkWarp(Player player) {
+	/**
+	 * @param player
+	 * @return
+	 */
+	public String warpHookCheck(Player player) {
 
 		// if not enabled, or config not enabled or player not in a claim
-		if (!isEnabled() || !configEnabled("WorldGuard.enabled")) {
-			return new Response(true, "");
+		if (!isEnabled() || !pl.getConfig().getBoolean("WorldGuard.enabled")) {
+			return null;
 		}
 
-		if (isInClaim(player) == null) {
-			return new Response(false, "WORLGUARD_NOT_IN_A_REGION");
+		if (getLocationData(player) == null) {
+			return "WORLGUARD_NOT_IN_A_REGION";
 		}
 
-		if (configEnabled("WorldGuard.owner-can-set-warp")) {
-			for (ProtectedRegion r : isInClaim(player)) {
+		if (pl.getConfig().getBoolean("WorldGuard.owner-can-set-warp")) {
+			for (ProtectedRegion r : getLocationData(player)) {
 				if (r.getOwners().contains(player.getUniqueId())) {
-					return new Response(true, "");
+					return null;
 				}
 			}
 		}
 		
-		if (configEnabled("WorldGuard.member-player-can-set-warp")) {
-			for (ProtectedRegion r : isInClaim(player)) {
+		if (pl.getConfig().getBoolean("WorldGuard.member-player-can-set-warp")) {
+			for (ProtectedRegion r : getLocationData(player)) {
 				if (r.getMembers().contains(player.getUniqueId())) {
-					return new Response(true, "");
+					return null;
 				}
 			}
 		}
 
-		return new Response(false, "WORLDGUARD_NO_PERMISSION");
+		return "WORLDGUARD_NO_PERMISSION";
 
 	}
 

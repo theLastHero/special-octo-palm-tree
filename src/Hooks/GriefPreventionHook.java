@@ -5,6 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import com.massivecraft.factions.Factions;
+
+import Listeners.FactionsListener;
 import Listeners.GriefPreventionListener;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Response;
@@ -13,86 +16,87 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class GriefPreventionHook implements Listener {
 
-	public static PlayerWarpGUI pl;
-	public boolean enabled = false;
-	public GriefPrevention gp;
+	private static PlayerWarpGUI pl;
+	private boolean enabled = false;
+	private GriefPrevention gp;
 
 	// +-------------------------------------------------------------------------------------
 	// | Constructor
 	// +-----------------------------------------------------------------------------------
 	public GriefPreventionHook(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
-		check();
+		setEnabled();
+		registerListener();
 	}
 
-	public void deletedClaim() {
-
-	}
-
-	public void check() {
+	/**
+	 * 
+	 */
+	private void setEnabled() {
 		if (pl.getConfig().getBoolean("GriefPrevention.enabled")) {
 			setEnabled(pl.getHookHandler().checkHook("GriefPrevention"));
 		}
 	}
 
-	public GriefPrevention getGp() {
-		return gp;
+	/**
+	 * @param enabled
+	 */
+	private void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
-	public void setGp(GriefPrevention gp) {
-		this.gp = gp;
-	}
-
+	/**
+	 * @return the enabled
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		if (enabled) {
+	/**
+	 * @param enabled
+	 */
+	private void registerListener() {
+		if (this.enabled) {
 			gp = GriefPrevention.instance;
 			Bukkit.getServer().getPluginManager().registerEvents(new GriefPreventionListener(pl), pl);
 		}
 	}
 
-	public boolean configEnabled(String configMaker) {
-		if (pl.getConfig().getBoolean(configMaker)) {
-			return true;
-		}
-		return false;
+	/**
+	 * @param location
+	 * @return
+	 */
+	public Claim getLocationData(Location location) {
+		return this.gp.dataStore.getClaimAt(location, false, null);
 	}
 
-	public Claim isInClaim(Location location) {
-		me.ryanhamshire.GriefPrevention.Claim isClaim = this.gp.dataStore.getClaimAt(location, false, null);
-		return isClaim;
-	}
+	/**
+	 * @param player
+	 * @return
+	 */
+	public String warpHookCheck(Player player) {
 
-	public Response checkWarp(Player player) {
-
-		// if not enabled, or config not enabled or player not in a claim
-		if (!isEnabled() || !configEnabled("GriefPrevention.enabled")) {
-			return new Response(true, "");
+		if (!isEnabled() || !pl.getConfig().getBoolean("GriefPrevention.enabled")) {
+			return null;
 		}
 
-		if (isInClaim(player.getLocation()) == null) {
-			return new Response(false, "GRIEFPREVENTION_NOT_IN_A_CLAIM");
+		if (getLocationData(player.getLocation()) == null) {
+			return "GRIEFPREVENTION_NOT_IN_A_CLAIM";
 		}
 
-		if (configEnabled("GriefPrevention.owner-can-set-warp")
-				&& isInClaim(player.getLocation()).getOwnerName().equalsIgnoreCase(player.getName())) {
-			return new Response(true, "");
+		if (pl.getConfig().getBoolean("GriefPrevention.owner-can-set-warp")
+				&& getLocationData(player.getLocation()).getOwnerName().equalsIgnoreCase(player.getName())) {
+			return null;
 
 		}
 
-		if (configEnabled("GriefPrevention.trusted-player-can-set-warp")
-				&& (isInClaim(player.getLocation()).allowAccess(player) == null)) {
-			return new Response(true, "");
+		if (pl.getConfig().getBoolean("GriefPrevention.trusted-player-can-set-warp")
+				&& (getLocationData(player.getLocation()).allowAccess(player) == null)) {
+			return null;
 		}
 
-		return new Response(false, "GRIEFPREVENTION_NO_PERMISSION");
+		return "GRIEFPREVENTION_NO_PERMISSION";
 
 	}
-
-	
 
 }

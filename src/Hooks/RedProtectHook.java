@@ -5,94 +5,104 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import Listeners.GriefPreventionListener;
 import Listeners.RedProtectListener;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Response;
 import br.net.fabiozumbi12.RedProtect.Region;
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 public class RedProtectHook {
 
-	public static PlayerWarpGUI pl;
-	public boolean enabled = false;
-	public Plugin rp;
-
-	public Plugin getRp() {
-		return rp;
-	}
-
-	public void setRp(Plugin rp) {
-		this.rp = rp;
-	}
+	private static PlayerWarpGUI pl;
+	private boolean enabled = false;
+	private Plugin rp;
 
 	// +-------------------------------------------------------------------------------------
 	// | Constructor
 	// +-----------------------------------------------------------------------------------
 	public RedProtectHook(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
-		check();
+		setEnabled();
+		registerListener();
 	}
 
-	private void check() {
+	/**
+	 * 
+	 */
+	private void setEnabled() {
 		if (pl.getConfig().getBoolean("RedProtect.enabled")) {
 			setEnabled(pl.getHookHandler().checkHook("RedProtect"));
 		}
 	}
 
+	/**
+	 * @param enabled
+	 */
+	private void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	/**
+	 * @return
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		if (enabled) {
+	
+	/**
+	 * 
+	 */
+	private void registerListener() {
+		if (this.enabled) {
 			rp = Bukkit.getPluginManager().getPlugin("RedProtect");
 			Bukkit.getServer().getPluginManager().registerEvents(new RedProtectListener(pl), pl);
 		}
 	}
 
-	public boolean configEnabled(String configMaker) {
-		if (pl.getConfig().getBoolean(configMaker)) {
-			return true;
-		}
-		return false;
+	/**
+	 * @param location
+	 * @return
+	 */
+	public Region getLocationData(Location location) {
+		return RedProtectAPI.getRegion(location);
 	}
 
-	public Region isInClaim(Location location) {
-		Region r = RedProtectAPI.getRegion(location);
-		return r;
-	}
-
-	public Response checkWarp(Player player) {
+	/**
+	 * @param player
+	 * @return
+	 */
+	public String warpHookCheck(Player player) {
 
 		// if not enabled, or config not enabled or player not in a claim
-		if (!isEnabled() || !configEnabled("RedProtect.enabled")) {
-			return new Response(true, "");
+		if (!isEnabled() || !pl.getConfig().getBoolean("RedProtect.enabled")) {
+			return null;
 		}
 		
-		if (isInClaim(player.getLocation()) == null) {
-			return new Response(false, "REDPROTECT_NOT_IN_A_REGION");
+		if (getLocationData(player.getLocation()) == null) {
+			return "REDPROTECT_NOT_IN_A_REGION";
 		}
 
-		if (configEnabled("RedProtect.leader-player-can-set-warp")) {
-			if (isInClaim(player.getLocation()).isLeader(player)) {
-				return new Response(true, "");
+		if (pl.getConfig().getBoolean("RedProtect.leader-player-can-set-warp")) {
+			if (getLocationData(player.getLocation()).isLeader(player)) {
+				return null;
 			}
 		}
 
-		if (configEnabled("RedProtect.admin-player-can-set-warp")) {
-			if (isInClaim(player.getLocation()).isAdmin(player)) {
-				return new Response(true, "");
+		if (pl.getConfig().getBoolean("RedProtect.admin-player-can-set-warp")) {
+			if (getLocationData(player.getLocation()).isAdmin(player)) {
+				return null;
 			}
 		}
 
-		if (configEnabled("RedProtect.member-player-can-set-warp")) {
-			if (isInClaim(player.getLocation()).isMember(player)) {
-				return new Response(true, "");
+		if (pl.getConfig().getBoolean("RedProtect.member-player-can-set-warp")) {
+			if (getLocationData(player.getLocation()).isMember(player)) {
+				return null;
 			}
 		}
 
-		return new Response(false, "REDPROTECT_NO_PERMISSION");
+		return "REDPROTECT_NO_PERMISSION";
 
 	}
 

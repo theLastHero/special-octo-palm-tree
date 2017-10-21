@@ -14,35 +14,48 @@ public class VaultHook {
 	public static PlayerWarpGUI pl;
 	public static Economy econ = null;
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * @param playerWarpGUI
+	 */
 	public VaultHook(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
 		plName = "Vault";
 		checkVault();
 	}
 
+	/**
+	 * 
+	 */
 	private void checkVault() {
 		Plugin pVT = Bukkit.getPluginManager().getPlugin(plName);
 		if ((pVT != null) && (pVT.isEnabled())) {
-			pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName,
-					pl.getLanguageHandler().getMessage("SUCCESS")));
 			setupEconomy();
-			//setupPermissions();
+			consoleMsgPassed(plName);
 			return;
 		}
+		consoleMsgError(plName);
+	}
+
+	/**
+	 * 
+	 */
+	private void consoleMsgPassed(String plName) {
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName,
+				pl.getLanguageHandler().getMessage("SUCCESS")));
+	}
+
+	/**
+	 * 
+	 */
+	private void consoleMsgError(String plName) {
 		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", plName,
 				pl.getLanguageHandler().getMessage("FAILED")));
 		pl.getCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_CRITIAL_ERROR_HOOK", plName));
 	}
 
-	public static Economy getEcon() {
-		return econ;
-	}
-
-	public static void setEcon(Economy econ) {
-		VaultHook.econ = econ;
-	}
-
+	/**
+	 * @return
+	 */
 	private boolean setupEconomy() {
 		if (pl.getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;

@@ -32,7 +32,7 @@ public class RedProtectListener implements Listener {
 				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();
 
-				if (pl.getRedProtectHook().isInClaim(loc) != null) {
+				if (pl.getRedProtectHook().getLocationData(loc) != null) {
 					Bukkit.broadcastMessage("InClaim");
 					pl.getPlayerWarpFileHandler().removeSingleWarpValue(
 							pl.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);

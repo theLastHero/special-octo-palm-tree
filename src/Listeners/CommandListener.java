@@ -391,29 +391,32 @@ public class CommandListener implements CommandExecutor {
 
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * @param player
+	 * @param cmd
+	 * @param args
+	 * @return
+	 */
 	public boolean cmdSet(final Player player, final Command cmd, final String[] args) {
 
 		if (checkPerm(player, "pwarps.setwarp", pl.getLanguageHandler().getMessage("COMMAND_USE_SET"))) {
 			if (!checkArgs(player, args, 2, pl.getLanguageHandler().getMessage("COMMAND_USE_SET"))) {
 				return false;
 			}
-			// chestObject.openGUI(player, 0);
 
-			// check if at set warp limit
+			//GP check
+			checkCanSetWarp(player, pl.getGriefPreventionHook().warpHookCheck(player));
+			//GP check
+			checkCanSetWarp(player, pl.getWorldGuardHook().warpHookCheck(player));
+			//GP check
+			checkCanSetWarp(player, pl.getRedProtectHook().warpHookCheck(player));
+			//GP check
+			checkCanSetWarp(player, pl.getFactionsHook().warpHookCheck(player));
+			//GP check
+			checkCanSetWarp(player, pl.getResidenceHook().warpHookCheck(player));
 
-			Response response = pl.getGriefPreventionHook().checkWarp(player);
-			if (!response.getResponseBool()) {
-				if (response.getErrorMsg().length() > 0) {
-					pl.getMessageHandler().sendPlayerMessage(player,
-							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
-				}
-				return false;
-			}
-
-			response = pl.getWorldGuardHook().checkWarp(player);
+/*			response = pl.getWorldGuardHook().checkWarp(player);
 			if (!response.getResponseBool()) {
 				if (response.getErrorMsg().length() > 0) {
 					pl.getMessageHandler().sendPlayerMessage(player,
@@ -447,7 +450,7 @@ public class CommandListener implements CommandExecutor {
 							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
 				}
 				return false;
-			}
+			}*/
 
 			final int maxSizeAllowed = pl.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player, "pwarps.setwarp",
 					".");
@@ -510,6 +513,27 @@ public class CommandListener implements CommandExecutor {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param player
+	 * @param checkCanSetWarp
+	 */
+	private boolean checkCanSetWarp(final Player player, String checkCanSetWarp) {
+		if (!checkCanSetWarp.equals(null)) {
+				msgPlayerCheckCanSetWarp(player, checkCanSetWarp);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param player
+	 * @param checkCanSetWarp
+	 */
+	private void msgPlayerCheckCanSetWarp(final Player player, String checkCanSetWarp) {
+		pl.getMessageHandler().sendPlayerMessage(player,
+				pl.getLanguageHandler().getMessage(checkCanSetWarp));
 	}
 
 	// -------------------------------------------------------------------------------------
