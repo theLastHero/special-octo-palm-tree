@@ -18,6 +18,11 @@ public class WarpHandler {
 		pl = playerWarpGUI;
 	}
 
+	/**
+	 * @param p
+	 * @param location
+	 * @return
+	 */
 	public String canTeleport(Player p, Location location) {
 
 		if (location == null) {
@@ -37,6 +42,10 @@ public class WarpHandler {
 
 	}
 	
+	/**
+	 * @param location
+	 * @return
+	 */
 	public boolean isBlockedWorld(Location location) {
 		
 		for (int i = 0; i < pl.getConfig().getStringList("teleport.blocked-world").size(); i++) {

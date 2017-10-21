@@ -45,9 +45,7 @@ public class MessageHandler {
 		if (!player.hasPermission("pwarps.color.text")) {
 			str = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', str));
 		}
-
 		return str;
-
 	}
 
 	public void showErrors() {

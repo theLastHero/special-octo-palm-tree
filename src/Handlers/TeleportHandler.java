@@ -25,6 +25,10 @@ public class TeleportHandler {
 		pl = playerWarpGUI;
 	}
 
+	/**
+	 * @param player
+	 * @param location
+	 */
 	public void startTeleport(Player player, Location location) {
 		if (pl.getConfig().getBoolean("teleport.cancel-on-movement")) {
 			tpQueue.put(player.getUniqueId(),
@@ -35,28 +39,36 @@ public class TeleportHandler {
 
 	private class Teleport extends BukkitRunnable {
 		int count;
-		UUID player;
+		Player player;
 		Location loc;
 
+		/**
+		 * @param count
+		 * @param player
+		 * @param loc
+		 */
 		Teleport(int count, UUID player, Location loc) {
 			this.count = count;
-			this.player = player;
+			this.player = Bukkit.getPlayer(player);
 			this.loc = loc;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
 		@Override
 		public void run() {
 			if (count > 0) {
-				pl.getMessageHandler().sendPlayerMessage(Bukkit.getPlayer(player),
-						pl.getLanguageHandler().getMessage("TELEPORT_COUNTDOWN", count));
+				teleportCountMessage(player, count);
 				count--;
 			} else {
 				// Teleport code here
-				Bukkit.getPlayer(player).teleport(loc);
-				tpQueue.remove(player);
+				player.teleport(loc);
+				tpQueue.remove(player.getUniqueId());
 				this.cancel();
-				pl.getMessageHandler().sendPlayerMessage(Bukkit.getPlayer(player),
-						pl.getLanguageHandler().getMessage("TELEPORT_COMPLETED"));
+				teleportCompletedMessage();
 				// call godMode Code
 				/*
 				 * if (PlayerWarpGUI.godModeAfterTP > 0) { godModeQueue.put(player, new
@@ -65,15 +77,38 @@ public class TeleportHandler {
 				 */
 			}
 		}
+
+		/**
+		 * 
+		 */
+		private void teleportCompletedMessage() {
+			pl.getMessageHandler().sendPlayerMessage(player,
+					pl.getLanguageHandler().getMessage("TELEPORT_COMPLETED"));
+		}
+
+		/**
+		 * @param player
+		 * @param count
+		 */
+		private void teleportCountMessage(Player player, int count) {
+			pl.getMessageHandler().sendPlayerMessage(player,
+					pl.getLanguageHandler().getMessage("TELEPORT_COUNTDOWN", count));
+		}
 	}
 
+	/**
+	 * @param p
+	 */
 	public void checkTeleport(Player p) {
 		if (tpQueue.containsKey(p.getUniqueId())) {
 			cancelTeleportPlayer(p);
 		}
 	}
 
-	public void cancelTeleportPlayer(Player p) {
+	/**
+	 * @param p
+	 */
+	private void cancelTeleportPlayer(Player p) {
 		tpQueue.get(p.getUniqueId()).cancel();
 		tpQueue.remove(p.getUniqueId());
 		pl.getMessageHandler().sendPlayerMessage(p, pl.getLanguageHandler().getMessage("TELEPORT_CANCEL_MOVEMENT"));

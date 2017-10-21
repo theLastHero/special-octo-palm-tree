@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import com.google.common.base.Charsets;
@@ -20,7 +21,7 @@ public class ConfigHandler {
 
 	private HashMap<String, String> comments;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ConfigHandler(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
 		this.comments = new HashMap();
@@ -41,13 +42,13 @@ public class ConfigHandler {
 			config.getParentFile().mkdirs();
 		}
 
-		addDef();
+		setupDefaults();
 		saveConfig();
-		addDef();
+		setupDefaults();
 	}
 
-	public void addDef() {
-		File config = new File(pl.pathConfig);
+	public void setupDefaults() {
+		File config = new File(pl.getPathConfig());
 		if (config.exists()) {
 			try {
 				pl.getConfig().load(config);
@@ -64,64 +65,64 @@ public class ConfigHandler {
 
 		}
 		
-		setDefault("language", "en_US", "Available: en_US, en_AU");
+		setDefaultValues("language", "en_US", "Available: en_US, en_AU");
 
-		setDefault("metrics", null, "Metrics");
-		setDefault("metrics.enabled", Boolean.valueOf(true), null);
+		setDefaultValues("metrics", null, "Metrics");
+		setDefaultValues("metrics.enabled", Boolean.valueOf(true), null);
 		
-		setDefault("gui", Integer.valueOf(9), "GUI");
-		setDefault("gui.rows", Integer.valueOf(9), null);
-		setDefault("gui.title", "&2PlayerWarps", null);
-		setDefault("gui.default-playerwarp-icon", "35:9", null);
-		setDefault("gui.default-playerwarp-title", "Go to &6[playername]s &fwarp", null);
-		setDefault("gui.use-playerheads-as-icons", Boolean.valueOf(true), null);
-		setDefault("gui.nextpage-icon", "35:8", null);
+		setDefaultValues("gui", Integer.valueOf(9), "GUI");
+		setDefaultValues("gui.rows", Integer.valueOf(9), null);
+		setDefaultValues("gui.title", "&2PlayerWarps", null);
+		setDefaultValues("gui.default-playerwarp-icon", "35:9", null);
+		setDefaultValues("gui.default-playerwarp-title", "Go to &6[playername]s &fwarp", null);
+		setDefaultValues("gui.use-playerheads-as-icons", Boolean.valueOf(true), null);
+		setDefaultValues("gui.nextpage-icon", "35:8", null);
 
-		setDefault("settings", null, null);
-		setDefault("settings.set-warp-cost", Integer.valueOf(400), null);
-		setDefault("settings.max-title-text-size", Integer.valueOf(40), null);
-		setDefault("settings.max-lore-text-size", Integer.valueOf(40), null);
+		setDefaultValues("settings", null, null);
+		setDefaultValues("settings.set-warp-cost", Integer.valueOf(400), null);
+		setDefaultValues("settings.max-title-text-size", Integer.valueOf(40), null);
+		setDefaultValues("settings.max-lore-text-size", Integer.valueOf(40), null);
 		
-		setDefault("teleport", Boolean.valueOf(true), "Teleport");
-		setDefault("teleport.cancel-on-movement", Boolean.valueOf(true), null);
-		setDefault("teleport.movement-cooldown", Integer.valueOf(9), null);
-		setDefault("teleport.use-safelocation", Boolean.valueOf(true), null);
-		setDefault("teleport.unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" }), null);
-		setDefault("teleport.blocked-world", Arrays.asList(new String[] { "world_nether","world_end" }), null);
+		setDefaultValues("teleport", Boolean.valueOf(true), "Teleport");
+		setDefaultValues("teleport.cancel-on-movement", Boolean.valueOf(true), null);
+		setDefaultValues("teleport.movement-cooldown", Integer.valueOf(9), null);
+		setDefaultValues("teleport.use-safelocation", Boolean.valueOf(true), null);
+		setDefaultValues("teleport.unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" }), null);
+		setDefaultValues("teleport.blocked-world", Arrays.asList(new String[] { "world_nether","world_end" }), null);
 		
-		setDefault("GriefPrevention", null, "GreifProtection");
-		setDefault("GriefPrevention.enabled", Boolean.valueOf(false), null);
-		setDefault("GriefPrevention.owner-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("GriefPrevention.trusted-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("GriefPrevention.delete-warps-if-claim-is-deleted", Boolean.valueOf(true) , null);
+		setDefaultValues("GriefPrevention", null, "GreifProtection");
+		setDefaultValues("GriefPrevention.enabled", Boolean.valueOf(false), null);
+		setDefaultValues("GriefPrevention.owner-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("GriefPrevention.trusted-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("GriefPrevention.delete-warps-if-claim-is-deleted", Boolean.valueOf(true) , null);
 		
-		setDefault("RedProtect", null, "RedProtect");
-		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
-		setDefault("RedProtect.leader-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("RedProtect.admin-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("RedProtect.member-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("RedProtect.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
+		setDefaultValues("RedProtect", null, "RedProtect");
+		setDefaultValues("RedProtect.enabled", Boolean.valueOf(false), null);
+		setDefaultValues("RedProtect.leader-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("RedProtect.admin-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("RedProtect.member-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("RedProtect.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
 		
-		setDefault("Residence", null, "RedProtect");
-		setDefault("Residence.enabled", Boolean.valueOf(false), null);
-		setDefault("Residence.owner-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("Residence.build-permission-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
+		setDefaultValues("Residence", null, "RedProtect");
+		setDefaultValues("Residence.enabled", Boolean.valueOf(false), null);
+		setDefaultValues("Residence.owner-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("Residence.build-permission-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
 
-		setDefault("WorldGuard", null, "WorldGuard");
-		setDefault("WorldGuard.enabled", Boolean.valueOf(false), null);
-		setDefault("WorldGuard.owner-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("WorldGuard.member-player-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , "Not working :(");
+		setDefaultValues("WorldGuard", null, "WorldGuard");
+		setDefaultValues("WorldGuard.enabled", Boolean.valueOf(false), null);
+		setDefaultValues("WorldGuard.owner-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("WorldGuard.member-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , "Not working :(");
 
-		setDefault("Factions", null, "Factions");
-		setDefault("Factions.enabled", Boolean.valueOf(false), null);
-		setDefault("Factions.leader-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("Factions.in-own-territory-can-set-warp", Boolean.valueOf(true) , null);
-		setDefault("Factions.in-wilderness-can-set-warp", Boolean.valueOf(false) , null);
-		setDefault("Factions.delete-warps-if-zone-is-deleted", Boolean.valueOf(true) , null);
+		setDefaultValues("Factions", null, "Factions");
+		setDefaultValues("Factions.enabled", Boolean.valueOf(false), null);
+		setDefaultValues("Factions.leader-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("Factions.in-own-territory-can-set-warp", Boolean.valueOf(true) , null);
+		setDefaultValues("Factions.in-wilderness-can-set-warp", Boolean.valueOf(false) , null);
+		setDefaultValues("Factions.delete-warps-if-zone-is-deleted", Boolean.valueOf(true) , null);
 		
-		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \nDO NOT MODIFY");
+		setDefaultValues("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \nDO NOT MODIFY");
 		
 		/*
 		 * setDefault("flat-file", null, "If file-type: yml, configuration:");
@@ -435,7 +436,7 @@ public class ConfigHandler {
 
 	}
 
-	private void setDefault(String key, Object def, String comment) {
+	private void setDefaultValues(String key, Object def, String comment) {
 		if (def != null) {
 			pl.getConfig().set(key, pl.getConfig().get(key, def));
 		}
@@ -449,58 +450,57 @@ public class ConfigHandler {
 	}
 
 	public void saveConfig() {
-		StringBuilder b = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		pl.getConfig().options().header(null);
 
-		b.append("# +--------------------------------------------------------------------+ #\n"
+		sb.append("# +--------------------------------------------------------------------+ #\n"
 				+ "# <                 PlayerWarpGUI configuration File                   > #\n"
 				+ "# <--------------------------------------------------------------------> #\n"
 				+ "# <       This is the configuration file, feel free to edit it.        > #\n"
 				+ "# <        For more info about cmds and flags, check our Wiki:         > #\n"
 				+ "# <         https://github.com/FabioZumbi12/RedProtect/wiki            > #\n"
-				+ "# +--------------------------------------------------------------------+ #\n" + "#\n")
+				+ "# +--------------------------------------------------------------------+ #\n" + "#\n");
 
-				.append('\n');
-		for (String line : pl.getConfig().getKeys(true)) {
-			String[] key = line.split("\\" + pl.getConfig().options().pathSeparator());
+		for (String configLine : pl.getConfig().getKeys(true)) {
+			String[] configKey = configLine.split("\\" + pl.getConfig().options().pathSeparator());
 			String spaces = new String();
-			for (int i = 0; i < key.length; i++) {
+			for (int i = 0; i < configKey.length; i++) {
 				if (i != 0) {
 					spaces = spaces + " ";
 				}
 			}
-			if (this.comments.containsKey(line)) {
+			if (this.comments.containsKey(configLine)) {
 				if (spaces.isEmpty()) {
-					b.append("\n# " + ((String) this.comments.get(line)).replace("\n", "\n# ")).append('\n');
+					sb.append("\n# " + ((String) this.comments.get(configLine)).replace("\n", "\n# ")).append('\n');
 				} else {
-					b.append(spaces + "# "
-							+ ((String) this.comments.get(line)).replace("\n",
+					sb.append(spaces + "# "
+							+ ((String) this.comments.get(configLine)).replace("\n",
 									new StringBuilder().append("\n").append(spaces).append("# ").toString()))
 							.append('\n');
 				}
 			}
-			Object value = pl.getConfig().get(line);
-			if (!pl.getConfig().isConfigurationSection(line)) {
-				if ((value instanceof String)) {
-					b.append(spaces + key[(key.length - 1)] + ": '" + value + "'\n");
-				} else if ((value instanceof List)) {
-					b.append(spaces + key[(key.length - 1)] + ":\n");
-					for (Object lineCfg : (List<?>) value) {
+			Object configValue = pl.getConfig().get(configLine);
+			if (!pl.getConfig().isConfigurationSection(configLine)) {
+				if ((configValue instanceof String)) {
+					sb.append(spaces + configKey[(configKey.length - 1)] + ": '" + configValue + "'\n");
+				} else if ((configValue instanceof List)) {
+					sb.append(spaces + configKey[(configKey.length - 1)] + ":\n");
+					for (Object lineCfg : (List<?>) configValue) {
 						if ((lineCfg instanceof String)) {
-							b.append(spaces + "- '" + lineCfg + "'\n");
+							sb.append(spaces + "- '" + lineCfg + "'\n");
 						} else {
-							b.append(spaces + "- " + lineCfg + "\n");
+							sb.append(spaces + "- " + lineCfg + "\n");
 						}
 					}
 				} else {
-					b.append(spaces + key[(key.length - 1)] + ": " + value + "\n");
+					sb.append(spaces + configKey[(configKey.length - 1)] + ": " + configValue + "\n");
 				}
 			} else {
-				b.append(spaces + key[(key.length - 1)] + ":\n");
+				sb.append(spaces + configKey[(configKey.length - 1)] + ":\n");
 			}
 		}
 		try {
-			Files.write(b, new File(pl.pathMain, "config.yml"), Charsets.UTF_8);
+			Files.write(sb, new File(pl.getPathMain(), "config.yml"), Charsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

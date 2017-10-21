@@ -37,61 +37,95 @@ public class PlayerWarpFileHandler {
 		}
 	}
 
-	// -----------------------------------------------------
-	// loadAllWarpObjects
-	// -----------------------------------------------------
-	public void createAllFromWarpFiles(boolean verbalise) {
-		UUID playerUUID = null;
+	/**
+	 * 
+	 */
+	public void createAllWarpsFromFile() {
 		int warpFilesCount = 0;
 		int warpCount = 0;
 
 		File warpsFolder = new File(pl.getPathWarps());
 
-		if (!(warpsFolder.listFiles() == null)) {
+		if (!(new File(pl.getPathWarps()).listFiles() == null)) {
 			for (File file : warpsFolder.listFiles()) {
-				;
-				if (isValidPlayer(playerUUID = getUUIDFromString(file.getName()))) {
+				if (isValidPlayer(getUUIDFromString(file.getName()))) {
 					// increase file count
 					warpFilesCount++;
-
 					// increase warpCount & Create warp objects
-					warpCount = warpCount + createPlayerWarpObjectFromFile(file, playerUUID);
-
+					warpCount = warpCount + createWarpFromFile(file, getUUIDFromString(file.getName()));
 				}
 			}
 		}
+		consoleMsgWarpCount(warpFilesCount, warpCount);
+	}
 
-		if (verbalise) {
+	/**
+	 * @param warpFilesCount
+	 * @param warpCount
+	 */
+	public void consoleMsgWarpCount(int warpFilesCount, int warpCount) {
+		if (pl.isStartup()) {
 			pl.getMessageHandler().sendConsoleMessage(
 					pl.getLanguageHandler().getMessage("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount));
 			pl.getMessageHandler()
 					.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_WARPS_COUNT", "" + warpCount));
 		}
-
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	/**
+	 * @param uuid
+	 * @return
+	 */
 	public File createPlayerWarpFile(UUID uuid) {
 		File f = new File(pl.getPathWarps() + uuid.toString() + ".yml");
 		pl.getOtherFunctions().copy(pl.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	/**
+	 * @param playerDataFile
+	 * @param location
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param lore
+	 * @param ban
+	 * @return
+	 */
 	public boolean addWarpToPlayerWarpFile(File playerDataFile, Location location, String name, String title,
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
-		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 
+		FileConfiguration warpConfig = setWarpConfigData(playerDataFile, location, name, title, icon, lore, ban);
+		return savePlayerDataFile(playerDataFile, warpConfig);
+	}
+
+	/**
+	 * @param playerDataFile
+	 * @param location
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param lore
+	 * @param ban
+	 * @return
+	 */
+	private FileConfiguration setWarpConfigData(File playerDataFile, Location location, String name, String title,
+			String icon, ArrayList<String> lore, ArrayList<String> ban) {
+		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 		warpConfig.set("warps." + name, "");
 		warpConfig.set("warps." + name + ".location", pl.getOtherFunctions().loc2str(location));
 		warpConfig.set("warps." + name + ".title", title);
 		warpConfig.set("warps." + name + ".icon", icon);
 		warpConfig.set("warps." + name + ".lore", lore);
 		warpConfig.set("warps." + name + ".ban", ban);
+		return warpConfig;
+	}
+
+	/**
+	 * @param playerDataFile
+	 * @param warpConfig
+	 */
+	private boolean savePlayerDataFile(File playerDataFile, FileConfiguration warpConfig) {
 		try {
 			warpConfig.save(playerDataFile);
 			return true;
@@ -99,71 +133,53 @@ public class PlayerWarpFileHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return false;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
-	public boolean updateSingleElementWarpFile(File playerDataFile, String warpName, String subName, String value) {
+	/**
+	 * @param playerDataFile
+	 * @param warpName
+	 * @param subName
+	 * @param value
+	 * @return
+	 */
+	public boolean setSingleWarpValue(File playerDataFile, String warpName, String subName, String value) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
-
 		warpConfig.set("warps." + warpName + "." + subName, value);
-		try {
-			warpConfig.save(playerDataFile);
-			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
-	public boolean deleteSingleWarpFromFile(File playerDataFile, String warpName) {
+	/**
+	 * @param playerDataFile
+	 * @param warpName
+	 * @return
+	 */
+	public boolean removeSingleWarpValue(File playerDataFile, String warpName) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
-
 		warpConfig.set("warps." + warpName, null);
-		try {
-			warpConfig.save(playerDataFile);
-			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
-	public boolean setStringToArrayWarpFile(File playerDataFile, String warpName, String arrayName,
+	/**
+	 * @param playerDataFile
+	 * @param warpName
+	 * @param arrayName
+	 * @param aArray
+	 * @return
+	 */
+	public boolean setsingleWarpArray(File playerDataFile, String warpName, String arrayName,
 			ArrayList<String> aArray) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
-
-		// aArray.add(newElement);
 		warpConfig.set("warps." + warpName + "." + arrayName, aArray);
-
-		try {
-			warpConfig.save(playerDataFile);
-			return true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
 
-
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
-	public File checkPlayerWarpsExsits(UUID uuid) {
+	/**
+	 * @param uuid
+	 * @return
+	 */
+	public File checkWarpsExsits(UUID uuid) {
 		File warpsFolder = new File(pl.getPathWarps());
-
 		if (!(warpsFolder.listFiles() == null)) {
 			for (File file : warpsFolder.listFiles()) {
 				if (file.getName().equals(uuid.toString() + ".yml")) {
@@ -174,16 +190,26 @@ public class PlayerWarpFileHandler {
 		return createPlayerWarpFile(uuid);
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	/**
+	 * @param file
+	 * @param playerUUID
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public int createPlayerWarpObjectFromFile(File file, UUID playerUUID) {
+	public int createWarpFromFile(File file, UUID playerUUID) {
+		return loadCreateWarp(file, playerUUID, 0);
+	}
 
-		int warpCount = 0;
+	/**
+	 * @param file
+	 * @param playerUUID
+	 * @param warpCount
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private int loadCreateWarp(File file, UUID playerUUID, int warpCount) {
 		FileConfiguration warpsFile = new YamlConfiguration();
 		try {
-
 			warpsFile.load(file);
 			Set<String> keys = warpsFile.getConfigurationSection("warps").getKeys(false);
 
@@ -195,24 +221,42 @@ public class PlayerWarpFileHandler {
 				ArrayList<String> loreList = (ArrayList<String>) warpsFile.getList("warps." + key + ".lore");
 				ArrayList<String> banList = (ArrayList<String>) warpsFile.getList("warps." + key + ".ban");
 
-				try {
-					pl.getPlayerWarpObjectHandler().createWarpObjects(playerUUID, warpName, warpLocation, warpTitle,
-							warpIcon, loreList, banList);
-					warpCount++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				warpCount = createWarp(playerUUID, warpCount, warpName, warpLocation, warpIcon, warpTitle, loreList,
+						banList);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return warpCount;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	/**
+	 * @param playerUUID
+	 * @param warpCount
+	 * @param warpName
+	 * @param warpLocation
+	 * @param warpIcon
+	 * @param warpTitle
+	 * @param loreList
+	 * @param banList
+	 * @return
+	 */
+	private int createWarp(UUID playerUUID, int warpCount, String warpName, String warpLocation, String warpIcon,
+			String warpTitle, ArrayList<String> loreList, ArrayList<String> banList) {
+		try {
+			pl.getPlayerWarpObjectHandler().createWarpObjects(playerUUID, warpName, warpLocation, warpTitle, warpIcon,
+					loreList, banList);
+			warpCount++;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return warpCount;
+	}
+
+	/**
+	 * @param fileName
+	 * @return
+	 */
 	public UUID getUUIDFromString(String fileName) {
 		// check if file name is a validate UUID
 		UUID fileUUID = null;
@@ -224,9 +268,11 @@ public class PlayerWarpFileHandler {
 		return fileUUID;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * @param playerUUID
+	 * @return
+	 */
 	public boolean isValidPlayer(UUID playerUUID) {
 		try {
 			Bukkit.getOfflinePlayer(playerUUID).hasPlayedBefore();

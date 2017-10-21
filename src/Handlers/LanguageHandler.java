@@ -1,130 +1,100 @@
 package Handlers;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
+import PlayerWarpGUI.LinkedProperties;
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class LanguageHandler {
 
 	public static PlayerWarpGUI pl;
+	LinkedProperties langProperties;
+	LinkedProperties defaultLanguageFile = new LinkedProperties();
 
 	// +-------------------------------------------------------------------------------------
 	// | Constructor
 	// +-----------------------------------------------------------------------------------
 	public LanguageHandler(PlayerWarpGUI playerWarpGUI) {
 		pl = playerWarpGUI;
-
 	}
 
-	// sets plugin locale
-	public void setLocale(String locale) {
-		String[] localeString = locale.split("_");
-		pl.setLocale(new Locale(localeString[0], localeString[1]));
-	}
-
-	public void setResourceBundle() {
-
-		ResourceBundle rb = null;
-		try {
-
-			Bukkit.broadcastMessage("LOCALE: "+pl.getLocale());
-			rb = ResourceBundle.getBundle("lang", pl.getLocale(), pl.getClassLoaderThis());
-		} catch (MissingResourceException e) {
-			// TODO Auto-generated catch block
-			//pl.messageHandler.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
-			//pl.messageHandler.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
-			setupLocale(pl.getDefaultLocale());
-		}
-
-		if (!rb.getLocale().toString().equals(pl.getLocale().toString())) {
-			//pl.messageHandler.sendConsoleMessage("Could not find language file >> " + pl.getLocale().toString());
-			//pl.messageHandler.sendConsoleMessage("Reverting back to default language >> " + pl.getDefaultLocale());
-			setLocale(pl.getDefaultLocale());
-		}
-
-		pl.setResourceBundle(rb);
-	}
-
-	public void setLanguageFile() {
-		pl.setLanganugeFile(new File(pl.pathLangs));
-	}
-
-	public void setClassLoader() {
-		ClassLoader cl = null;
-		try {
-			cl = new URLClassLoader(new URL[] { pl.getLanganugeFile().toURI().toURL() });
-		} catch (MalformedURLException e) {
-
-		}
-		pl.setClassLoader(cl);
-	}
-
-	public void setFormatter() {
-		pl.setLanguageFormat(new MessageFormat(""));
-	}
-
-	public void setFormatterLocale() {
-		pl.getLanguageFormat().setLocale(pl.getLocale());
-	}
-
-	public void setupLocale(String s) {
-		Bukkit.broadcastMessage("FILENAME: "+s);
-		setLocale(s);
-		setFormatter();
-		setLanguageFile();
-		setClassLoader();
-		setResourceBundle();
-		setFormatterLocale();
-		pl.getMessageHandler().sendConsoleMessage( getMessage("CONSOLE_MSG_LANGUAGE_FILE", pl.getLocale().toString()));
-	}
-	
-	public void setupLocaleSilent(String s) {
-		Bukkit.broadcastMessage("SILENT FILENAME: "+s);
-		setLocale(s);
-		setFormatter();
-		setLanguageFile();
-		setClassLoader();
-		setResourceBundle();
-		setFormatterLocale();
-	}
-
-	public String getMessage(String key, Object... args) {
-		pl.getLanguageFormat().applyPattern(pl.getResourceBundle().getString(key));
-		String output = pl.getLanguageFormat().format(args);
-		return output;
-	}
-
-	public void checkLanguageFileExsists(String fn) {
-		String fileName = "lang_" + fn + ".properties";
+	public boolean checkLanguageFileExsists(String fn) {
+		String fileName = fn + ".properties";
 		File languageFile = new File(pl.getPathLangs() + fileName);
 
 		// Check it exsists
 		if (!languageFile.exists()) {
-			//Bukkit.getConsoleSender().sendMessage("Creating language file >> " + fn);
-			languageFile.getParentFile().mkdirs();
-			pl.getOtherFunctions().copy(pl.getResource("defaults/" + fileName), languageFile);
-
+			return false;
 		}
+		return true;
+	}
+
+	public void loadLanguageFile(String lang) {
+
+		String error = "Cannot load default lang file.";
+		String error2 = "Cannot load language file. Reverting back to default language file.";
+
+		pl.setLanguageFormat(new MessageFormat(""));
+		setDefaultLangProperties(error);
+		setLangProperties(lang, error);
 
 	}
-	
+
+	/**
+	 * @param error
+	 */
+	private void setDefaultLangProperties(String error) {
+		try {
+			defaultLanguageFile.load(pl.getResource("lang_.properties"));
+		} catch (FileNotFoundException e) {
+			pl.getCriticalErrors().add(error);
+		} catch (IOException e1) {
+			pl.getCriticalErrors().add(error);
+		}
+	}
+
+	/**
+	 * @param lang
+	 * @param error
+	 */
+	private void setLangProperties(String lang, String error) {
+		langProperties = new LinkedProperties(defaultLanguageFile);
+		try {
+			langProperties.load(new FileInputStream(new File(pl.pathLangs + lang + ".properties")));
+		} catch (FileNotFoundException e) {
+			try {
+				langProperties.load(pl.getResource("lang_.properties"));
+			} catch (IOException e1) {
+				pl.getCriticalErrors().add(error);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public String getMessage(String key, Object... args) {
+		pl.getLanguageFormat().applyPattern(langProperties.getProperty(key).toString());
+		String output = pl.getLanguageFormat().format(args);
+		return output;
+	}
+
 	public String statusValue(boolean compare) {
-		String status = pl.getLanguageHandler().getMessage("SUCCESS");
+		String status = langProperties.getProperty("SUCCESS");
 		if (!compare) {
-			status = pl.getLanguageHandler().getMessage("FAILED");
+			status = langProperties.getProperty("FAILED");
 		}
 		return status;
 
 	}
-
 
 }

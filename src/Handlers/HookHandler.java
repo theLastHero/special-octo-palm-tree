@@ -7,7 +7,8 @@ import PlayerWarpGUI.PlayerWarpGUI;
 
 public class HookHandler {
 
-	public static PlayerWarpGUI pl;
+	private static PlayerWarpGUI pl;
+	private String status = "FAILED";
 
 	// +-------------------------------------------------------------------------------------
 	// | Constructor
@@ -18,14 +19,44 @@ public class HookHandler {
 
 	public boolean checkHook(String pluginName) {
 		Plugin pHook = Bukkit.getPluginManager().getPlugin(pluginName);
-		if ((pHook != null) && (pHook.isEnabled())) {
-			pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
-					pl.getLanguageHandler().getMessage("SUCCESS")));
+
+		if (validateHook(pluginName, pHook)) {
 			return true;
 		}
+
+		consoleStatusMessage(pluginName);
+		addNonCriticalError(pluginName);
+		
+		return false;
+	}
+
+	/**
+	 * @param pluginName
+	 */
+	private void addNonCriticalError(String pluginName) {
+		if (status == "FAILED") {
+			pl.getNonCriticalErrors()
+					.add(pl.getLanguageHandler().getMessage("CONSOLE_NONCRITIAL_ERROR_HOOK", pluginName));
+		}
+	}
+
+	/**
+	 * @param pluginName
+	 */
+	private void consoleStatusMessage(String pluginName) {
 		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
-				pl.getLanguageHandler().getMessage("FAILED")));
-		pl.getNonCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_NONCRITIAL_ERROR_HOOK", pluginName));
+				pl.getLanguageHandler().getMessage(status)));
+	}
+
+	/**
+	 * @param pluginName
+	 * @param pHook
+	 */
+	private boolean validateHook(String pluginName, Plugin pHook) {
+		if ((pHook != null) && (pHook.isEnabled())) {
+			status = "SUCCESS";
+			return true;
+		}
 		return false;
 	}
 

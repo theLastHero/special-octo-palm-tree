@@ -12,7 +12,6 @@ import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
 
 import Listeners.FactionsListener;
-import Listeners.ResidenceListener;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Response;
 
@@ -30,16 +29,25 @@ public class FactionsHook implements Listener {
 		check();
 	}
 
+	/**
+	 * 
+	 */
 	public void check() {
 		if (pl.getConfig().getBoolean("Factions.enabled")) {
 			setEnabled(pl.getHookHandler().checkHook("Factions"));
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public Factions getFa() {
 		return fa;
 	}
 
+	/**
+	 * @param fa
+	 */
 	public void setFa(Factions fa) {
 		this.fa = fa;
 	}
@@ -64,13 +72,10 @@ public class FactionsHook implements Listener {
 	}
 
 	public Faction isInClaim(Location location) {
-		Faction faction = null;
-		faction = BoardColl.get().getFactionAt(PS.valueOf(location));
-		return faction;
+		return BoardColl.get().getFactionAt(PS.valueOf(location));
 	}
 
 	public Response checkWarp(Player player) {
-
 
 		// if not enabled, or config not enabled or player not in a claim
 		if (!isEnabled() || !configEnabled("Factions.enabled")) {

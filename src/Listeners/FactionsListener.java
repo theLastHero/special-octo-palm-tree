@@ -51,8 +51,8 @@ public class FactionsListener implements Listener {
 						Bukkit.broadcastMessage("deleted chunk: " + chunk.asBukkitChunk());
 
 						if (world.getChunkAt(loc) == chunk.asBukkitChunk()) {
-							pl.getPlayerWarpFileHandler().deleteSingleWarpFromFile(
-									pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(playerUUID), warpName);
+							pl.getPlayerWarpFileHandler().removeSingleWarpValue(
+									pl.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 
 							pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();
 							pl.getMessageHandler().sendPlayerMessage(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),

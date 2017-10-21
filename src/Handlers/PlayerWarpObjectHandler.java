@@ -21,14 +21,25 @@ public class PlayerWarpObjectHandler {
 	
 
 	
-	// -----------------------------------------------------
-	// createWarpObjects
-	// -----------------------------------------------------
+	/**
+	 * @param playerUUID
+	 * @param warpName
+	 * @param warpLocation
+	 * @param title
+	 * @param icon
+	 * @param loreList
+	 * @param banList
+	 */
 	public void createWarpObjects(UUID playerUUID, String warpName, String warpLocation, String title, String icon,
 			ArrayList<String> loreList, ArrayList<String> banList) {
 		new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon, loreList, banList);
 	}
 	
+	/**
+	 * @param banList
+	 * @param playerUUIDString
+	 * @return
+	 */
 	public boolean isPlayerOnBannedList(ArrayList<String> banList, String playerUUIDString) {
 		for (int i = 0; i < banList.size(); i++) {
 			if(banList.get(i).equals(playerUUIDString)) {
@@ -38,9 +49,10 @@ public class PlayerWarpObjectHandler {
 		return false;
 	}
 	
-	// ------------------------------------------------------
-	// getPlayerWarpObjects - return array of playerworpobjects
-	// ------------------------------------------------------
+	/**
+	 * @param playerUUID
+	 * @return
+	 */
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
 		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
 		
@@ -52,9 +64,11 @@ public class PlayerWarpObjectHandler {
 		return playWarpObjectsList;
 	}
 	
-	// ------------------------------------------------------
-	// getPlayerWarpObject - returns single object
-	// ------------------------------------------------------
+	/**
+	 * @param playerUUID
+	 * @param warpName
+	 * @return
+	 */
 	public PlayerWarpObject getPlayerWarpObject(UUID playerUUID, String warpName) {
 		for (PlayerWarpObject pwo : pl.getPlayerWarpObjects()) {
 			if (pwo.getPlayerUUID().equals(playerUUID) && pwo.getWarpName().equals(warpName)) {
@@ -64,6 +78,11 @@ public class PlayerWarpObjectHandler {
 		return null;
 	}
 	
+	/**
+	 * @param playerUUID
+	 * @param warpName
+	 * @return
+	 */
 	public boolean checkPlayerWarpObject(UUID playerUUID, String warpName) {
 		if(getPlayerWarpObject(playerUUID, warpName) != null) {
 			return true;
@@ -71,33 +90,43 @@ public class PlayerWarpObjectHandler {
 		return false;
 	}
 	
-	
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	/**
+	 * @param player
+	 * @param perm
+	 * @param splitter
+	 * @return
+	 */
 	public int geMaxAmountAllowedFromPerm(Player player, String perm, String splitter) {
-		int returnAllowed = 1;
-
+		int maxAllowed = 1;
 		for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
+			maxAllowed = permSubCount(perm, splitter, maxAllowed, permission);
+		}
+		return maxAllowed;
+	}
 
-			if (permission.getPermission().equals(perm)) {
-				returnAllowed = 1;
-			}
+	/**
+	 * @param perm
+	 * @param splitter
+	 * @param returnAllowed
+	 * @param permission
+	 * @return
+	 */
+	private int permSubCount(String perm, String splitter, int returnAllowed, PermissionAttachmentInfo permission) {
+		if (permission.getPermission().equals(perm)) {
+			returnAllowed = 1;
+		}
 
-			if (permission.getPermission().startsWith(perm+splitter)) {
-				String result[] = permission.getPermission().split(perm+splitter);
-				String returnValue = result[result.length - 1];
-				if (returnValue != null && pl.getCalc().isInt(returnValue)) {
-					int validInt = Integer.parseInt(returnValue);
-					if (validInt > returnAllowed) {
-						returnAllowed = validInt;
-					}
+		if (permission.getPermission().startsWith(perm+splitter)) {
+			String result[] = permission.getPermission().split(perm+splitter);
+			String returnValue = result[result.length - 1];
+			if (returnValue != null && pl.getCalc().isInt(returnValue)) {
+				int validInt = Integer.parseInt(returnValue);
+				if (validInt > returnAllowed) {
+					returnAllowed = validInt;
 				}
-
 			}
 
 		}
-
 		return returnAllowed;
 	}
 }

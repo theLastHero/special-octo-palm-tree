@@ -33,7 +33,7 @@ public class GriefPreventionListener implements Listener {
 				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID()).getUniqueId();
 
 				if (pl.getGriefPreventionHook().isInClaim(loc) != null) {
-					pl.getPlayerWarpFileHandler().deleteSingleWarpFromFile(pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(playerUUID),
+					pl.getPlayerWarpFileHandler().removeSingleWarpValue(pl.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID),
 							warpName);
 
 					pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();

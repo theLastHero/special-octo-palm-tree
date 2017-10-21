@@ -36,8 +36,8 @@ public class ResidenceListener implements Listener {
 						.getUniqueId();
 
 				if (pl.getResidenceHook().isInClaim(loc) != null) {
-					pl.getPlayerWarpFileHandler().deleteSingleWarpFromFile(
-							pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(playerUUID), warpName);
+					pl.getPlayerWarpFileHandler().removeSingleWarpValue(
+							pl.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 
 					pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();
 					pl.getMessageHandler().sendPlayerMessage(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),pl.getLanguageHandler().getMessage("RESIDENCE_CLAIM_DELETED", warpName));
