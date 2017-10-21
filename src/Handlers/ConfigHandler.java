@@ -28,10 +28,10 @@ public class ConfigHandler {
 	
 	public void msg() {
 		if(pl.getConfig() != null) {
-		pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getConfigName()));
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getConfigName()));
 		} else {
 			pl.getCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_ERROR_CRITIAL_FILENOTFOUND", pl.getConfigName()));
-			pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getLanguageHandler().getMessage("FAILED")));	
+			pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", pl.getLanguageHandler().getMessage("FAILED")));	
 		}
 	}
 
@@ -64,8 +64,6 @@ public class ConfigHandler {
 
 		}
 		
-		//config version
-		
 		setDefault("language", "en_US", "Available: en_US, en_AU");
 
 		setDefault("metrics", null, "Metrics");
@@ -79,8 +77,7 @@ public class ConfigHandler {
 		setDefault("gui.use-playerheads-as-icons", Boolean.valueOf(true), null);
 		setDefault("gui.nextpage-icon", "35:8", null);
 
-		
-		setDefault("settings", "35:9", null);
+		setDefault("settings", null, null);
 		setDefault("settings.set-warp-cost", Integer.valueOf(400), null);
 		setDefault("settings.max-title-text-size", Integer.valueOf(40), null);
 		setDefault("settings.max-lore-text-size", Integer.valueOf(40), null);
@@ -92,24 +89,40 @@ public class ConfigHandler {
 		setDefault("teleport.unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" }), null);
 		setDefault("teleport.blocked-world", Arrays.asList(new String[] { "world_nether","world_end" }), null);
 		
-		
 		setDefault("GriefPrevention", null, "GreifProtection");
 		setDefault("GriefPrevention.enabled", Boolean.valueOf(false), null);
 		setDefault("GriefPrevention.owner-can-set-warp", Boolean.valueOf(true) , null);
 		setDefault("GriefPrevention.trusted-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("GriefPrevention.delete-warps-if-claim-is-deleted", Boolean.valueOf(true) , null);
 		
 		setDefault("RedProtect", null, "RedProtect");
-		setDefault("RedProtect.enabled", Boolean.valueOf(true), null);
+		setDefault("RedProtect.enabled", Boolean.valueOf(false), null);
 		setDefault("RedProtect.leader-player-can-set-warp", Boolean.valueOf(true) , null);
 		setDefault("RedProtect.admin-player-can-set-warp", Boolean.valueOf(true) , null);
 		setDefault("RedProtect.member-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("RedProtect.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
+		
+		setDefault("Residence", null, "RedProtect");
+		setDefault("Residence.enabled", Boolean.valueOf(false), null);
+		setDefault("Residence.owner-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("Residence.build-permission-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , null);
 
 		setDefault("WorldGuard", null, "WorldGuard");
 		setDefault("WorldGuard.enabled", Boolean.valueOf(false), null);
 		setDefault("WorldGuard.owner-can-set-warp", Boolean.valueOf(true) , null);
 		setDefault("WorldGuard.member-player-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("Residence.delete-warps-if-region-is-deleted", Boolean.valueOf(true) , "Not working :(");
+
+		setDefault("Factions", null, "Factions");
+		setDefault("Factions.enabled", Boolean.valueOf(false), null);
+		setDefault("Factions.leader-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("Factions.in-own-territory-can-set-warp", Boolean.valueOf(true) , null);
+		setDefault("Factions.in-wilderness-can-set-warp", Boolean.valueOf(false) , null);
+		setDefault("Factions.delete-warps-if-zone-is-deleted", Boolean.valueOf(true) , null);
 		
 		setDefault("config-version", Double.valueOf(1.1D), "Config.yml compatability version. \nDO NOT MODIFY");
+		
 		/*
 		 * setDefault("flat-file", null, "If file-type: yml, configuration:");
 		 * setDefault("flat-file.region-per-file", Boolean.valueOf(false),
@@ -445,8 +458,7 @@ public class ConfigHandler {
 				+ "# <       This is the configuration file, feel free to edit it.        > #\n"
 				+ "# <        For more info about cmds and flags, check our Wiki:         > #\n"
 				+ "# <         https://github.com/FabioZumbi12/RedProtect/wiki            > #\n"
-				+ "# +--------------------------------------------------------------------+ #\n" + "#\n" + "# Notes:\n"
-				+ "# Lists are [object1, object2, ...]\n" + "# Strings containing the char & always need to be quoted")
+				+ "# +--------------------------------------------------------------------+ #\n" + "#\n")
 
 				.append('\n');
 		for (String line : pl.getConfig().getKeys(true)) {

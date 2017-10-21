@@ -3,18 +3,14 @@ package Handlers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import Objects.PlayerWarpObject;
 import PlayerWarpGUI.PlayerWarpGUI;
 
 public class PlayerWarpFileHandler {
@@ -35,7 +31,7 @@ public class PlayerWarpFileHandler {
 	public void checkWarpFolder() {
 		File directory = new File(pl.getPathWarps());
 		if (!directory.exists()) {
-			pl.messageHandler.sendConsoleMessage(
+			pl.getMessageHandler().sendConsoleMessage(
 					pl.getLanguageHandler().getMessage("CONSOLE_MSG_CREATE_FOLDER", pl.getWarpsName()));
 			directory.mkdirs();
 		}

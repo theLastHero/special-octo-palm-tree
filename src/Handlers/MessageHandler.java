@@ -19,9 +19,9 @@ public class MessageHandler {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&',
 				pl.getLanguageHandler().getMessage("MESSAGE_PREFIX") + msg));
 	}
-	
+
 	public void sendPlayerMessageBare(Player player, String msg) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&',msg));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
 
 	public void sendConsoleMessage(String msg) {
@@ -39,6 +39,15 @@ public class MessageHandler {
 		sendConsoleMessageBare("&b'   `-' ` '  `  `-' ' ' &3`.'.' ` ' ' ' '   &a`-' `-' `-' ");
 		startupStatus();
 		showErrors();
+	}
+
+	public String ColorVariables(Player player, String str) {
+		if (!player.hasPermission("pwarps.color.text")) {
+			str = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', str));
+		}
+
+		return str;
+
 	}
 
 	public void showErrors() {

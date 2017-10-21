@@ -1,10 +1,13 @@
 package Hooks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import Listeners.RedProtectListener;
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Response;
 import br.net.fabiozumbi12.RedProtect.Region;
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
 
@@ -32,7 +35,7 @@ public class RedProtectHook {
 
 	private void check() {
 		if (pl.getConfig().getBoolean("RedProtect.enabled")) {
-			setEnabled(pl.hookHandler.checkHook("RedProtect"));
+			setEnabled(pl.getHookHandler().checkHook("RedProtect"));
 		}
 	}
 
@@ -44,6 +47,7 @@ public class RedProtectHook {
 		this.enabled = enabled;
 		if (enabled) {
 			rp = Bukkit.getPluginManager().getPlugin("RedProtect");
+			Bukkit.getServer().getPluginManager().registerEvents(new RedProtectListener(pl), pl);
 		}
 	}
 
@@ -54,8 +58,8 @@ public class RedProtectHook {
 		return false;
 	}
 
-	public Region isInClaim(Player player) {
-		Region r = RedProtectAPI.getRegion(player.getLocation());
+	public Region isInClaim(Location location) {
+		Region r = RedProtectAPI.getRegion(location);
 		return r;
 	}
 
@@ -66,59 +70,29 @@ public class RedProtectHook {
 			return new Response(true, "");
 		}
 		
-		if (isInClaim(player) == null) {
+		if (isInClaim(player.getLocation()) == null) {
 			return new Response(false, "REDPROTECT_NOT_IN_A_REGION");
 		}
 
 		if (configEnabled("RedProtect.leader-player-can-set-warp")) {
-			if (isInClaim(player).isLeader(player)) {
+			if (isInClaim(player.getLocation()).isLeader(player)) {
 				return new Response(true, "");
 			}
 		}
 
 		if (configEnabled("RedProtect.admin-player-can-set-warp")) {
-			if (isInClaim(player).isAdmin(player)) {
+			if (isInClaim(player.getLocation()).isAdmin(player)) {
 				return new Response(true, "");
 			}
 		}
 
 		if (configEnabled("RedProtect.member-player-can-set-warp")) {
-			if (isInClaim(player).isMember(player)) {
+			if (isInClaim(player.getLocation()).isMember(player)) {
 				return new Response(true, "");
 			}
 		}
 
 		return new Response(false, "REDPROTECT_NO_PERMISSION");
-
-	}
-
-	public class Response {
-
-		private String errorMsg;
-		private boolean responseBool;
-
-		public Response(boolean showError, String errorMsg) {
-
-			this.responseBool = showError;
-			this.errorMsg = errorMsg;
-
-		}
-
-		public String getErrorMsg() {
-			return errorMsg;
-		}
-
-		public void setErrorMsg(String errorMsg) {
-			this.errorMsg = errorMsg;
-		}
-
-		public boolean getResponseBool() {
-			return responseBool;
-		}
-
-		public void setresponseBool(boolean responseBool) {
-			this.responseBool = responseBool;
-		}
 
 	}
 

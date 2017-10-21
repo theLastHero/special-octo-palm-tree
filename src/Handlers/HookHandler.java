@@ -19,11 +19,11 @@ public class HookHandler {
 	public boolean checkHook(String pluginName) {
 		Plugin pHook = Bukkit.getPluginManager().getPlugin(pluginName);
 		if ((pHook != null) && (pHook.isEnabled())) {
-			pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
+			pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
 					pl.getLanguageHandler().getMessage("SUCCESS")));
 			return true;
 		}
-		pl.messageHandler.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", pluginName,
 				pl.getLanguageHandler().getMessage("FAILED")));
 		pl.getNonCriticalErrors().add(pl.getLanguageHandler().getMessage("CONSOLE_NONCRITIAL_ERROR_HOOK", pluginName));
 		return false;

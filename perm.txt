@@ -16,3 +16,6 @@ playerwarpgui.setlore
 
 # Allows the use of /pwarps ban & unban 
 playerwarpgui.ban 
+
+#Allow use of color codes in text
+playerwarpgui.color.text

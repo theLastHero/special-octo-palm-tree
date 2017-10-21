@@ -37,12 +37,12 @@ public class PlayerWarpObject {
 		this.setLoreList(loreList);
 		this.setBanList(banList);
 		
-		PlayerWarpGUI.playerWarpObjects.add(this);
+		pl.getPlayerWarpObjects().add(this);
 
 	}
 	
 	public void removePlayerWarpObject() {
-		pl.playerWarpObjects.remove(this);
+		pl.getPlayerWarpObjects().remove(this);
 	}
 
 

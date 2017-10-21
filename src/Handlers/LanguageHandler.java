@@ -1,9 +1,6 @@
 package Handlers;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -11,6 +8,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.bukkit.Bukkit;
 
 import PlayerWarpGUI.PlayerWarpGUI;
 
@@ -36,6 +35,8 @@ public class LanguageHandler {
 
 		ResourceBundle rb = null;
 		try {
+
+			Bukkit.broadcastMessage("LOCALE: "+pl.getLocale());
 			rb = ResourceBundle.getBundle("lang", pl.getLocale(), pl.getClassLoaderThis());
 		} catch (MissingResourceException e) {
 			// TODO Auto-generated catch block
@@ -76,16 +77,18 @@ public class LanguageHandler {
 	}
 
 	public void setupLocale(String s) {
+		Bukkit.broadcastMessage("FILENAME: "+s);
 		setLocale(s);
 		setFormatter();
 		setLanguageFile();
 		setClassLoader();
 		setResourceBundle();
 		setFormatterLocale();
-		pl.messageHandler.sendConsoleMessage( getMessage("CONSOLE_MSG_LANGUAGE_FILE", pl.getLocale().toString()));
+		pl.getMessageHandler().sendConsoleMessage( getMessage("CONSOLE_MSG_LANGUAGE_FILE", pl.getLocale().toString()));
 	}
 	
 	public void setupLocaleSilent(String s) {
+		Bukkit.broadcastMessage("SILENT FILENAME: "+s);
 		setLocale(s);
 		setFormatter();
 		setLanguageFile();

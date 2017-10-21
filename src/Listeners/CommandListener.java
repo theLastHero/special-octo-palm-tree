@@ -10,14 +10,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import Hooks.GriefPreventionHook.Response;
-import Hooks.VaultHook;
 import Objects.PlayerWarpObject;
 import PlayerWarpGUI.PlayerWarpGUI;
-import net.milkbowl.vault.economy.EconomyResponse;
+import PlayerWarpGUI.Response;
 
 public class CommandListener implements CommandExecutor {
 
@@ -31,15 +27,19 @@ public class CommandListener implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
+		if ((args.length >= 1) && (args[0].equalsIgnoreCase("test"))) {
+			cmdtest(sender, cmd, args);
+		}
+
 		if (!(sender instanceof Player)) {
-			pl.messageHandler
+			pl.getMessageHandler()
 					.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_COMMAND_ERROR", cmd.getName()));
 			return false;
 		}
 
 		final Player player = (Player) sender;
 
-		if (cmd.getName().equalsIgnoreCase("playerwarps")) {
+		if (cmd.getName().equalsIgnoreCase("pwarps")) {
 
 			// show warps
 			if ((args.length == 0) || (args[0].equalsIgnoreCase("show"))) {
@@ -60,58 +60,72 @@ public class CommandListener implements CommandExecutor {
 			}
 
 			// delete a warp
-			if ((args.length >= 2) && (args[1].equalsIgnoreCase("deletewarp"))) {
+			if ((args.length >= 1) && (args[0].equalsIgnoreCase("deletewarp") || args[0].equalsIgnoreCase("delete")|| args[0].equalsIgnoreCase("warpdelete"))) {
 				cmdDelete(player, cmd, args);
 			}
 
 			// set title
-			if ((args.length >= 3) && (args[1].equalsIgnoreCase("settitle"))) {
+			if ((args.length >= 1) && (args[0].equalsIgnoreCase("settitle")|| args[0].equalsIgnoreCase("title")|| args[0].equalsIgnoreCase("titleset"))) {
 				cmdTitle(player, cmd, args);
 			}
 
 			// set icon
-			if ((args.length >= 2) && (args[1].equalsIgnoreCase("seticon"))) {
+			if ((args.length >= 1) && (args[0].equalsIgnoreCase("seticon")|| args[0].equalsIgnoreCase("icon")|| args[0].equalsIgnoreCase("iconset"))) {
 				cmdIcon(player, cmd, args);
 			}
 
 			// set lore
-			if ((args.length >= 3) && (args[1].equalsIgnoreCase("ban"))) {
+			if ((args.length >= 1) && (args[0].equalsIgnoreCase("ban"))) {
 				cmdBan(player, cmd, args, true);
 			}
 
 			// set lore
-			if ((args.length >= 3) && (args[1].equalsIgnoreCase("unban"))) {
+			if ((args.length >= 1) && (args[0].equalsIgnoreCase("unban"))) {
 				cmdBan(player, cmd, args, false);
 			}
 
 			// set lore
-			if ((args.length >= 3) && (args[1].contains("setlore"))) {
+			if ((args.length >= 1) && (args[0].contains("setlore")|| args[0].equalsIgnoreCase("lore")|| args[0].equalsIgnoreCase("loreset"))) {
 				cmdLore(player, cmd, args);
 			}
 
-			/*
-			 * // set lore if ((args.length >= 2) && (args[1].equalsIgnoreCase("setlore")))
-			 * { cmdLore(player, cmd, args); }
-			 */
+			// reload language
+			if ((args.length == 1) && (args[0].contains("langreload"))) {
+				cmdLangReload(player, cmd, args);
+			}
+			// getLanguageHandler().setupLocale(getConfig().getString("language"));
 		}
 		return false;
 
 	}
 
+	private boolean cmdLangReload(Player player, Command cmd, String[] args) {
+		if (checkPerm(player, "pwarps.langreload", pl.getLanguageHandler().getMessage("COMMAND_USE_LANGUAGE_RELOAD"))) {
+			if (!checkArgs(player, args, 1, pl.getLanguageHandler().getMessage("COMMAND_USE_LANGUAGE_RELOAD"))) {
+				return false;
+			}
+
+			pl.getLanguageHandler().setupLocale(pl.getConfig().getString("language"));
+			pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler()
+					.getMessage("COMMAND_LANGUAGE_RELOADED", pl.getConfig().getString("language")));
+		}
+		return false;
+	}
+
 	private boolean cmdLore(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.setlore", pl.getLanguageHandler().getMessage("COMMAND_USE_LORE"))) {
+		if (checkPerm(player, "pwarps.setlore", pl.getLanguageHandler().getMessage("COMMAND_USE_LORE"))) {
 			if (!checkArgsString(player, args, 3, pl.getLanguageHandler().getMessage("COMMAND_USE_LORE"))) {
 				return false;
 			}
 
-			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT"));
+						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 				return false;
 			}
 
 			int LoreRow = 1;
-			String result[] = args[1].split("setlore");
+			String result[] = args[0].split("setlore");
 			if (result.length > 0) {
 				String returnValue = result[result.length - 1];
 				if (returnValue != null && pl.getCalc().isInt(returnValue)) {
@@ -124,8 +138,8 @@ public class CommandListener implements CommandExecutor {
 			// check lorerow > allowamount
 			// checkPerm(Player player, String perm, String msg) {
 			if (LoreRow > 1) {
-				if (!checkPerm(player, "playerwarpgui.setlore." + LoreRow,
-						pl.getLanguageHandler().getMessage("COMMAND_USE_LORE", LoreRow))) {
+				if (!checkPerm(player, "pwarps.setlore." + LoreRow,
+						pl.getLanguageHandler().getMessage("COMMAND_NO_PERMISSION", "pwarps.setlore."+LoreRow))) {
 					return false;
 				}
 			}
@@ -135,16 +149,18 @@ public class CommandListener implements CommandExecutor {
 				sb.append(args[i]); // Adds the argument into the StringBuilder
 				sb.append(" "); // Adding a space into the StringBuilder
 			}
+			String loreText = sb.toString();
+			loreText = pl.getMessageHandler().ColorVariables(player, loreText);
 
 			// checl lenght of text
-			if (sb.toString().length() > pl.getConfig().getInt("settings.max-lore-text-size")) {
-				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_LORE_TOOLONG_TEXT"));
+			if (loreText.length() > pl.getConfig().getInt("settings.max-lore-text-size")) {
+				pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler().getMessage(
+						"COMMAND_UPDATE_LORE_TOOLONG_TEXT", pl.getConfig().getInt("settings.max-lore-text-size")));
 				return false;
 			}
 
 			// get object
-			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[0]);
+			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[1]);
 
 			// add lore to object
 			ArrayList<String> ll = pwo.getLoreList();
@@ -155,15 +171,15 @@ public class CommandListener implements CommandExecutor {
 				}
 			}
 
-			ll.set(LoreRow - 1, sb.toString());
+			ll.set(LoreRow - 1, loreText);
 			pwo.setLoreList(ll);
 			// set file lore
 			pl.getPlayerWarpFileHandler().setStringToArrayWarpFile(
-					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[0], "lore",
+					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[1], "lore",
 					pwo.getLoreList());
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[0]));
+					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[1], loreText));
 
 		}
 		return true;
@@ -172,13 +188,13 @@ public class CommandListener implements CommandExecutor {
 
 	@SuppressWarnings("deprecation")
 	private boolean cmdBan(Player player, Command cmd, String[] args, boolean banType) {
-		if (checkPerm(player, "playerwarpgui.ban", pl.getLanguageHandler().getMessage("COMMAND_USE_BAN"))) {
+		if (checkPerm(player, "pwarps.ban", pl.getLanguageHandler().getMessage("COMMAND_USE_BAN"))) {
 			if (!checkArgs(player, args, 3, pl.getLanguageHandler().getMessage("COMMAND_USE_BAN"))) {
 				return false;
 			}
 
 			// does this player have a warp with that name?
-			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
 						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT"));
 				return false;
@@ -191,14 +207,14 @@ public class CommandListener implements CommandExecutor {
 				return false;
 			}
 
-			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[0]);
+			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[1]);
 			String error = "";
 
 			if (banType) {
 				if (pl.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
 						Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
 					pl.getMessageHandler().sendPlayerMessage(player,
-							pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_ALREADY", args[2], args[0]));
+							pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_ALREADY", args[2], args[1]));
 					return false;
 				}
 				pwo.getBanList().add(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());
@@ -210,7 +226,7 @@ public class CommandListener implements CommandExecutor {
 				if (!pl.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
 						Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
 					pl.getMessageHandler().sendPlayerMessage(player,
-							pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[0]));
+							pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]));
 					return false;
 				}
 				pwo.getBanList().remove(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());
@@ -219,11 +235,11 @@ public class CommandListener implements CommandExecutor {
 
 			// add to file
 			pl.getPlayerWarpFileHandler().setStringToArrayWarpFile(
-					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[0], "ban",
+					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[1], "ban",
 					pwo.getBanList());
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage(error, Bukkit.getOfflinePlayer(args[2]).getName(), args[0]));
+					pl.getLanguageHandler().getMessage(error, Bukkit.getOfflinePlayer(args[2]).getName(), args[1]));
 
 		}
 		return true;
@@ -234,7 +250,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkPerm(Player player, String perm, String msg) {
 		if (!player.hasPermission(perm)) {
-			pl.messageHandler.sendPlayerMessage(player,
+			pl.getMessageHandler().sendPlayerMessage(player,
 					pl.getLanguageHandler().getMessage("COMMAND_NO_PERMISSION", msg));
 			return false;
 		}
@@ -246,7 +262,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkArgs(Player player, String[] args, int size, String errorMsg) {
 		if (args.length != size) {
-			pl.messageHandler.sendPlayerMessage(player,
+			pl.getMessageHandler().sendPlayerMessage(player,
 					pl.getLanguageHandler().getMessage("COMMAND_USE_INVALID") + errorMsg);
 			return false;
 		}
@@ -258,7 +274,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkArgsString(Player player, String[] args, int size, String errorMsg) {
 		if (args.length < size) {
-			pl.messageHandler.sendPlayerMessage(player,
+			pl.getMessageHandler().sendPlayerMessage(player,
 					pl.getLanguageHandler().getMessage("COMMAND_USE_INVALID") + errorMsg);
 			return false;
 		}
@@ -269,7 +285,7 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdShow(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.show", pl.getLanguageHandler().getMessage("COMMAND_USE_SHOW"))) {
+		if (checkPerm(player, "pwarps.show", pl.getLanguageHandler().getMessage("COMMAND_USE_SHOW"))) {
 			pl.getGuiObject().openGUI(player, 0);
 			return true;
 		}
@@ -280,31 +296,102 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdList(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.list", pl.getLanguageHandler().getMessage("COMMAND_USE_LIST"))) {
-			if (!checkArgs(player, args, 1, pl.getLanguageHandler().getMessage("COMMAND_USE_LIST"))) {
-				return false;
-			}
+		if (checkPerm(player, "pwarps.list", pl.getLanguageHandler().getMessage("COMMAND_USE_LIST"))) {
+			// if (!checkArgs(player, args, 2,
+			// pl.getLanguageHandler().getMessage("COMMAND_USE_LIST"))) {
+			// return false;
+			// }
 
 			ArrayList<PlayerWarpObject> playerWarpObjects = pl.getPlayerWarpObjectHandler()
 					.getPlayerWarpObjects(player.getUniqueId());
 			if (playerWarpObjects.size() <= 0) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_LIST_TEXT"));
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARPS_TITLE"));
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_NONE_TEXT"));
 				return true;
 			}
-			String warpText = "";
-			for (int i = 0; i < playerWarpObjects.size(); i++) {
-				warpText += playerWarpObjects.get(i).getWarpName();
-				if (!(i >= playerWarpObjects.size() - 1)) {
-					warpText += ", ";
+
+			if (args.length == 1) {
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARPS_TITLE"));
+
+				for (int i = 0; i < playerWarpObjects.size(); i++) {
+					String warpText = playerWarpObjects.get(i).getWarpName();
+					Location warpLocation = pl.getOtherFunctions().str2loc(playerWarpObjects.get(i).getWarpLocation());
+					String warpWorld = warpLocation.getWorld().getName().toString();
+					String warpXpos = String.valueOf(warpLocation.getX()).split("\\.")[0];
+					String warpYpos = String.valueOf(warpLocation.getY()).split("\\.")[0];
+					String warpZpos = String.valueOf(warpLocation.getZ()).split("\\.")[0];
+					if (!(i >= playerWarpObjects.size())) { // COMMAND_LIST_PRETEXT
+						pl.getMessageHandler().sendPlayerMessage(player,
+								pl.getLanguageHandler().getMessage("COMMAND_LIST_WARPDETAILS", "" + (i + 1), warpText,
+										warpWorld, warpXpos, warpYpos, warpZpos));
+					}
 				}
 			}
-			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_LIST_TEXT") + warpText);
+
+			if (args.length == 2) {
+				PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(),
+						args[1]);
+				if (pwo == null) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+					return false;
+				}
+
+				String warpText = pwo.getWarpName();
+				Location warpLocation = pl.getOtherFunctions().str2loc(pwo.getWarpLocation());
+				String warpWorld = warpLocation.getWorld().getName().toString();
+				String warpXpos = String.valueOf(warpLocation.getX()).split("\\.")[0];
+				String warpYpos = String.valueOf(warpLocation.getY()).split("\\.")[0];
+				String warpZpos = String.valueOf(warpLocation.getZ()).split("\\.")[0];
+
+				String warpTitle = pwo.getTitle();
+				String warpIcon = pwo.getIcon();
+				ArrayList<String> warpLore = pwo.getLoreList();
+				ArrayList<String> warpBan = pwo.getBanList();
+
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARPS_DETAILS_TITLE", warpText));
+				// title
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_TITLE", warpTitle));
+				// Location
+				pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler()
+						.getMessage("COMMAND_LIST_WARP_LOCATION", warpWorld, warpXpos, warpYpos, warpZpos));
+				// ICON
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_ICON", warpIcon));
+				// LOREMAIN
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_LORE_MAIN"));
+				// LORE LOOP
+				int i = 0;
+				for (String lore : warpLore) {
+					i++;
+					if (lore.length() > 0) {
+						pl.getMessageHandler().sendPlayerMessage(player,
+								pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_LORE",lore, i));
+					}
+				}
+				// BAN MAIN
+				pl.getMessageHandler().sendPlayerMessage(player,
+						pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_BAN_MAIN"));
+				// BAN LOOP
+				for (String ban : warpBan) {
+					if (ban.length() > 0) {
+						pl.getMessageHandler().sendPlayerMessage(player,
+								pl.getLanguageHandler().getMessage("COMMAND_LIST_WARP_BAN", ban));
+					}
+				}
+
+			}
 
 			return true;
 		}
 		return false;
+
 	}
 
 	// -------------------------------------------------------------------------------------
@@ -312,7 +399,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean cmdSet(Player player, Command cmd, String[] args) {
 
-		if (checkPerm(player, "playerwarpgui.setwarp", pl.getLanguageHandler().getMessage("COMMAND_USE_SET"))) {
+		if (checkPerm(player, "pwarps.setwarp", pl.getLanguageHandler().getMessage("COMMAND_USE_SET"))) {
 			if (!checkArgs(player, args, 2, pl.getLanguageHandler().getMessage("COMMAND_USE_SET"))) {
 				return false;
 			}
@@ -320,77 +407,94 @@ public class CommandListener implements CommandExecutor {
 
 			// check if at set warp limit
 
-			Hooks.GriefPreventionHook.Response response = pl.getGreifProtectionHook().checkWarp(player);
-			if(!response.getResponseBool()) {
-				if(response.getErrorMsg().length() > 0) {
-				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage(response.getErrorMsg()));
+			Response response = pl.getGriefPreventionHook().checkWarp(player);
+			if (!response.getResponseBool()) {
+				if (response.getErrorMsg().length() > 0) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
 				}
 				return false;
 			}
-			
-			Hooks.WorldGuardHook.Response responseWG = pl.getWorldGuardHook().checkWarp(player);
-			if(!responseWG.getResponseBool()) {
-				if(responseWG.getErrorMsg().length() > 0) {
-				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage(responseWG.getErrorMsg()));
-				}
-				return false;
-			}			
-			
-			Hooks.RedProtectHook.Response responseRP = pl.getRedProtectHook().checkWarp(player);
-			if(!responseRP.getResponseBool()) {
-				if(responseRP.getErrorMsg().length() > 0) {
-				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage(responseRP.getErrorMsg()));
+
+			response = pl.getWorldGuardHook().checkWarp(player);
+			if (!response.getResponseBool()) {
+				if (response.getErrorMsg().length() > 0) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
 				}
 				return false;
 			}
-			
-			if (pl.getPlayerWarpObjectHandler().getPlayerWarpObjects(player.getUniqueId()).size() >= pl
-					.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player, "playerwarpgui.setwarp", ".")) {
+
+			response = pl.getRedProtectHook().checkWarp(player);
+			if (!response.getResponseBool()) {
+				if (response.getErrorMsg().length() > 0) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
+				}
+				return false;
+			}
+
+			response = pl.getFactionsHook().checkWarp(player);
+			if (!response.getResponseBool()) {
+				if (response.getErrorMsg().length() > 0) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
+				}
+				return false;
+			}
+
+			response = pl.getResidenceHook().checkWarp(player);
+			if (!response.getResponseBool()) {
+				if (response.getErrorMsg().length() > 0) {
+					pl.getMessageHandler().sendPlayerMessage(player,
+							pl.getLanguageHandler().getMessage(response.getErrorMsg()));
+				}
+				return false;
+			}
+
+			int maxSizeAllowed = pl.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player, "pwarps.setwarp",
+					".");
+			int currentSize = pl.getPlayerWarpObjectHandler().getPlayerWarpObjects(player.getUniqueId()).size();
+			if (currentSize >= maxSizeAllowed) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_SET_MAX_ALLOWED_TEXT",
-								pl.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player,
-										"playerwarpgui.setwarp", ".")));
+						pl.getLanguageHandler().getMessage("COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed));
 				return false;
 			}
 
 			// check if player has warp named same;
 			if (pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_SET_ALLREADY_EXSISTS_TEXT"));
+						pl.getLanguageHandler().getMessage("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]));
 				return false;
 			}
 
 			// isafe location
 			if (!pl.getWarpHandler().isSafeLocation(player.getLocation())) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_UNSAFE_LOCATION"));
+						pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]));
 				return false;
 			}
 
 			// world blocked
 			if (pl.getWarpHandler().isBlockedWorld(player.getLocation())) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_WORLD_BLOCKED"));
+						pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]));
 				return false;
 			}
 
 			// check if player can afford to set a warp.
-		/*	if (pl.getConfig().getInt("settings.set-warp-cost") != 0) {
-				pl.getVaultHandler();
-				EconomyResponse r = VaultHook.econ.withdrawPlayer(player, pl.getConfig().getInt("settings.set-warp-cost"));
-				if (!r.transactionSuccess()) {
-					pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler().getMessage("COMMAND_SET_NOT_ENOUGH_MONEY"));
-					return true;
-				} else {
-					pl.getMessageHandler().sendPlayerMessage(player, pl.getLanguageHandler().getMessage("COMMAND_SET_ENOUGH_MONEY"));
-				}
-				return false;
-			}
-			*/
-			
+			/*
+			 * if (pl.getConfig().getInt("settings.set-warp-cost") != 0) {
+			 * pl.getVaultHandler(); EconomyResponse r =
+			 * VaultHook.econ.withdrawPlayer(player,
+			 * pl.getConfig().getInt("settings.set-warp-cost")); if
+			 * (!r.transactionSuccess()) { pl.getMessageHandler().sendPlayerMessage(player,
+			 * pl.getLanguageHandler().getMessage("COMMAND_SET_NOT_ENOUGH_MONEY")); return
+			 * true; } else { pl.getMessageHandler().sendPlayerMessage(player,
+			 * pl.getLanguageHandler().getMessage("COMMAND_SET_ENOUGH_MONEY")); } return
+			 * false; }
+			 */
+
 			// check for uuid file, if exists than add warp else create file
 			// pl.getPlayerWarpFileHandler().checkPlayerWarpsFileExsits(player.getUniqueId());
 			pl.getPlayerWarpFileHandler().addWarpToPlayerWarpFile(
@@ -401,11 +505,11 @@ public class CommandListener implements CommandExecutor {
 			// new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon,
 			// loreList);7
 			pl.getPlayerWarpObjectHandler().createWarpObjects(player.getUniqueId(), args[1].toString(),
-					pl.getOtherFunctions().loc2str(player.getLocation()), "", "",
-					new ArrayList<>(Arrays.asList("", "", "")), new ArrayList<>(Arrays.asList("", "", "")));
+					pl.getOtherFunctions().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
+					new ArrayList<>(Arrays.asList("")));
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_SET_COMPLETED_TEXT"));
+					pl.getLanguageHandler().getMessage("COMMAND_SET_COMPLETED_TEXT", args[1]));
 			return true;
 		}
 		return false;
@@ -415,19 +519,19 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdDelete(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.setwarp", pl.getLanguageHandler().getMessage("COMMAND_USE_DELETE"))) {
+		if (checkPerm(player, "pwarps.setwarp", pl.getLanguageHandler().getMessage("COMMAND_USE_DELETE"))) {
 			if (!checkArgs(player, args, 2, pl.getLanguageHandler().getMessage("COMMAND_USE_DELETE"))) {
 				return false;
 			}
 
-			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
 						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT"));
 				return false;
 			}
 
 			// update warp file
-			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[0]);
+			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[1]);
 
 			// delete object
 			pwo.removePlayerWarpObject();
@@ -436,11 +540,11 @@ public class CommandListener implements CommandExecutor {
 			// pl.getPlayerWarpFileHandler().addWarpToPlayerWarpFile((pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId())),
 			// player.getLocation(), args[0], title,pwo.getIcon(),pwo.getLoreList());
 			pl.getPlayerWarpFileHandler().deleteSingleWarpFromFile(
-					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[0]);
+					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[1]);
 			// chestObject.openGUI(player, 0);
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_DELETE_WARP_TEXT", args[0]));
+					pl.getLanguageHandler().getMessage("COMMAND_DELETE_WARP_TEXT", args[1]));
 
 			return true;
 		}
@@ -451,14 +555,14 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdTitle(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.settitle", pl.getLanguageHandler().getMessage("COMMAND_USE_TITLE"))) {
+		if (checkPerm(player, "pwarps.settitle", pl.getLanguageHandler().getMessage("COMMAND_USE_TITLE"))) {
 			if (!checkArgsString(player, args, 3, pl.getLanguageHandler().getMessage("COMMAND_USE_TITLE"))) {
 				return false;
 			}
 
-			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT"));
+						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 				return false;
 			}
 
@@ -469,15 +573,17 @@ public class CommandListener implements CommandExecutor {
 			}
 
 			String title = sb.toString();
+			title = pl.getMessageHandler().ColorVariables(player, title);
 
 			if (title.length() > pl.getConfig().getInt("settings.max-title-text-size")) {
 				pl.getMessageHandler().sendPlayerMessage(player,
-						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_TOOLONG_TEXT"));
+						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_TOOLONG_TEXT",
+								"" + pl.getConfig().getInt("settings.max-title-text-size")));
 				return false;
 			}
 
 			// update warp file
-			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[0]);
+			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[1]);
 
 			// update object
 			pwo.setTitle(title);
@@ -486,12 +592,12 @@ public class CommandListener implements CommandExecutor {
 			// pl.getPlayerWarpFileHandler().addWarpToPlayerWarpFile((pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId())),
 			// player.getLocation(), args[0], title,pwo.getIcon(),pwo.getLoreList());
 			pl.getPlayerWarpFileHandler().updateSingleElementWarpFile(
-					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[0], "title",
+					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[1], "title",
 					title);
 			// chestObject.openGUI(player, 0);
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[0]));
+					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[1], title));
 
 			return true;
 		}
@@ -503,12 +609,12 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	@SuppressWarnings("deprecation")
 	public boolean cmdIcon(Player player, Command cmd, String[] args) {
-		if (checkPerm(player, "playerwarpgui.icon", pl.getLanguageHandler().getMessage("COMMAND_USE_ICON"))) {
+		if (checkPerm(player, "pwarps.icon", pl.getLanguageHandler().getMessage("COMMAND_USE_ICON"))) {
 			if (!checkArgs(player, args, 2, pl.getLanguageHandler().getMessage("COMMAND_USE_ICON"))) {
 				return false;
 			}
 
-			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			if (!pl.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
 				pl.getMessageHandler().sendPlayerMessage(player,
 						pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT"));
 				return false;
@@ -521,22 +627,204 @@ public class CommandListener implements CommandExecutor {
 			}
 
 			// update warp file
-			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[0]);
+			PlayerWarpObject pwo = pl.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(), args[1]);
 
 			// update object
 			pwo.setIcon(pl.getOtherFunctions().parseStringFromItemStack(player.getItemInHand()));
 
 			pl.getPlayerWarpFileHandler().updateSingleElementWarpFile(
-					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[0], "icon",
+					pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId()), args[1], "icon",
 					pl.getOtherFunctions().parseStringFromItemStack(player.getItemInHand()));
 			// chestObject.openGUI(player, 0);
 
 			pl.getMessageHandler().sendPlayerMessage(player,
-					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[0]));
+					pl.getLanguageHandler().getMessage("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]));
 
 			return true;
 		}
+
 		return false;
+
+	}
+
+	private void cmdtest(CommandSender sender, Command cmd, String[] args) {
+		if ((sender instanceof Player)) {
+			pl.getMessageHandler().sendPlayerMessage((Player) sender, pl.getLanguageHandler().getMessage(
+					"COMMAND_NO_PERMISSION", pl.getLanguageHandler().getMessage("COMMAND_USE_SET", "arg1", "arg2")));
+		}
+		pl.getMessageHandler().sendConsoleMessage("&5[&6&l&nOWNER&5] ");
+		pl.getMessageHandler().sendConsoleMessage("&4&l[&c&l&oOwner&4&l] &c&o[username]&4: &b<message>");
+		pl.getMessageHandler().sendConsoleMessage("&e&l<<&2&lO&a&lwner&e&l>> ");
+		pl.getMessageHandler().sendConsoleMessage("&e---< &a sometext &e >---");
+		pl.getMessageHandler().sendConsoleMessage("&e-----< &6sometext &e>-----");
+		pl.getMessageHandler().sendConsoleMessage("&e---- &6Market List &e----");
+		pl.getMessageHandler().sendConsoleMessage("&eUsage: &6/res compass <residence>");
+		pl.getMessageHandler().sendConsoleMessage("&b[&cRed&4Protect&b]&r");
+		pl.getMessageHandler().sendConsoleMessage("&3/rp {cmd}|{alias} &r- &bSee a list of near regions.");
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("MESSAGE_PREFIX", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_INVALID", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_TOOMANY", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_SHOW", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_LIST", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_ICON", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_SET", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_DELETE", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_TITLE", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_LORE", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_USE_BAN", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_LIST_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_LIST_NONE_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_SET_COMPLETED_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_SET_ENOUGH_MONEY", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_SET_NOT_ENOUGH_MONEY", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_SET_ALLREADY_EXSISTS_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_SET_MAX_ALLOWED_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_UNSAFE_LOCATION", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_SET_CANCEL_WORLD_BLOCKED", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_COMPLETED_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_TITLE_TOOLONG_TEXT", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_LORE_COMPLETED_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_LORE_TOOLONG_TEXT", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_ICON_COMPLETED_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_ICON_NOICON_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("GRIEFPREVENTION_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("GRIEFPREVENTION_NOT_IN_A_CLAIM", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("GRIEFPREVENTION_CLAIM_DELETED", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("WORLDGUARD_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("WORLGUARD_NOT_IN_A_REGION", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("REDPROTECT_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("REDPROTECT_NOT_IN_A_REGION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("REDPROTECT_CLAIM_DELETED", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("RESIDENCE_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("RESIDENCE_NOT_IN_A_REGION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("RESIDENCE_CLAIM_DELETED", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("FACTIONS_NO_PERMISSION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("FACTIONS_NOT_IN_A_REGION", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("FACTIONS_CLAIM_DELETED", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_BAN_UNKNOWN_PLAYER", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_ALREADY", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_NOTBANNED", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_COMPLETED", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("COMMAND_BANNED_PLAYER_UNBANNED_COMPLETED", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("COMMAND_DELETE_WARP_TEXT", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("TELEPORT_CANCEL_MOVEMENT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("TELEPORT_CANCEL_INVALID_LOCATION", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("TELEPORT_CANCEL_UNSAFE_LOCATION", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("TELEPORT_CANCEL_WORLD_BLOCKED", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("TELEPORT_COMPLETED", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("TELEPORT_COUNTDOWN", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("NEXTPAGE_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("WARP_ID_TEXT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("WARP_OWNER_TEXT", "arg1", "arg2"));
+
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_COMMAND_ERROR", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_METRICS", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_HOOK", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_LANGUAGE_FILE", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CONFIG_FILE", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_WARPFILE_COUNT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_WARPS_COUNT", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_PREFIX", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_FINAL", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("CONSOLE_MSG_CRITIAL_ERROR_PREFIX", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("CONSOLE_MSG_NONCRITIAL_ERROR_PREFIX", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_MSG_CREATE_FOLDER", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("CONSOLE_ERROR_CRITIAL_FILENOTFOUND", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_NONCRITIAL_ERROR", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(
+				pl.getLanguageHandler().getMessage("CONSOLE_NONCRITIAL_ERROR_HOOK", "arg1", "arg2"));
+		pl.getMessageHandler()
+				.sendConsoleMessage(pl.getLanguageHandler().getMessage("CONSOLE_CRITIAL_ERROR_HOOK", "arg1", "arg2"));
+
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("SUCCESS", "arg1", "arg2"));
+		pl.getMessageHandler().sendConsoleMessage(pl.getLanguageHandler().getMessage("FAILED", "arg1", "arg2"));
 
 	}
 

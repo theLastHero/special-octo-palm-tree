@@ -41,7 +41,6 @@ public class PlayerWarpObjectHandler {
 	// ------------------------------------------------------
 	// getPlayerWarpObjects - return array of playerworpobjects
 	// ------------------------------------------------------
-	@SuppressWarnings("null")
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
 		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
 		

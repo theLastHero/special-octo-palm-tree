@@ -72,6 +72,7 @@ public class OtherFunctions {
 		return new ItemStack(Material.getMaterial(matId));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String parseStringFromItemStack(ItemStack iStack) {
 
 		int iconID = iStack.getTypeId();

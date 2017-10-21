@@ -3,7 +3,6 @@ package Listeners;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -80,7 +79,7 @@ public class ChestListener implements Listener {
 				}
 
 				//start teleport
-				pl.teleportHandler.startTeleport(player, pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
+				pl.getTeleportHandler().startTeleport(player, pl.getOtherFunctions().str2loc(pwo.getWarpLocation()));
 
 				// close inventory
 				closeInv(player);
@@ -122,8 +121,8 @@ public class ChestListener implements Listener {
 		loreList = itemStack.getItemMeta().getLore();
 		
 		for(int i = 0; i < loreList.size(); i++) {
-			if(loreList.get(i).contains(ChatColor.stripColor(pl.otherFunctions.replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT"))))){
-				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(pl.otherFunctions.replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT")), "")));	
+			if(loreList.get(i).contains(ChatColor.stripColor(pl.getOtherFunctions().replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT"))))){
+				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(pl.getOtherFunctions().replaceColorVariables(pl.getLanguageHandler().getMessage("WARP_ID_TEXT")), "")));	
 			}
 		}
 		

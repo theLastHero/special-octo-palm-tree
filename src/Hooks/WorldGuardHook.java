@@ -7,10 +7,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import Hooks.GriefPreventionHook.Response;
 import PlayerWarpGUI.PlayerWarpGUI;
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import PlayerWarpGUI.Response;
 
 public class WorldGuardHook {
 
@@ -28,7 +26,7 @@ public class WorldGuardHook {
 
 	private void check() {
 		if (pl.getConfig().getBoolean("WorldGuard.enabled")) {
-			setEnabled(pl.hookHandler.checkHook("WorldGuard"));
+			setEnabled(pl.getHookHandler().checkHook("WorldGuard"));
 		}
 	}
 
@@ -95,33 +93,4 @@ public class WorldGuardHook {
 
 	}
 
-	public class Response {
-
-		private String errorMsg;
-		private boolean responseBool;
-
-		public Response(boolean showError, String errorMsg) {
-
-			this.responseBool = showError;
-			this.errorMsg = errorMsg;
-
-		}
-
-		public String getErrorMsg() {
-			return errorMsg;
-		}
-
-		public void setErrorMsg(String errorMsg) {
-			this.errorMsg = errorMsg;
-		}
-
-		public boolean getResponseBool() {
-			return responseBool;
-		}
-
-		public void setresponseBool(boolean responseBool) {
-			this.responseBool = responseBool;
-		}
-
-	}
 }
