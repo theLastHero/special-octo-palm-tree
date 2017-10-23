@@ -1,0 +1,91 @@
+# +--------------------------------------------------------------------+ #
+# <                 PlayerWarpGUI configuration File                   > #
+# <--------------------------------------------------------------------> #
+# <       This is the configuration file, feel free to edit it.        > #
+# <        For more info about cmds and flags, check our Wiki:         > #
+# <         https://github.com/FabioZumbi12/RedProtect/wiki            > #
+# +--------------------------------------------------------------------+ #
+#
+general:
+  locale: 'en_us'
+
+# Metrics
+metrics:
+ enabled: true
+
+# GUI
+gui:
+ rows: 9
+ title: '&2PlayerWarps'
+ default-playerwarp-icon: '35:9'
+ default-playerwarp-title: 'Go to &6[playername]s &fwarp'
+ use-playerheads-as-icons: true
+ nextpage-icon: '35:8'
+ 
+settings:
+ set-warp-cost: 400
+ max-title-text-size: 40
+ max-lore-text-size: 40
+
+# Teleport
+teleport:
+ cancel-on-movement: true
+ movement-cooldown: 9
+ use-safelocation: true
+ unsafe-blocks:
+ - '8'
+ - '9'
+ - '10'
+ - '11'
+ - '70'
+ - '71'
+ - '147'
+ - '148'
+ blocked-world:
+ - 'world_nether'
+ - 'world_end'
+
+# GreifProtection
+GriefPrevention:
+ enabled: false
+ owner-can-set-warp: true
+ trusted-player-can-set-warp: true
+ delete-warps-if-claim-is-deleted: true
+
+# RedProtect
+RedProtect:
+ enabled: false
+ leader-player-can-set-warp: true
+ admin-player-can-set-warp: true
+ member-player-can-set-warp: true
+ delete-warps-if-region-is-deleted: true
+
+# RedProtect
+Residence:
+ enabled: false
+ owner-player-can-set-warp: true
+ build-permission-player-can-set-warp: true
+ # Not working :(
+ delete-warps-if-region-is-deleted: true
+
+# WorldGuard
+WorldGuard:
+ enabled: false
+ owner-can-set-warp: true
+ member-player-can-set-warp: true
+
+# Factions
+Factions:
+ enabled: false
+ leader-can-set-warp: true
+ in-own-territory-can-set-warp: true
+ in-wilderness-can-set-warp: false
+ delete-warps-if-zone-is-deleted: true
+
+# Config.yml compatability version. 
+# DO NOT MODIFY
+config-version: 1.1
+General:
+ # Available: en_us, en_au
+ Locale: 'en_us'
+playerData:
