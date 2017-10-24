@@ -12,7 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import config.Config;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 
 public class TeleportHandler {
@@ -93,8 +95,8 @@ public class TeleportHandler {
 		 * 
 		 */
 		private void teleportCompletedMessage() {
-			p.getMsgSend().send(player,
-					p.localeLoader.getString("TELEPORT_COMPLETED"));
+			MessageSender.send(player,
+					LocaleLoader.getString("TELEPORT_COMPLETED"));
 		}
 
 		/**
@@ -102,8 +104,8 @@ public class TeleportHandler {
 		 * @param count
 		 */
 		private void teleportCountMessage(Player player, int count) {
-			p.getMsgSend().send(player,
-					p.localeLoader.getString("TELEPORT_COUNTDOWN", count));
+			MessageSender.send(player,
+					LocaleLoader.getString("TELEPORT_COUNTDOWN", count));
 		}
 	}
 
@@ -122,7 +124,7 @@ public class TeleportHandler {
 	protected static void cancelTeleportPlayer(Player player) {
 		tpQueue.get(player.getUniqueId()).cancel();
 		tpQueue.remove(player.getUniqueId());
-		p.getMsgSend().send(player, "TELEPORT_CANCEL_MOVEMENT");
+		MessageSender.send(player, "TELEPORT_CANCEL_MOVEMENT");
 	}
 
 }

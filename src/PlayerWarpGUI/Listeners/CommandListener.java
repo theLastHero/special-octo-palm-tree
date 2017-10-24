@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,9 +14,10 @@ import org.bukkit.entity.Player;
 import com.google.common.base.Strings;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
-import PlayerWarpGUI.Objects.msgSender;
-import config.Config;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 @SuppressWarnings("unused")
 public class CommandListener implements CommandExecutor {
@@ -37,7 +39,7 @@ public class CommandListener implements CommandExecutor {
 		 */
 
 		if (!(sender instanceof Player)) {
-			p.getMsgSend().sendConsole("CONSOLE_MSG_COMMAND_ERROR", cmd.getName());
+			MessageSender.sendConsole("CONSOLE_MSG_COMMAND_ERROR", cmd.getName());
 			return false;
 		}
 
@@ -108,8 +110,8 @@ public class CommandListener implements CommandExecutor {
 	}
 
 	private boolean cmdLangReload(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.langreload", p.localeLoader.getString("COMMAND_USE_LANGUAGE_RELOAD"))) {
-			if (!checkArgs(player, args, 1, p.localeLoader.getString("COMMAND_USE_LANGUAGE_RELOAD"))) {
+		if (checkPerm(player, "pwarps.langreload", LocaleLoader.getString("COMMAND_USE_LANGUAGE_RELOAD"))) {
+			if (!checkArgs(player, args, 1, LocaleLoader.getString("COMMAND_USE_LANGUAGE_RELOAD"))) {
 				return false;
 			}
 
@@ -122,13 +124,13 @@ public class CommandListener implements CommandExecutor {
 	}
 
 	private boolean cmdLore(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.setlore", p.localeLoader.getString("COMMAND_USE_LORE"))) {
-			if (!checkArgsString(player, args, 3, p.localeLoader.getString("COMMAND_USE_LORE"))) {
+		if (checkPerm(player, "pwarps.setlore", LocaleLoader.getString("COMMAND_USE_LORE"))) {
+			if (!checkArgsString(player, args, 3, LocaleLoader.getString("COMMAND_USE_LORE"))) {
 				return false;
 			}
 
 			if (!p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
+				MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
 				return false;
 			}
 
@@ -144,7 +146,7 @@ public class CommandListener implements CommandExecutor {
 			// get allowed amount
 			if (LoreRow > 1) {
 				if (!checkPerm(player, "pwarps.setlore." + LoreRow,
-						p.localeLoader.getString("COMMAND_NO_PERMISSION", "pwarps.setlore." + LoreRow))) {
+						LocaleLoader.getString("COMMAND_NO_PERMISSION", "pwarps.setlore." + LoreRow))) {
 					return false;
 				}
 			}
@@ -155,11 +157,11 @@ public class CommandListener implements CommandExecutor {
 				sb.append(" ");
 			}
 			String loreText = sb.toString();
-			loreText = p.getMsgSend().ColorVariables(player, loreText);
+			loreText = ChatColor.translateAlternateColorCodes('&',loreText);
 
 			// check lenght of text
 			if (loreText.length() > Config.getInstance().getMaxLoreSize()) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_LORE_TOOLONG_TEXT",
+				MessageSender.send(player, "COMMAND_UPDATE_LORE_TOOLONG_TEXT",
 						Config.getInstance().getMaxLoreSize());
 				return false;
 			}
@@ -184,7 +186,7 @@ public class CommandListener implements CommandExecutor {
 					p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId()), args[1], "lore",
 					pwo.getLoreList());
 
-			p.getMsgSend().send(player, "COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[1], loreText);
+			MessageSender.send(player, "COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[1], loreText);
 
 		}
 		return true;
@@ -193,20 +195,20 @@ public class CommandListener implements CommandExecutor {
 
 	@SuppressWarnings("deprecation")
 	private boolean cmdBan(final Player player, final Command cmd, final String[] args, final boolean banType) {
-		if (checkPerm(player, "pwarps.ban", p.localeLoader.getString("COMMAND_USE_BAN"))) {
-			if (!checkArgs(player, args, 3, p.localeLoader.getString("COMMAND_USE_BAN"))) {
+		if (checkPerm(player, "pwarps.ban", LocaleLoader.getString("COMMAND_USE_BAN"))) {
+			if (!checkArgs(player, args, 3, LocaleLoader.getString("COMMAND_USE_BAN"))) {
 				return false;
 			}
 
 			// does this player have a warp with that name?
 			if (!p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
+				MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
 				return false;
 			}
 
 			// is player to be ban a valid player?
 			if (!p.getPlayerWarpFileHandler().isValidPlayer(Bukkit.getOfflinePlayer(args[2]).getUniqueId())) {
-				p.getMsgSend().send(player, "COMMAND_BAN_UNKNOWN_PLAYER");
+				MessageSender.send(player, "COMMAND_BAN_UNKNOWN_PLAYER");
 				return false;
 			}
 
@@ -217,7 +219,7 @@ public class CommandListener implements CommandExecutor {
 			if (banType) {
 				if (p.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
 						Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
-					p.getMsgSend().send(player, "COMMAND_BANNED_PLAYER_ALREADY", args[2], args[1]);
+					MessageSender.send(player, "COMMAND_BANNED_PLAYER_ALREADY", args[2], args[1]);
 					return false;
 				}
 				pwo.getBanList().add(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());
@@ -228,7 +230,7 @@ public class CommandListener implements CommandExecutor {
 			if (!banType) {
 				if (!p.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
 						Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
-					p.getMsgSend().send(player, "COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]);
+					MessageSender.send(player, "COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]);
 					return false;
 				}
 				pwo.getBanList().remove(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());
@@ -240,7 +242,7 @@ public class CommandListener implements CommandExecutor {
 					p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId()), args[1], "ban",
 					pwo.getBanList());
 
-			p.getMsgSend().send(player, error, Bukkit.getOfflinePlayer(args[2]).getName(), args[1]);
+			MessageSender.send(player, error, Bukkit.getOfflinePlayer(args[2]).getName(), args[1]);
 
 		}
 		return true;
@@ -251,7 +253,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkPerm(final Player player, final String perm, final String msg) {
 		if (!player.hasPermission(perm)) {
-			p.getMsgSend().send(player, "COMMAND_NO_PERMISSION", msg);
+			MessageSender.send(player, "COMMAND_NO_PERMISSION", msg);
 			return false;
 		}
 		return true;
@@ -262,7 +264,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {
-			p.getMsgSend().send(player, "COMMAND_USE_INVALID" + errorMsg);
+			MessageSender.send(player, "COMMAND_USE_INVALID" + errorMsg);
 			return false;
 		}
 		return true;
@@ -273,7 +275,7 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	public boolean checkArgsString(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length < size) {
-			p.getMsgSend().send(player, "COMMAND_USE_INVALID" + errorMsg);
+			MessageSender.send(player, "COMMAND_USE_INVALID" + errorMsg);
 			return false;
 		}
 		return true;
@@ -283,7 +285,7 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdShow(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.show", p.localeLoader.getString("COMMAND_USE_SHOW"))) {
+		if (checkPerm(player, "pwarps.show", LocaleLoader.getString("COMMAND_USE_SHOW"))) {
 			p.getGuiObject().openGUI(player, 0);
 			return true;
 		}
@@ -294,7 +296,7 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdList(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.list", p.localeLoader.getString("COMMAND_USE_LIST"))) {
+		if (checkPerm(player, "pwarps.list", LocaleLoader.getString("COMMAND_USE_LIST"))) {
 			// if (!checkArgs(player, args, 2,
 			// pl.getLanguageHandler().getMessage("COMMAND_USE_LIST"))) {
 			// return false;
@@ -305,14 +307,14 @@ public class CommandListener implements CommandExecutor {
 
 			if (playerWarpObjects.size() <= 0) {
 
-				p.getMsgSend().send(player, "COMMAND_LIST_WARPS_TITLE");
-				p.getMsgSend().send(player, "COMMAND_LIST_NONE_TEXT");
+				MessageSender.send(player, "COMMAND_LIST_WARPS_TITLE");
+				MessageSender.send(player, "COMMAND_LIST_NONE_TEXT");
 				return true;
 			}
 
 			if (args.length == 1) {
 
-				p.getMsgSend().send(player, "COMMAND_LIST_WARPS_TITLE");
+				MessageSender.send(player, "COMMAND_LIST_WARPS_TITLE");
 
 				for (int i = 0; i < playerWarpObjects.size(); i++) {
 					final String warpText = playerWarpObjects.get(i).getWarpName();
@@ -324,7 +326,7 @@ public class CommandListener implements CommandExecutor {
 					final String warpZpos = String.valueOf(warpLocation.getZ()).split("\\.")[0];
 					if (!(i >= playerWarpObjects.size())) {
 
-						p.getMsgSend().send(player, "COMMAND_LIST_WARP", new Object[] { String.valueOf(i + 1), warpText,
+						MessageSender.send(player, "COMMAND_LIST_WARP", new Object[] { String.valueOf(i + 1), warpText,
 								warpWorld, warpXpos, warpYpos, warpZpos });
 					}
 				}
@@ -334,7 +336,7 @@ public class CommandListener implements CommandExecutor {
 				final PlayerWarpObject pwo = p.getPlayerWarpObjectHandler().getPlayerWarpObject(player.getUniqueId(),
 						args[1]);
 				if (pwo == null) {
-					p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
+					MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
 					return false;
 				}
 
@@ -350,29 +352,29 @@ public class CommandListener implements CommandExecutor {
 				final ArrayList<String> warpLore = pwo.getLoreList();
 				final ArrayList<String> warpBan = pwo.getBanList();
 
-				p.getMsgSend().send(player, "COMMAND_LIST_WARPS_DETAILS_TITLE", warpText);
+				MessageSender.send(player, "COMMAND_LIST_WARPS_DETAILS_TITLE", warpText);
 				// title
-				p.getMsgSend().send(player, "COMMAND_LIST_WARP_TITLE", warpTitle);
+				MessageSender.send(player, "COMMAND_LIST_WARP_TITLE", warpTitle);
 				// Location
-				p.getMsgSend().send(player, "COMMAND_LIST_WARP_LOCATION", warpWorld, warpXpos, warpYpos, warpZpos);
+				MessageSender.send(player, "COMMAND_LIST_WARP_LOCATION", warpWorld, warpXpos, warpYpos, warpZpos);
 				// ICON
-				p.getMsgSend().send(player, "COMMAND_LIST_WARP_ICON", warpIcon);
+				MessageSender.send(player, "COMMAND_LIST_WARP_ICON", warpIcon);
 				// LOREMAIN
-				p.getMsgSend().send(player, "COMMAND_LIST_WARP_LORE_MAIN");
+				MessageSender.send(player, "COMMAND_LIST_WARP_LORE_MAIN");
 				// LORE LOOP
 				int i = 0;
 				for (final String lore : warpLore) {
 					i++;
 					if (lore.length() > 0) {
-						p.getMsgSend().send(player, "COMMAND_LIST_WARP_LORE", lore, i);
+						MessageSender.send(player, "COMMAND_LIST_WARP_LORE", lore, i);
 					}
 				}
 				// BAN MAIN
-				p.getMsgSend().send(player, "COMMAND_LIST_WARP_BAN_MAIN");
+				MessageSender.send(player, "COMMAND_LIST_WARP_BAN_MAIN");
 				// BAN LOOP
 				for (final String ban : warpBan) {
 					if (ban.length() > 0) {
-						p.getMsgSend().send(player, "COMMAND_LIST_WARP_BAN", ban);
+						MessageSender.send(player, "COMMAND_LIST_WARP_BAN", ban);
 					}
 				}
 
@@ -392,8 +394,8 @@ public class CommandListener implements CommandExecutor {
 	 */
 	public boolean cmdSet(final Player player, final Command cmd, final String[] args) {
 
-		if (checkPerm(player, "pwarps.setwarp", p.localeLoader.getString("COMMAND_USE_SET"))) {
-			if (!checkArgs(player, args, 2, p.localeLoader.getString("COMMAND_USE_SET"))) {
+		if (checkPerm(player, "pwarps.setwarp", LocaleLoader.getString("COMMAND_USE_SET"))) {
+			if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_SET"))) {
 				return false;
 			}
 
@@ -422,25 +424,25 @@ public class CommandListener implements CommandExecutor {
 					"pwarps.setwarp", ".");
 			final int currentSize = p.getPlayerWarpObjectHandler().getPlayerWarpObjects(player.getUniqueId()).size();
 			if (currentSize >= maxSizeAllowed) {
-				p.getMsgSend().send(player, "COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed);
+				MessageSender.send(player, "COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed);
 				return false;
 			}
 
 			// check if player has warp named same;
 			if (p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]);
+				MessageSender.send(player, "COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]);
 				return false;
 			}
 
 			// isafe location
 			if (!p.getWarpHandler().isSafeLocation(player.getLocation())) {
-				p.getMsgSend().send(player, "COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]);
+				MessageSender.send(player, "COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]);
 				return false;
 			}
 
 			// world blocked
 			if (p.getWarpHandler().isBlockedWorld(player.getLocation())) {
-				p.getMsgSend().send(player, "COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]);
+				MessageSender.send(player, "COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]);
 				return false;
 			}
 
@@ -470,7 +472,7 @@ public class CommandListener implements CommandExecutor {
 					p.getOtherFunctions().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
 					new ArrayList<>(Arrays.asList("")));
 
-			p.getMsgSend().send(player, "COMMAND_SET_COMPLETED_TEXT", args[1]);
+			MessageSender.send(player, "COMMAND_SET_COMPLETED_TEXT", args[1]);
 			return true;
 		}
 		return false;
@@ -493,20 +495,20 @@ public class CommandListener implements CommandExecutor {
 	 * @param checkCanSetWarp
 	 */
 	private void msgPlayerCheckCanSetWarp(final Player player, String checkCanSetWarp) {
-		p.getMsgSend().send(player, checkCanSetWarp);
+		MessageSender.send(player, checkCanSetWarp);
 	}
 
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdDelete(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.setwarp", p.localeLoader.getString("COMMAND_USE_DELETE"))) {
-			if (!checkArgs(player, args, 2, p.localeLoader.getString("COMMAND_USE_DELETE"))) {
+		if (checkPerm(player, "pwarps.setwarp", LocaleLoader.getString("COMMAND_USE_DELETE"))) {
+			if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_DELETE"))) {
 				return false;
 			}
 
 			if (!p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
+				MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
 				return false;
 			}
 
@@ -524,7 +526,7 @@ public class CommandListener implements CommandExecutor {
 					p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId()), args[1]);
 			// chestObject.openGUI(player, 0);
 
-			p.getMsgSend().send(player, "COMMAND_DELETE_WARP_TEXT", args[1]);
+			MessageSender.send(player, "COMMAND_DELETE_WARP_TEXT", args[1]);
 
 			return true;
 		}
@@ -535,13 +537,13 @@ public class CommandListener implements CommandExecutor {
 	//
 	// -------------------------------------------------------------------------------------
 	public boolean cmdTitle(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.settitle", p.localeLoader.getString("COMMAND_USE_TITLE"))) {
-			if (!checkArgsString(player, args, 3, p.localeLoader.getString("COMMAND_USE_TITLE"))) {
+		if (checkPerm(player, "pwarps.settitle", LocaleLoader.getString("COMMAND_USE_TITLE"))) {
+			if (!checkArgsString(player, args, 3, LocaleLoader.getString("COMMAND_USE_TITLE"))) {
 				return false;
 			}
 
 			if (!p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
+				MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]);
 				return false;
 			}
 
@@ -552,10 +554,10 @@ public class CommandListener implements CommandExecutor {
 			}
 
 			String title = sb.toString();
-			title = p.getMsgSend().ColorVariables(player, title);
+			title = ChatColor.translateAlternateColorCodes('&',title);
 
 			if (title.length() > Config.getInstance().getMaxTitleSize()) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_TITLE_TOOLONG_TEXT",
+				MessageSender.send(player, "COMMAND_UPDATE_TITLE_TOOLONG_TEXT",
 						"" + Config.getInstance().getMaxTitleSize());
 				return false;
 			}
@@ -574,7 +576,7 @@ public class CommandListener implements CommandExecutor {
 					p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId()), args[1], "title", title);
 			// chestObject.openGUI(player, 0);
 
-			p.getMsgSend().send(player, "COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[1], title);
+			MessageSender.send(player, "COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[1], title);
 
 			return true;
 		}
@@ -586,18 +588,18 @@ public class CommandListener implements CommandExecutor {
 	// -------------------------------------------------------------------------------------
 	@SuppressWarnings("deprecation")
 	public boolean cmdIcon(final Player player, final Command cmd, final String[] args) {
-		if (checkPerm(player, "pwarps.icon", p.localeLoader.getString("COMMAND_USE_ICON"))) {
-			if (!checkArgs(player, args, 2, p.localeLoader.getString("COMMAND_USE_ICON"))) {
+		if (checkPerm(player, "pwarps.icon", LocaleLoader.getString("COMMAND_USE_ICON"))) {
+			if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_ICON"))) {
 				return false;
 			}
 
 			if (!p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
+				MessageSender.send(player, "COMMAND_UPDATE_DOESNT_EXSISTS_TEXT");
 				return false;
 			}
 
 			if (player.getItemInHand().getItemMeta() == null) {
-				p.getMsgSend().send(player, "COMMAND_UPDATE_ICON_NOICON_TEXT");
+				MessageSender.send(player, "COMMAND_UPDATE_ICON_NOICON_TEXT");
 				return true;
 			}
 
@@ -613,7 +615,7 @@ public class CommandListener implements CommandExecutor {
 					p.getOtherFunctions().parseStringFromItemStack(player.getItemInHand()));
 			// chestObject.openGUI(player, 0);
 
-			p.getMsgSend().send(player, "COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]);
+			MessageSender.send(player, "COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]);
 
 			return true;
 		}

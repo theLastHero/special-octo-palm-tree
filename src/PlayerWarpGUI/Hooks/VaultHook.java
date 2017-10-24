@@ -5,6 +5,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.locale.LocaleLoader;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook {
@@ -40,17 +42,17 @@ public class VaultHook {
 	 * 
 	 */
 	private void consoleMsgPassed(String plName) {
-		p.getMsgSend().sendConsole("CONSOLE_MSG_HOOK", plName,
-				p.localeLoader.getString("SUCCESS"));
+		MessageSender.sendConsole("CONSOLE_MSG_HOOK", plName,
+				LocaleLoader.getString("SUCCESS"));
 	}
 
 	/**
 	 * 
 	 */
 	private void consoleMsgError(String plName) {
-		p.getMsgSend().sendConsole(p.localeLoader.getString("CONSOLE_MSG_HOOK", plName,
-				p.localeLoader.getString("FAILED")));
-		p.getCriticalErrors().add(p.localeLoader.getString("CONSOLE_CRITIAL_ERROR_HOOK", plName));
+		MessageSender.sendConsole(LocaleLoader.getString("CONSOLE_MSG_HOOK", plName,
+				LocaleLoader.getString("FAILED")));
+		PlayerWarpGUI.getCriticalErrors().add(LocaleLoader.getString("CONSOLE_CRITIAL_ERROR_HOOK", plName));
 	}
 
 	/**

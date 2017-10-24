@@ -13,7 +13,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import PlayerWarpGUI.Handlers.ConfigHandler;
+import com.google.common.base.Charsets;
+
+import PlayerWarpGUI.Commands.CommandManager;
+import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Handlers.HookHandler;
 import PlayerWarpGUI.Handlers.PlayerWarpFileHandler;
 import PlayerWarpGUI.Handlers.PlayerWarpObjectHandler;
@@ -21,22 +24,22 @@ import PlayerWarpGUI.Handlers.TeleportHandler;
 import PlayerWarpGUI.Handlers.WarpHandler;
 import PlayerWarpGUI.Hooks.FactionsHook;
 import PlayerWarpGUI.Hooks.GriefPreventionHook;
+import PlayerWarpGUI.Hooks.HookManager;
 import PlayerWarpGUI.Hooks.RedProtectHook;
 import PlayerWarpGUI.Hooks.ResidenceHook;
 import PlayerWarpGUI.Hooks.VaultHook;
 import PlayerWarpGUI.Hooks.WorldGuardHook;
 import PlayerWarpGUI.Listeners.ChestListener;
 import PlayerWarpGUI.Listeners.CommandListener;
+import PlayerWarpGUI.Listeners.GriefPreventionListener;
 import PlayerWarpGUI.Listeners.PlayerListener;
 import PlayerWarpGUI.Objects.GUIObject;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
-import PlayerWarpGUI.Objects.msgSender;
 import PlayerWarpGUI.Others.Conversions;
 import PlayerWarpGUI.Others.Metrics;
-import config.Config;
-import locale.LocaleLoader;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 import net.milkbowl.vault.economy.Economy;
-import com.google.common.base.Charsets;
 
 public class PlayerWarpGUI extends JavaPlugin {
 
@@ -44,30 +47,32 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public static PlayerWarpGUI p;
 
 	// objects
-	public ArrayList<PlayerWarpObject> pwoList = new ArrayList<PlayerWarpObject>();;
+	public static ArrayList<PlayerWarpObject> pwoList = new ArrayList<PlayerWarpObject>();;
 
 	// file paths
-	public String pathMain;
-	public String pathLangs;
-	public String configName;
-	public String pathConfig;
-	public String warpsName;
-	public String pathWarps;
+	protected static String pathMain;
+	protected static String pathLangs;
+	protected static String configName;
+	protected static String pathConfig;
+	protected static String warpsName;
+	protected static String pathWarps;
 
 	// plugin details
-	public String pWarpsVersion;
+	protected static String pWarpsVersion;
 	// Config Validation Check
     public boolean noErrorsInConfigFiles = true;
 	// handlers
-	public LocaleLoader localeLoader;
-	public msgSender msgSend;
+	//public LocaleLoader localeLoader;
+	//public MessageSender msgSend;
 	//public ConfigHandler configHandler;
 	// public MessageHandler msgHandler;
-	public HookHandler hookHandler;
+	public static HookHandler hookHandler;
+	public static HookManager<?> hookManager;
 	public PlayerWarpObjectHandler pwoHandler;
 	public WarpHandler warpHandler;
 	public TeleportHandler tpHandler;
 	public PlayerWarpFileHandler warpFileHandler;
+	public GriefPreventionListener griefpreventionlistener;
 
 	public Locale locale;
 	public ResourceBundle resourceBundle;
@@ -94,8 +99,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public Economy econ = null;
 
 	// error arrays
-	public ArrayList<String> criticalErrorList = new ArrayList<String>();
-	public ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
+	public static ArrayList<String> criticalErrorList = new ArrayList<String>();
+	public static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
 
 	// +------------------------------------------------------------------------------------
 	// | onEnable()
@@ -118,7 +123,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 			//languageHandler = new LanguageHandler(p);
 			//languageHandler.loadLanguageFile("en_US");
 			// msgHandler = new MessageHandler(p);
-			msgSend = new msgSender(p);
+			//msgSend = new MessageSender(p);
 			//configHandler = new ConfigHandler(p);
 
 			// create language files
@@ -126,7 +131,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 			//configHandler.setUp();
 			//configHandler.msg();
-
+			CommandManager.registerCommands();
 			// handlers
 			pwoHandler = new PlayerWarpObjectHandler(p);
 			warpFileHandler = new PlayerWarpFileHandler(p);
@@ -139,18 +144,19 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 			setupHooks();
 
-			guiObject = new GUIObject(p);
+			//guiObject = new GUIObject(p);
 
 			// listeners
-			this.getCommand("pwarps").setExecutor(new CommandListener(p));
+			//this.getCommand("pwarps").setExecutor(new CommandListener(p));
 			registerEvents();
 
 			// metrics
 			useMetrics();
 
 			// console stuff
-			p.getMsgSend().sendTitle();
+			MessageSender.sendTitle();
 			setStartup(false);
+			
 		} catch (Throwable t) {
 
 			if (!(t instanceof ExceptionInInitializerError)) {
@@ -169,11 +175,11 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 */
 	private void setupHooks() {
 		vaultHook = new VaultHook(p);
-		griefPreventionHook = new GriefPreventionHook(p);
-		redProtectHook = new RedProtectHook(p);
-		worldGuardHook = new WorldGuardHook(p);
-		residenceHook = new ResidenceHook(p);
-		factionsHook = new FactionsHook(p);
+		griefPreventionHook = new GriefPreventionHook();
+		redProtectHook = new RedProtectHook();
+		worldGuardHook = new WorldGuardHook();
+		residenceHook = new ResidenceHook();
+		factionsHook = new FactionsHook();
 	}
 
 	/**
@@ -209,7 +215,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 *            the pwoList to set
 	 */
 	public void setPwoList(ArrayList<PlayerWarpObject> pwoList) {
-		this.pwoList = pwoList;
+		PlayerWarpGUI.pwoList = pwoList;
 	}
 
 	/**
@@ -224,7 +230,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 *            the pwarpsVersion to set
 	 */
 	public void setPwarpsVersion(String pwarpsVersion) {
-		this.pWarpsVersion = pwarpsVersion;
+		PlayerWarpGUI.pWarpsVersion = pwarpsVersion;
 	}
 
 	/**
@@ -299,7 +305,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 *            the criticalErrorList to set
 	 */
 	public void setCriticalErrorList(ArrayList<String> criticalErrorList) {
-		this.criticalErrorList = criticalErrorList;
+		PlayerWarpGUI.criticalErrorList = criticalErrorList;
 	}
 
 	/**
@@ -314,7 +320,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 *            the nonCriticalErrorList to set
 	 */
 	public void setNonCriticalErrorList(ArrayList<String> nonCriticalErrorList) {
-		this.nonCriticalErrorList = nonCriticalErrorList;
+		PlayerWarpGUI.nonCriticalErrorList = nonCriticalErrorList;
 	}
 
 	// +-----------------------------------------------------------------------------------
@@ -326,9 +332,9 @@ public class PlayerWarpGUI extends JavaPlugin {
 			try {
 				Metrics metrics = new Metrics(this);
 				metrics.start();
-				p.getMsgSend().sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("SUCCESS"));
+				MessageSender.sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("SUCCESS"));
 			} catch (IOException e) {
-				p.getMsgSend().sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("FAILED"));
+				MessageSender.sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("FAILED"));
 				getNonCriticalErrors().add(LocaleLoader.getString("CONSOLE_NONCRITIAL_ERROR"));
 			}
 		}
@@ -337,8 +343,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	// +-----------------------------------------------------------------------------------
 	// | killPlugin()
 	// +-----------------------------------------------------------------------------------
-	public void killPlugin() {
-		Bukkit.getPluginManager().disablePlugin(this);
+	public static void killPlugin() {
+		Bukkit.getPluginManager().disablePlugin(PlayerWarpGUI.p);
 	}
 
 	// +-----------------------------------------------------------------------------------
@@ -474,7 +480,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setWarpsName(String warpsName) {
-		this.warpsName = warpsName;
+		PlayerWarpGUI.warpsName = warpsName;
 	}
 
 	public String getPathWarps() {
@@ -482,7 +488,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setPathWarps(String pathWarps) {
-		this.pathWarps = pathWarps;
+		PlayerWarpGUI.pathWarps = pathWarps;
 	}
 
 	/*
@@ -496,7 +502,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setHookHandler(HookHandler hookHandler) {
-		this.hookHandler = hookHandler;
+		PlayerWarpGUI.hookHandler = hookHandler;
 	}
 
 	public VaultHook getVaultHook() {
@@ -520,15 +526,15 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setPlayerWarpObjects(ArrayList<PlayerWarpObject> playerWarpObjects) {
-		this.pwoList = playerWarpObjects;
+		PlayerWarpGUI.pwoList = playerWarpObjects;
 	}
 
-	public ArrayList<String> getNonCriticalErrors() {
+	public static ArrayList<String> getNonCriticalErrors() {
 		return nonCriticalErrorList;
 	}
 
 	public void setNonCriticalErrors(ArrayList<String> nonCriticalErrors) {
-		this.nonCriticalErrorList = nonCriticalErrors;
+		PlayerWarpGUI.nonCriticalErrorList = nonCriticalErrors;
 	}
 
 	public VaultHook getVaultHandler() {
@@ -547,12 +553,12 @@ public class PlayerWarpGUI extends JavaPlugin {
 		this.econ = econ;
 	}
 
-	public ArrayList<String> getCriticalErrors() {
+	public static ArrayList<String> getCriticalErrors() {
 		return criticalErrorList;
 	}
 
 	public void setCriticalErrors(ArrayList<String> criticalErrors) {
-		this.criticalErrorList = criticalErrors;
+		PlayerWarpGUI.criticalErrorList = criticalErrors;
 	}
 
 	public String getConfigName() {
@@ -560,7 +566,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setConfigName(String configName) {
-		this.configName = configName;
+		PlayerWarpGUI.configName = configName;
 	}
 
 /*	public ConfigHandler getConfigHandler() {
@@ -579,24 +585,9 @@ public class PlayerWarpGUI extends JavaPlugin {
 	 *            the pWarpsVersion to set
 	 */
 	public void setpWarpsVersion(String pWarpsVersion) {
-		this.pWarpsVersion = pWarpsVersion;
+		PlayerWarpGUI.pWarpsVersion = pWarpsVersion;
 	}
-
-	/**
-	 * @return the msgSend
-	 */
-	public msgSender getMsgSend() {
-		return this.msgSend;
-	}
-
-	/**
-	 * @param msgSend
-	 *            the msgSend to set
-	 */
-	public void setMsgSend(msgSender msgSend) {
-		this.msgSend = msgSend;
-	}
-
+	
 /*	public void setConfigHandler(ConfigHandler configHandler) {
 		this.configHandler = configHandler;
 	}
@@ -606,7 +597,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setPathMain(String pathMain) {
-		this.pathMain = pathMain;
+		PlayerWarpGUI.pathMain = pathMain;
 	}
 
 	public String getPathLangs() {
@@ -614,7 +605,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setPathLangs(String pathLangs) {
-		this.pathLangs = pathLangs;
+		PlayerWarpGUI.pathLangs = pathLangs;
 	}
 
 	public String getPathConfig() {
@@ -622,7 +613,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setPathConfig(String pathConfig) {
-		this.pathConfig = pathConfig;
+		PlayerWarpGUI.pathConfig = pathConfig;
 	}
 
 	public String getthisVersion() {
@@ -631,7 +622,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	public void setthisVersion(String thisVersion) {
-		this.pWarpsVersion = thisVersion;
+		PlayerWarpGUI.pWarpsVersion = thisVersion;
 	}
 
 	public TeleportHandler getTeleportHandler() {

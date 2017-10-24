@@ -60,12 +60,11 @@ RedProtect:
  member-player-can-set-warp: true
  delete-warps-if-region-is-deleted: true
 
-# RedProtect
+# Residence
 Residence:
  enabled: false
  owner-player-can-set-warp: true
  build-permission-player-can-set-warp: true
- # Not working :(
  delete-warps-if-region-is-deleted: true
 
 # WorldGuard
@@ -85,7 +84,3 @@ Factions:
 # Config.yml compatability version. 
 # DO NOT MODIFY
 config-version: 1.1
-General:
- # Available: en_us, en_au
- Locale: 'en_us'
-playerData:

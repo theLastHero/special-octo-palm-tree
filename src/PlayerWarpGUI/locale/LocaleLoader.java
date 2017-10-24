@@ -1,23 +1,16 @@
-package locale;
+package PlayerWarpGUI.locale;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.bukkit.ChatColor;
 
-import com.sun.jmx.snmp.agent.SnmpStandardMetaServer;
-
 import PlayerWarpGUI.PlayerWarpGUI;
-import PlayerWarpGUI.Handlers.ConfigHandler;
-import config.Config;
-
-import java.util.logging.Level;
+import PlayerWarpGUI.config.Config;
 
 public final class LocaleLoader {
-	private static PlayerWarpGUI p;
     private static final String BUNDLE_ROOT = "locale";
     private static ResourceBundle bundle = null;
     private static ResourceBundle enBundle = null;
@@ -25,7 +18,6 @@ public final class LocaleLoader {
 
 
 	private LocaleLoader(PlayerWarpGUI pl) {
-		LocaleLoader.p = pl;
 	}
 
     public static String getString(String key) {

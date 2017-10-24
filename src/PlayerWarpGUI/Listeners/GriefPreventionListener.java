@@ -8,8 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import config.Config;
-import locale.LocaleLoader;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 import me.ryanhamshire.GriefPrevention.events.ClaimDeletedEvent;
 
 public class GriefPreventionListener implements Listener {
@@ -28,7 +29,7 @@ public class GriefPreventionListener implements Listener {
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(ClaimDeletedEvent e) {
 
-		if(pl.getGriefPreventionHook().isEnabled()) {
+		if(Config.getInstance().getGPEnabled()) {
 		if (Config.getInstance().getGPRemoveOnDelete()) {
 			for (int i = 0; i < pl.getPlayerWarpObjects().size(); i++) {
 
@@ -41,7 +42,7 @@ public class GriefPreventionListener implements Listener {
 							warpName);
 
 					pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();
-					pl.getMsgSend().send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(), LocaleLoader.getString("GRIEFPREVENTION_CLAIM_DELETED", warpName));
+					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(), LocaleLoader.getString("GRIEFPREVENTION_CLAIM_DELETED", warpName));
 					
 				}
 			}

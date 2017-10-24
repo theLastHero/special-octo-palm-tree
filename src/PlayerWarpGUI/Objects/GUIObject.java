@@ -13,19 +13,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import config.Config;
-import locale.LocaleLoader;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class GUIObject {
 
-	private PlayerWarpGUI pl;
+	private PlayerWarpGUI p;
 	
-	/**
-	 * @param pl
-	 */
-	public GUIObject(PlayerWarpGUI pl) {
-		this.pl = pl;
-	}
 
 	// -------------------------------------------------------------------------------------
 	//
@@ -33,10 +27,11 @@ public class GUIObject {
 	@SuppressWarnings({ "unused" })
 	public void openGUI(Player player, int page) {
 
+		p = PlayerWarpGUI.p;
 		int pageNumber = page;
 		int chestSize = Config.getInstance().getGuiRows() * 9;
 
-		String chestTitle = pl.getOtherFunctions().replaceColorVariables(pl.getConfig().getString("gui.title"));
+		String chestTitle = p.getOtherFunctions().replaceColorVariables(p.getConfig().getString("gui.title"));
 
 		int pageSize = (chestSize - 1);
 		int startNum = 0; // decalre variable
@@ -52,7 +47,7 @@ public class GUIObject {
 		Inventory inv = Bukkit.createInventory(null, chestSize, chestTitle);
 
 		// create array list of warps by name from hashmap
-		ArrayList<PlayerWarpObject> playerWarpObjects = pl.getPlayerWarpObjects();
+		ArrayList<PlayerWarpObject> playerWarpObjects = p.getPlayerWarpObjects();
 
 		// set start
 		startNum = pageNum * pageSize;
@@ -121,11 +116,11 @@ public class GUIObject {
 		ArrayList<String> lore = new ArrayList<String>();
 		ArrayList<String> loreList = pwo.getLoreList();
 		for (int i = 0; i < loreList.size(); i++) {
-			lore.add(pl.getOtherFunctions().replaceColorVariables(loreList.get(i)));
+			lore.add(p.getOtherFunctions().replaceColorVariables(loreList.get(i)));
 		}
-		lore.add(pl.getOtherFunctions()
+		lore.add(p.getOtherFunctions()
 				.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT") + pwo.getUid()));
-		lore.add(pl.getOtherFunctions().replaceColorVariables(LocaleLoader.getString("WARP_OWNER_TEXT")
+		lore.add(p.getOtherFunctions().replaceColorVariables(LocaleLoader.getString("WARP_OWNER_TEXT")
 				+ Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName()));
 		return lore;
 
@@ -136,10 +131,10 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	public String getWarpTitle(PlayerWarpObject pwo) {
 		if (!(pwo.getTitle() == null) && !(pwo.getTitle().length() == 0)) {
-			return pl.getOtherFunctions().replaceColorVariables(pwo.getTitle());
+			return p.getOtherFunctions().replaceColorVariables(pwo.getTitle());
 		}
 
-		return pl.getOtherFunctions().replaceHolders(Config.getInstance().getDefaultTitle(),
+		return p.getOtherFunctions().replaceHolders(Config.getInstance().getDefaultTitle(),
 				Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName());
 
 	}
@@ -153,10 +148,10 @@ public class GUIObject {
 		}
 
 		if (!(pwo.getIcon() == null) && !(pwo.getIcon().length() == 0)) {
-			return pl.getOtherFunctions().parseItemStackFromString(pwo.getIcon());
+			return p.getOtherFunctions().parseItemStackFromString(pwo.getIcon());
 		}
 
-		return pl.getOtherFunctions().parseItemStackFromString(pl.getConfig().getString("gui.default-playerwarp-icon"));
+		return p.getOtherFunctions().parseItemStackFromString(p.getConfig().getString("gui.default-playerwarp-icon"));
 
 	}
 
@@ -183,10 +178,10 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	public ItemStack getNextPageItemStack(int pageNum) {
 
-		ItemStack nextPageItemstack = pl.getOtherFunctions()
+		ItemStack nextPageItemstack = p.getOtherFunctions()
 				.parseItemStackFromString(Config.getInstance().getNextpageIcon());
 		ItemMeta nextPageMeta = nextPageItemstack.getItemMeta();
-		nextPageMeta.setDisplayName(pl.localeLoader.getString("TEXT_NEXTPAGE") + pageNum);
+		nextPageMeta.setDisplayName(LocaleLoader.getString("TEXT_NEXTPAGE") + pageNum);
 		nextPageItemstack.setItemMeta(nextPageMeta);
 
 		return nextPageItemstack;

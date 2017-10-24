@@ -1,9 +1,8 @@
-package PlayerWarpGUI.Handlers;
+package OldClasses;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,8 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import locale.LocaleLoader;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ConfigHandler {
 
@@ -28,11 +28,11 @@ public class ConfigHandler {
 
 	public void msg() {
 		if(p.getConfig() != null) {
-			p.getMsgSend().sendConsole("CONSOLE_MSG_CONFIG_FILE", p.getConfigName().toString());
+			MessageSender.sendConsole("CONSOLE_MSG_CONFIG_FILE", p.getConfigName().toString());
 		} else {
-			p.getCriticalErrors().add(LocaleLoader.getString("CONSOLE_ERROR_CRITIAL_FILENOTFOUND", p.getConfigName().toString()));
+			PlayerWarpGUI.getCriticalErrors().add(LocaleLoader.getString("CONSOLE_ERROR_CRITIAL_FILENOTFOUND", p.getConfigName().toString()));
 			
-			p.getMsgSend().sendConsole("CONSOLE_MSG_CONFIG_FILE", LocaleLoader.getString("FAILED"));	
+			MessageSender.sendConsole("CONSOLE_MSG_CONFIG_FILE", LocaleLoader.getString("FAILED"));	
 		}
 	}
 

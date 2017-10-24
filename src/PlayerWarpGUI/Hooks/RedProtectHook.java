@@ -1,81 +1,26 @@
 package PlayerWarpGUI.Hooks;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import PlayerWarpGUI.PlayerWarpGUI;
-import PlayerWarpGUI.Listeners.RedProtectListener;
 import br.net.fabiozumbi12.RedProtect.Region;
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
-import config.Config;
+import PlayerWarpGUI.config.Config;
 
-public class RedProtectHook {
+public class RedProtectHook extends HookManager<Object>{
 
-	private PlayerWarpGUI pl;
-	private boolean enabled = false;
-	@SuppressWarnings("unused")
-	private Plugin rp;
-
-	// +-------------------------------------------------------------------------------------
-	// | Constructor
-	// +-----------------------------------------------------------------------------------
-	public RedProtectHook(PlayerWarpGUI pl) {
-		this.pl = pl;
-		setEnabled();
-		registerListener();
-	}
-
-	/**
-	 * 
-	 */
-	private void setEnabled() {
-		if (Config.getInstance().getRPEnabled()) {
-			setEnabled(pl.getHookHandler().checkHook("RedProtect"));
-		}
-	}
-
-	/**
-	 * @param enabled
-	 */
-	private void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+	private static String plName = "RedProtect";
+	private static boolean configEnabled = Config.getInstance().getRPEnabled();
 	
-	/**
-	 * @return
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	/**
-	 * 
-	 */
-	private void registerListener() {
-		if (this.enabled) {
-			rp = Bukkit.getPluginManager().getPlugin("RedProtect");
-			Bukkit.getServer().getPluginManager().registerEvents(new RedProtectListener(this.pl), pl);
-		}
+	public RedProtectHook() {
+		super(plName, configEnabled);
 	}
 
-	/**
-	 * @param location
-	 * @return
-	 */
-	public Region getLocationData(Location location) {
-		return RedProtectAPI.getRegion(location);
-	}
 
-	/**
-	 * @param player
-	 * @return
-	 */
+	@Override
 	public String warpHookCheck(Player player) {
 
 		// if not enabled, or config not enabled or player not in a claim
-		if (!isEnabled() || !Config.getInstance().getRPEnabled()) {
+		if (!this.isEnabled) {
 			return null;
 		}
 		
@@ -103,6 +48,11 @@ public class RedProtectHook {
 
 		return "REDPROTECT_NO_PERMISSION";
 
+	}
+
+	@Override
+	public Region getLocationData(Location location) {
+		return RedProtectAPI.getRegion(location);
 	}
 
 }

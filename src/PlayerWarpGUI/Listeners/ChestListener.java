@@ -15,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ChestListener implements Listener {
 
@@ -69,8 +71,8 @@ public class ChestListener implements Listener {
 				// check ban list
 				if (p.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
 						player.getUniqueId().toString())) {
-					p.getMsgSend().send(player,
-							p.localeLoader.getString("COMMAND_BANNED_PLAYER"));
+					MessageSender.send(player,
+							LocaleLoader.getString("COMMAND_BANNED_PLAYER"));
 					closeInv(player);
 					return;
 				}
@@ -79,7 +81,7 @@ public class ChestListener implements Listener {
 				String errorMsg = p.getWarpHandler().canTeleport(player,
 						p.getOtherFunctions().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
-					p.getMsgSend().send(player, errorMsg);
+					MessageSender.send(player, errorMsg);
 					closeInv(player);
 					return;
 				}
@@ -117,7 +119,7 @@ public class ChestListener implements Listener {
 	 * @return
 	 */
 	public boolean isNextPageIcon(String s) {
-		if (s.contains(p.localeLoader.getString("NEXTPAGE_TEXT"))) {
+		if (s.contains(LocaleLoader.getString("NEXTPAGE_TEXT"))) {
 			return true;
 		}
 		return false;
@@ -141,9 +143,9 @@ public class ChestListener implements Listener {
 
 		for (int i = 0; i < loreList.size(); i++) {
 			if (loreList.get(i).contains(ChatColor.stripColor(p.getOtherFunctions()
-					.replaceColorVariables(p.localeLoader.getString("WARP_ID_TEXT"))))) {
+					.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT"))))) {
 				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(p.getOtherFunctions()
-						.replaceColorVariables(p.localeLoader.getString("WARP_ID_TEXT")), "")));
+						.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT")), "")));
 			}
 		}
 

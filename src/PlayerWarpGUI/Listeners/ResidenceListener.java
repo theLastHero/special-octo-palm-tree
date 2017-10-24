@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ResidenceListener implements Listener {
 
@@ -25,9 +28,9 @@ public class ResidenceListener implements Listener {
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(ResidenceDeleteEvent e) {
 		Bukkit.broadcastMessage("Event Called");
-		if(p.getResidenceHook().isEnabled()) {
+		if(Config.getInstance().getRSEnabled()) {
 		
-		if (p.getConfig().getBoolean("Residence.delete-warps-if-region-is-deleted")) {
+		if (Config.getInstance().getRSemoveOnDelete()) {
 			for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
 
 				Location loc = p.getOtherFunctions().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
@@ -40,7 +43,7 @@ public class ResidenceListener implements Listener {
 							p.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 
 					p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
-					p.getMsgSend().send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),p.localeLoader.getString("RESIDENCE_CLAIM_DELETED", warpName));
+					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),LocaleLoader.getString("RESIDENCE_CLAIM_DELETED", warpName));
 				}
 			}
 			}

@@ -6,8 +6,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import config.Config;
-import locale.LocaleLoader;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class WarpHandler {
 

@@ -1,4 +1,4 @@
-package config;
+package PlayerWarpGUI.config;
 
 import java.io.File;
 import java.util.List;

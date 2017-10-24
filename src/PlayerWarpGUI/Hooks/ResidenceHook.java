@@ -1,6 +1,5 @@
 package PlayerWarpGUI.Hooks;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -9,70 +8,22 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
-import PlayerWarpGUI.PlayerWarpGUI;
-import PlayerWarpGUI.Listeners.ResidenceListener;
+import PlayerWarpGUI.config.Config;
 
-public class ResidenceHook {
+public class ResidenceHook extends HookManager<Object>{
 
-	private PlayerWarpGUI pl;
-	public boolean enabled = false;
-
-	// +-------------------------------------------------------------------------------------
-	// | Constructor
-	// +-----------------------------------------------------------------------------------
-	public ResidenceHook(PlayerWarpGUI pl) {
-		this.pl = pl;
-		setEnabled();
-		registerListener();
-	}
-
-	/**
-	 * 
-	 */
-	private void setEnabled() {
-		if (pl.getConfig().getBoolean("Residence.enabled")) {
-			setEnabled(pl.getHookHandler().checkHook("Residence"));
-		}
+	private static String plName = "Residence";
+	private static boolean configEnabled = Config.getInstance().getRSEnabled();
+	
+	public ResidenceHook() {
+		super(plName, configEnabled);
 	}
 	
-	/**
-	 * @param enabled
-	 */
-	private void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
 
-	/**
-	 * @return
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	/**
-	 * 
-	 */
-	private void registerListener() {
-		if (enabled) {
-			Bukkit.getServer().getPluginManager().registerEvents(new ResidenceListener(pl), pl);
-		}
-	}
-
-	/**
-	 * @param location
-	 * @return
-	 */
-	public ClaimedResidence getLocationData(Location location) {
-		return ResidenceApi.getResidenceManager().getByLoc(location);
-	}
-
-	/**
-	 * @param player
-	 * @return
-	 */
+	@Override
 	public String warpHookCheck(Player player) {
 
-		if (!isEnabled() || !pl.getConfig().getBoolean("Residence.enabled")) {
+		if (!this.isEnabled) {
 			return null;
 		}
 
@@ -80,13 +31,13 @@ public class ResidenceHook {
 			return "RESIDENCE_NOT_IN_A_REGION";
 		}
 
-		if (pl.getConfig().getBoolean("Residence.owner-player-can-set-warp")) {
+		if (Config.getInstance().getRSOwnerCan()) {
 			if (getLocationData(player.getLocation()).getOwner() == player.getName()) {
 				return null;
 			}
 		}
 
-		if (pl.getConfig().getBoolean("Residence.build-permission-player-can-set-warp")) {
+		if (Config.getInstance().getRSBuilderCan()) {
 			FlagPermissions.addFlag("build");
 			ResidencePermissions perms = getLocationData(player.getLocation()).getPermissions();
 
@@ -100,5 +51,14 @@ public class ResidenceHook {
 		return "RESIDENCE_NO_PERMISSION";
 
 	}
+
+	@Override
+	public ClaimedResidence getLocationData(Location location) {
+		return ResidenceApi.getResidenceManager().getByLoc(location);
+	}
+
+	
+	
+	
 
 }

@@ -15,6 +15,9 @@ import com.massivecraft.factions.event.EventFactionsChunksChange;
 import com.massivecraft.massivecore.ps.PS;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class FactionsListener implements Listener {
 
@@ -30,8 +33,8 @@ public class FactionsListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void lossOfLand(EventFactionsChunksChange e) {
 
-		if (p.getFactionsHook().isEnabled()) {
-			if (p.getConfig().getBoolean("Factions.delete-warps-if-zone-is-deleted")) {
+		if (Config.getInstance().getFAEnabled()) {
+			if (Config.getInstance().getFARemoveOnDelete()) {
 				for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
 
 					Location loc = p.getOtherFunctions().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
@@ -52,8 +55,8 @@ public class FactionsListener implements Listener {
 									p.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 
 							p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
-							p.getMsgSend().send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),
-									p.localeLoader.getString("FACTIONS_CLAIM_DELETED", warpName));
+							MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),
+									LocaleLoader.getString("FACTIONS_CLAIM_DELETED", warpName));
 						}
 
 					}

@@ -4,15 +4,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import locale.LocaleLoader;
+import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class HookHandler {
 
 	private static PlayerWarpGUI p;
 	private String status = "FAILED";
 	
-	public HookHandler(PlayerWarpGUI p) {
-		HookHandler.p = p;
+	public HookHandler(PlayerWarpGUI pl) {
+		HookHandler.p = pl;
+		//ignore error trash line
+		p.getEcon();
 	}
 
 	public boolean checkHook(String pluginName) {
@@ -33,7 +36,7 @@ public class HookHandler {
 	 */
 	private void addNonCriticalError(String pluginName) {
 		if (status == "FAILED") {
-			p.getNonCriticalErrors()
+			PlayerWarpGUI.getNonCriticalErrors()
 					.add(LocaleLoader.getString("CONSOLE_NONCRITIAL_ERROR_HOOK", pluginName));
 		}
 	}
@@ -42,7 +45,7 @@ public class HookHandler {
 	 * @param pluginName
 	 */
 	private void consoleStatusMessage(String pluginName) {
-		p.getMsgSend().sendConsole("CONSOLE_MSG_HOOK", pluginName,
+		MessageSender.sendConsole("CONSOLE_MSG_HOOK", pluginName,
 				LocaleLoader.getString(status));
 	}
 

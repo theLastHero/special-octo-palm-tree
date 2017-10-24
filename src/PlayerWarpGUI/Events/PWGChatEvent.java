@@ -1,4 +1,4 @@
-package Events;
+package PlayerWarpGUI.Events;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

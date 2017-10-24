@@ -31,12 +31,12 @@ public class PlayerWarpObject {
 		this.setLoreList(loreList);
 		this.setBanList(banList);
 		
-		pl.pwoList.add(this);
+		PlayerWarpGUI.pwoList.add(this);
 
 	}
 	
 	public void removePlayerWarpObject() {
-		pl.pwoList.remove(this);
+		PlayerWarpGUI.pwoList.remove(this);
 }
 
 	public static int getUNIQUE_ID() {

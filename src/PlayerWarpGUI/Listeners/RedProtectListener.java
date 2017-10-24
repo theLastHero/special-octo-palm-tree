@@ -8,8 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
 import br.net.fabiozumbi12.RedProtect.events.DeleteRegionEvent;
-import config.Config;
+import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class RedProtectListener implements Listener {
 
@@ -24,7 +26,7 @@ public class RedProtectListener implements Listener {
 
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(DeleteRegionEvent e) {
-		if(p.getRedProtectHook().isEnabled()) {
+		if(Config.getInstance().getRPEnabled()) {
 		if (Config.getInstance().getRPRemoveOnDelete()) {
 			for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
 
@@ -39,7 +41,7 @@ public class RedProtectListener implements Listener {
 							p.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
 
 					p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
-					p.getMsgSend().send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),p.localeLoader.getString("REDPROTECT_CLAIM_DELETED", warpName));
+					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),LocaleLoader.getString("REDPROTECT_CLAIM_DELETED", warpName));
 					return;
 				}
 			}

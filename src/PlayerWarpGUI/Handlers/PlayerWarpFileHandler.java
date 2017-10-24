@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Chat.MessageSender;
 
 public class PlayerWarpFileHandler {
 
@@ -28,7 +29,7 @@ public class PlayerWarpFileHandler {
 	public void checkWarpFolder() {
 		File directory = new File(p.getPathWarps());
 		if (!directory.exists()) {
-			p.getMsgSend().sendConsole("CONSOLE_MSG_CREATE_FOLDER", p.getWarpsName());
+			MessageSender.sendConsole("CONSOLE_MSG_CREATE_FOLDER", p.getWarpsName());
 			directory.mkdirs();
 		}
 	}
@@ -61,8 +62,8 @@ public class PlayerWarpFileHandler {
 	 */
 	public void consoleMsgWarpCount(int warpFilesCount, int warpCount) {
 		if (p.isStartup()) {
-			p.getMsgSend().sendConsole("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount);
-			p.getMsgSend().sendConsole("CONSOLE_MSG_WARPS_COUNT", "" + warpCount);
+			MessageSender.sendConsole("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount);
+			MessageSender.sendConsole("CONSOLE_MSG_WARPS_COUNT", "" + warpCount);
 		}
 	}
 
