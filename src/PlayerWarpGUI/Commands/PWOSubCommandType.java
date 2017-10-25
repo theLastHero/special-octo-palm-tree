@@ -10,7 +10,8 @@ public enum PWOSubCommandType {
 	    SETLORE,
 	    BAN,
 	    UNBAN,
-	    SHOW;
+	    SHOW,
+	    LIST;
 
 	    public static PWOSubCommandType getSubcommand(String commandName) {
 	        for (PWOSubCommandType command : values()) {
@@ -34,7 +35,7 @@ public enum PWOSubCommandType {
 	        else if (commandName.equalsIgnoreCase("settitle")) {
 	            return SETTITLE;
 	        }
-	        else if (commandName.equalsIgnoreCase("setlore")) {
+	        else if (commandName.contains("setlore")) {
 	            return SETLORE;
 	        }
 	        else if (commandName.equalsIgnoreCase("ban")) {
@@ -45,6 +46,9 @@ public enum PWOSubCommandType {
 	        }
 	        else if (commandName.equalsIgnoreCase("show")) {
 	            return SHOW;
+	        }
+	        else if (commandName.equalsIgnoreCase("list")) {
+	            return LIST;
 	        }
 
 	        return null;

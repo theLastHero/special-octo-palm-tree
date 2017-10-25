@@ -1,8 +1,5 @@
 package PlayerWarpGUI.Commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -11,36 +8,32 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.ImmutableList;
-
-import PlayerWarpGUI.Commands.SubCommands.*;
+import PlayerWarpGUI.Commands.SubCommands.BanCommand;
+import PlayerWarpGUI.Commands.SubCommands.DeleteWarpCommand;
+import PlayerWarpGUI.Commands.SubCommands.HelpCommand;
+import PlayerWarpGUI.Commands.SubCommands.SetIconCommand;
+import PlayerWarpGUI.Commands.SubCommands.SetLoreCommand;
+import PlayerWarpGUI.Commands.SubCommands.SetTitleCommand;
+import PlayerWarpGUI.Commands.SubCommands.SetWarpCommand;
+import PlayerWarpGUI.Commands.SubCommands.ShowCommand;
+import PlayerWarpGUI.Commands.SubCommands.UnbanCommand;
+import PlayerWarpGUI.Commands.SubCommands.ListCommand;
 import PlayerWarpGUI.locale.LocaleLoader;
 
 public class PWOCommand implements TabExecutor {
-    private static final List<String> PARTY_SUBCOMMANDS;
-    private static final List<String> XPSHARE_COMPLETIONS = ImmutableList.of("none", "equal");
-    private static final List<String> ITEMSHARE_COMPLETIONS = ImmutableList.of("none", "equal", "random", "loot", "mining", "herbalism", "woodcutting", "misc");
+	
+   
 
-    static {
-        ArrayList<String> subcommands = new ArrayList<String>();
-
-        for (PWOSubCommandType subcommand : PWOSubCommandType.values()) {
-            subcommands.add(subcommand.toString());
-        }
-
-        Collections.sort(subcommands);
-        PARTY_SUBCOMMANDS = ImmutableList.copyOf(subcommands);
-    }
-
-    private CommandExecutor helpWarpCommand          = new SetWarpCommand();
+    private CommandExecutor helpWarpCommand          = new HelpCommand();
     private CommandExecutor setWarpCommand       = new SetWarpCommand();
-    private CommandExecutor deleteWarpCommand          = new SetWarpCommand();
-    private CommandExecutor setIconWarpCommand       = new DeleteWarpCommand();
-    private CommandExecutor setTitleWarpCommand          = new SetWarpCommand();
-    private CommandExecutor setLoreWarpCommand       = new DeleteWarpCommand();
-    private CommandExecutor banWarpCommand          = new SetWarpCommand();
-    private CommandExecutor unbanWarpCommand       = new DeleteWarpCommand();
+    private CommandExecutor deleteWarpCommand          = new DeleteWarpCommand();
+    private CommandExecutor setIconWarpCommand       = new SetIconCommand();
+    private CommandExecutor setTitleWarpCommand          = new SetTitleCommand();
+    private CommandExecutor setLoreWarpCommand       = new SetLoreCommand();
+    private CommandExecutor banWarpCommand          = new BanCommand();
+    private CommandExecutor unbanWarpCommand       = new UnbanCommand();
     private CommandExecutor showCommand          = new ShowCommand();
+    private CommandExecutor listCommand          = new ListCommand();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -53,6 +46,10 @@ public class PWOCommand implements TabExecutor {
         if (args.length < 1) {
         	return showCommand.onCommand(sender, command, label, args);
         }
+        
+        if (args[0].contains("setlore")) {
+        	return setLoreWarpCommand.onCommand(sender, command, label, args);
+        }
 
         PWOSubCommandType subcommand = PWOSubCommandType.getSubcommand(args[0]);
 
@@ -62,23 +59,25 @@ public class PWOCommand implements TabExecutor {
 
         switch (subcommand) {
             case HELP:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return helpWarpCommand.onCommand(sender, command, label, args);
             case SET:
                 return setWarpCommand.onCommand(sender, command, label, args);
             case DELETE:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return deleteWarpCommand.onCommand(sender, command, label, args);
             case SETICON:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return setIconWarpCommand.onCommand(sender, command, label, args);
             case SETTITLE:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return setTitleWarpCommand.onCommand(sender, command, label, args);
             case SETLORE:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return setLoreWarpCommand.onCommand(sender, command, label, args);
             case BAN:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return banWarpCommand.onCommand(sender, command, label, args);
             case UNBAN:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return unbanWarpCommand.onCommand(sender, command, label, args);
             case SHOW:
-                return setWarpCommand.onCommand(sender, command, label, args);
+                return showCommand.onCommand(sender, command, label, args);
+            case LIST:
+                return listCommand.onCommand(sender, command, label, args);
             default:
                 break;
         }

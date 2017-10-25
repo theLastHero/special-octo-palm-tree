@@ -3,9 +3,9 @@ package PlayerWarpGUI.Handlers;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class HookHandler {
 

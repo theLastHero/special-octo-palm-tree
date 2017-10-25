@@ -4,9 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 import net.milkbowl.vault.economy.Economy;
 
 public class VaultHook {

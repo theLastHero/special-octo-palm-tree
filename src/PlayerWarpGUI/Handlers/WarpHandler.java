@@ -5,9 +5,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Utils.StringUtils;
 
 public class WarpHandler {
 
@@ -88,19 +89,19 @@ public class WarpHandler {
 		// here check blocks to land on
 		for (int i = 0; i < Config.getInstance().getUnsafeBlocks().size(); i++) {
 			
-			if (feet.getType().equals(pl.getOtherFunctions().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
+			if (feet.getType().equals(StringUtils.getInstance().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
 				return false; // not solid
 			}
 		
-			if (feet.getLocation().add(0, -1, 0).getBlock().getRelative(BlockFace.UP).getType().equals(pl.getOtherFunctions().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
+			if (feet.getLocation().add(0, -1, 0).getBlock().getRelative(BlockFace.UP).getType().equals(StringUtils.getInstance().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
 				return false; // not solid
 			}
 
-			if (feet.getRelative(BlockFace.DOWN).getType().equals(pl.getOtherFunctions().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
+			if (feet.getRelative(BlockFace.DOWN).getType().equals(StringUtils.getInstance().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
 				return false; // not solid
 			}
 			
-			if (feet.getLocation().add(0, 1, 0).getBlock().getType().equals(pl.getOtherFunctions().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
+			if (feet.getLocation().add(0, 1, 0).getBlock().getType().equals(StringUtils.getInstance().parseItemStackFromString(Config.getInstance().getUnsafeBlocks().get(i).toString()))) {
 				return false; // not solid
 			}
 

@@ -2,8 +2,8 @@ package PlayerWarpGUI.Commands;
 
 import org.bukkit.command.PluginCommand;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public final class CommandManager {
 

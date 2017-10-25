@@ -6,8 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Handlers.TeleportHandler;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class PlayerListener implements Listener {
 

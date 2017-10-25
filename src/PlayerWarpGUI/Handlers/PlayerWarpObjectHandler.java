@@ -6,8 +6,9 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
+import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class PlayerWarpObjectHandler {
 	
@@ -118,7 +119,7 @@ public class PlayerWarpObjectHandler {
 		if (permission.getPermission().startsWith(perm+splitter)) {
 			String result[] = permission.getPermission().split(perm+splitter);
 			String returnValue = result[result.length - 1];
-			if (returnValue != null && pl.getCalc().isInt(returnValue)) {
+			if (returnValue != null && StringUtils.getInstance().isInt(returnValue)) {
 				int validInt = Integer.parseInt(returnValue);
 				if (validInt > returnAllowed) {
 					returnAllowed = validInt;

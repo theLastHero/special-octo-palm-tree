@@ -5,17 +5,33 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public abstract class HookManager<OUTPUT> {
 
+	/**
+	 * 
+	 */
 	public boolean isEnabled = false;
+	/**
+	 * 
+	 */
 	public String hookedPluginName;
+	/**
+	 * 
+	 */
 	private String status = "FAILED";
+	/**
+	 * 
+	 */
 	private boolean isConfigEnabled;
 
+	/**
+	 * @param hookedPluginName
+	 * @param configEnabled
+	 */
 	public HookManager(String hookedPluginName, boolean configEnabled) {
 		this.hookedPluginName = hookedPluginName;
 		this.isConfigEnabled = configEnabled;
@@ -24,6 +40,9 @@ public abstract class HookManager<OUTPUT> {
 	}
 
 
+	/**
+	 * 
+	 */
 	public void setup() {
 		if (this.isConfigEnabled) {
 			Plugin pHook = Bukkit.getPluginManager().getPlugin(hookedPluginName);
@@ -40,6 +59,9 @@ public abstract class HookManager<OUTPUT> {
 
 	}
 
+	/**
+	 * @param pluginName
+	 */
 	private void addNonCriticalError(String pluginName) {
 		if (status == "FAILED") {
 			PlayerWarpGUI.getNonCriticalErrors()
@@ -47,12 +69,23 @@ public abstract class HookManager<OUTPUT> {
 		}
 	}
 
+	/**
+	 * @param pluginName
+	 */
 	private void consoleStatusMessage(String pluginName) {
 		MessageSender.sendConsole("CONSOLE_MSG_HOOK", pluginName, LocaleLoader.getString(status));
 	}
 
+	/**
+	 * @param player
+	 * @return
+	 */
 	public abstract String warpHookCheck(Player player);
 
+	/**
+	 * @param location
+	 * @return
+	 */
 	public abstract OUTPUT getLocationData(Location location);
 
 }

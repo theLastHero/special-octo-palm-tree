@@ -12,9 +12,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Utils.StringUtils;
 
 public class GUIObject {
 
@@ -31,7 +32,7 @@ public class GUIObject {
 		int pageNumber = page;
 		int chestSize = Config.getInstance().getGuiRows() * 9;
 
-		String chestTitle = p.getOtherFunctions().replaceColorVariables(p.getConfig().getString("gui.title"));
+		String chestTitle = StringUtils.getInstance().replaceColorVariables(p.getConfig().getString("gui.title"));
 
 		int pageSize = (chestSize - 1);
 		int startNum = 0; // decalre variable
@@ -116,11 +117,11 @@ public class GUIObject {
 		ArrayList<String> lore = new ArrayList<String>();
 		ArrayList<String> loreList = pwo.getLoreList();
 		for (int i = 0; i < loreList.size(); i++) {
-			lore.add(p.getOtherFunctions().replaceColorVariables(loreList.get(i)));
+			lore.add(StringUtils.getInstance().replaceColorVariables(loreList.get(i)));
 		}
-		lore.add(p.getOtherFunctions()
+		lore.add(StringUtils.getInstance()
 				.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT") + pwo.getUid()));
-		lore.add(p.getOtherFunctions().replaceColorVariables(LocaleLoader.getString("WARP_OWNER_TEXT")
+		lore.add(StringUtils.getInstance().replaceColorVariables(LocaleLoader.getString("WARP_OWNER_TEXT")
 				+ Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName()));
 		return lore;
 
@@ -131,10 +132,10 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	public String getWarpTitle(PlayerWarpObject pwo) {
 		if (!(pwo.getTitle() == null) && !(pwo.getTitle().length() == 0)) {
-			return p.getOtherFunctions().replaceColorVariables(pwo.getTitle());
+			return StringUtils.getInstance().replaceColorVariables(pwo.getTitle());
 		}
 
-		return p.getOtherFunctions().replaceHolders(Config.getInstance().getDefaultTitle(),
+		return StringUtils.getInstance().replaceHolders(Config.getInstance().getDefaultTitle(),
 				Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName());
 
 	}
@@ -148,10 +149,10 @@ public class GUIObject {
 		}
 
 		if (!(pwo.getIcon() == null) && !(pwo.getIcon().length() == 0)) {
-			return p.getOtherFunctions().parseItemStackFromString(pwo.getIcon());
+			return StringUtils.getInstance().parseItemStackFromString(pwo.getIcon());
 		}
 
-		return p.getOtherFunctions().parseItemStackFromString(p.getConfig().getString("gui.default-playerwarp-icon"));
+		return StringUtils.getInstance().parseItemStackFromString(p.getConfig().getString("gui.default-playerwarp-icon"));
 
 	}
 
@@ -178,7 +179,7 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	public ItemStack getNextPageItemStack(int pageNum) {
 
-		ItemStack nextPageItemstack = p.getOtherFunctions()
+		ItemStack nextPageItemstack = StringUtils.getInstance()
 				.parseItemStackFromString(Config.getInstance().getNextpageIcon());
 		ItemMeta nextPageMeta = nextPageItemstack.getItemMeta();
 		nextPageMeta.setDisplayName(LocaleLoader.getString("TEXT_NEXTPAGE") + pageNum);

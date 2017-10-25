@@ -11,8 +11,9 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class PlayerWarpFileHandler {
 
@@ -73,7 +74,7 @@ public class PlayerWarpFileHandler {
 	 */
 	public File createPlayerWarpFile(UUID uuid) {
 		File f = new File(p.getPathWarps() + uuid.toString() + ".yml");
-		p.getOtherFunctions().copy(p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
+		StringUtils.getInstance().copy(p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}
 
@@ -108,7 +109,7 @@ public class PlayerWarpFileHandler {
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 		warpConfig.set("warps." + name, "");
-		warpConfig.set("warps." + name + ".location", p.getOtherFunctions().loc2str(location));
+		warpConfig.set("warps." + name + ".location", StringUtils.getInstance().loc2str(location));
 		warpConfig.set("warps." + name + ".title", title);
 		warpConfig.set("warps." + name + ".icon", icon);
 		warpConfig.set("warps." + name + ".lore", lore);
@@ -219,7 +220,7 @@ public class PlayerWarpFileHandler {
 						banList);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return warpCount;
 	}

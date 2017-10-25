@@ -5,11 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Listeners.RedProtectListener;
 import br.net.fabiozumbi12.RedProtect.Region;
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class RedProtectHook2 {
 

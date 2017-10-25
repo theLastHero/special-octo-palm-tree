@@ -152,8 +152,8 @@ public class Config extends AutoUpdateConfigLoader {
     public boolean getTeleportCancel() { return config.getBoolean("teleport.cancel-on-movement", true); }
     public int getTeleportCancelCooldown() { return config.getInt("teleport.cancel-on-movement", 5); }
     public boolean getUseSafeLocation() { return config.getBoolean("teleport.use-safelocation", true); }
-    public List<?> getUnsafeBlocks() { return config.getList("unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" })); }
-    public List<?> getBlockedWorlds() { return config.getList("unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" })); }
+    public List<?> getUnsafeBlocks() { return config.getList("teleport.unsafe-blocks", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" })); }
+    public List<?> getBlockedWorlds() { return config.getList("teleport.blocked-world", Arrays.asList(new String[] { "8","9","10","11","70","71","147","148" })); }
  
     /* Metrics */
     public boolean getMetricsEnabled() { return config.getBoolean("metrics.enabled", true); }  

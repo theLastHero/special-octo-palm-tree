@@ -7,8 +7,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class WorldGuardHook2 {
 

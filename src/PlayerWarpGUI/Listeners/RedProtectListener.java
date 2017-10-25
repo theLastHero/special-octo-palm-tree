@@ -7,11 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Utils.StringUtils;
 import br.net.fabiozumbi12.RedProtect.events.DeleteRegionEvent;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class RedProtectListener implements Listener {
 
@@ -30,7 +31,7 @@ public class RedProtectListener implements Listener {
 		if (Config.getInstance().getRPRemoveOnDelete()) {
 			for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
 
-				Location loc = p.getOtherFunctions().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
+				Location loc = StringUtils.getInstance().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
 				String warpName = p.getPlayerWarpObjects().get(i).getWarpName();
 				UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();

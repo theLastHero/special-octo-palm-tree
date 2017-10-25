@@ -12,9 +12,9 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ConfigHandler {
 

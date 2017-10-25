@@ -8,18 +8,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Hooks.FactionsHook;
 import PlayerWarpGUI.Hooks.GriefPreventionHook;
 import PlayerWarpGUI.Hooks.RedProtectHook;
 import PlayerWarpGUI.Hooks.ResidenceHook;
 import PlayerWarpGUI.Hooks.WorldGuardHook;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.Utils.Location.LocUtils;
+import PlayerWarpGUI.Utils.Perms.PermUtils;
+import PlayerWarpGUI.Utils.Warp.ObjectUtils;
+import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
+import PlayerWarpGUI.Utils.World.WorldUtils;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class SetWarpCommand implements CommandExecutor {
 
-	private PlayerWarpGUI p;
 	private String perm = "pwarps.setwarp";
 
 	@Override
@@ -27,12 +31,15 @@ public class SetWarpCommand implements CommandExecutor {
 
 		final Player player = (Player) sender;
 
+		if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_SET"))) {
+			return false;
+		}
+		
 		if (!player.hasPermission(perm)) {
 			MessageSender.send(player, "COMMAND_NO_PERMISSION", "COMMAND_USE_SET");
 			return false;
 		}
 
-		p = PlayerWarpGUI.p;
 		// GP check
 		if (!checkCanSetWarp(player, new GriefPreventionHook().warpHookCheck(player))) {
 			return false;
@@ -54,29 +61,32 @@ public class SetWarpCommand implements CommandExecutor {
 			return false;
 		}
 
-		final int maxSizeAllowed = p.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player, "pwarps.setwarp",
-				".");
-		final int currentSize = p.getPlayerWarpObjectHandler().getPlayerWarpObjects(player.getUniqueId()).size();
+		int maxSizeAllowed = PermUtils.getInstance().getLargestPerm(player, "pwarps.setwarp", ".");
+		int currentSize = 0;
+				if(!(ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()) == null)) {
+					currentSize = ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()).size();
+				}
+		
 		if (currentSize >= maxSizeAllowed) {
-			MessageSender.send(player, "COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed);
+			player.sendMessage(LocaleLoader.getString("COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed));
 			return false;
 		}
 
 		// check if player has warp named same;
-		if (p.getPlayerWarpObjectHandler().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			MessageSender.send(player, "COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]);
+		if (ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
+			player.sendMessage(LocaleLoader.getString("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
 		// isafe location
-		if (!p.getWarpHandler().isSafeLocation(player.getLocation())) {
-			MessageSender.send(player, "COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]);
+		if (!LocUtils.getInstance().isSafeLocation(player.getLocation())) {
+			player.sendMessage(LocaleLoader.getString("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]));
 			return false;
 		}
 
 		// world blocked
-		if (p.getWarpHandler().isBlockedWorld(player.getLocation())) {
-			MessageSender.send(player, "COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]);
+		if (WorldUtils.getInstance().isBlockedWorld(player.getLocation())) {
+			player.sendMessage(LocaleLoader.getString("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]));
 			return false;
 		}
 
@@ -93,29 +103,34 @@ public class SetWarpCommand implements CommandExecutor {
 		 * false; }
 		 */
 
-		// check for uuid file, if exists than add warp else create file
-		// pl.getPlayerWarpFileHandler().checkPlayerWarpsFileExsits(player.getUniqueId());
-		p.getPlayerWarpFileHandler().addWarpToPlayerWarpFile(
-				(p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId())), player.getLocation(), args[1],
-				"", "", new ArrayList<>(Arrays.asList("", "", "")), new ArrayList<>(Arrays.asList("", "", "")));
-		// create object
-		// new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon,
-		// loreList);7
-		p.getPlayerWarpObjectHandler().createWarpObjects(player.getUniqueId(), args[1].toString(),
-				p.getOtherFunctions().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
+		WarpFileUtils.getInstance().addWarpToPlayerWarpFile(
+				(WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId())), player.getLocation(),
+				args[1], "", "", new ArrayList<>(Arrays.asList("", "", "")),
+				new ArrayList<>(Arrays.asList("", "", "")));
+		
+		ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(), args[1].toString(),
+				StringUtils.getInstance().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
 				new ArrayList<>(Arrays.asList("")));
 
-		MessageSender.send(player, "COMMAND_SET_COMPLETED_TEXT", args[1]);
+		player.sendMessage(LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT", args[1]));
 		return true;
-
 	}
 
 	private boolean checkCanSetWarp(Player player, String checkCanSetWarp) {
 		if (!(checkCanSetWarp == (null))) {
-			// msgPlayerCheckCanSetWarp(player, checkCanSetWarp);
+			player.sendMessage(LocaleLoader.getString(checkCanSetWarp));
 			return false;
 		}
 		return true;
 	}
+	
+	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
+		if (args.length != size) {
+			player.sendMessage(LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
+			return false;
+		}
+		return true;
+	}
+
 
 }

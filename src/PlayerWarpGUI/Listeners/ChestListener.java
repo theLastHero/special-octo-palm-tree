@@ -14,10 +14,11 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
+import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ChestListener implements Listener {
 
@@ -42,7 +43,7 @@ public class ChestListener implements Listener {
 			Player player = (Player) e.getWhoClicked();
 			// does it match the right inventory name
 			if (e.getInventory().getName()
-					.contains(p.getOtherFunctions().replaceColorVariables(p.getConfig().getString("gui.title")))) {
+					.contains(StringUtils.getInstance().replaceColorVariables(p.getConfig().getString("gui.title")))) {
 
 				// cancel event, prevent player from removing the item
 				e.setCancelled(true);
@@ -79,7 +80,7 @@ public class ChestListener implements Listener {
 
 				// do safeWarp checking
 				String errorMsg = p.getWarpHandler().canTeleport(player,
-						p.getOtherFunctions().str2loc(pwo.getWarpLocation()));
+						StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
 					MessageSender.send(player, errorMsg);
 					closeInv(player);
@@ -87,7 +88,7 @@ public class ChestListener implements Listener {
 				}
 
 				// start teleport
-				p.getTeleportHandler().startTeleport(player, p.getOtherFunctions().str2loc(pwo.getWarpLocation()));
+				p.getTeleportHandler().startTeleport(player, StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 
 				// close inventory
 				closeInv(player);
@@ -142,9 +143,9 @@ public class ChestListener implements Listener {
 		loreList = itemStack.getItemMeta().getLore();
 
 		for (int i = 0; i < loreList.size(); i++) {
-			if (loreList.get(i).contains(ChatColor.stripColor(p.getOtherFunctions()
+			if (loreList.get(i).contains(ChatColor.stripColor(StringUtils.getInstance()
 					.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT"))))) {
-				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(p.getOtherFunctions()
+				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(StringUtils.getInstance()
 						.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT")), "")));
 			}
 		}

@@ -7,8 +7,8 @@ import java.util.ResourceBundle;
 
 import org.bukkit.ChatColor;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public final class LocaleLoader {
     private static final String BUNDLE_ROOT = "locale";
@@ -37,11 +37,11 @@ public final class LocaleLoader {
         }
 
         try {
-            return getString(key, bundle, messageArguments);
+            return ChatColor.translateAlternateColorCodes('&',getString(key, bundle, messageArguments));
         }
         catch (MissingResourceException ex) {
             try {
-                return getString(key, enBundle, messageArguments);
+                return ChatColor.translateAlternateColorCodes('&',getString(key, enBundle, messageArguments));
             }
             catch (MissingResourceException ex2) {
                 if (!key.contains("Guides")) {

@@ -9,9 +9,9 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Listeners.ResidenceListener;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ResidenceHook2 {
 

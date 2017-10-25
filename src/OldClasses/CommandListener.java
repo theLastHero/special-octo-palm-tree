@@ -1,4 +1,4 @@
-package PlayerWarpGUI.Listeners;
+package OldClasses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +13,12 @@ import org.bukkit.entity.Player;
 
 import com.google.common.base.Strings;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
+import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 @SuppressWarnings("unused")
 public class CommandListener implements CommandExecutor {
@@ -138,7 +139,7 @@ public class CommandListener implements CommandExecutor {
 			final String result[] = args[0].split("setlore");
 			if (result.length > 0) {
 				final String returnValue = result[result.length - 1];
-				if (returnValue != null && p.getCalc().isInt(returnValue)) {
+				if (returnValue != null && StringUtils.getInstance().isInt(returnValue)) {
 					LoreRow = Integer.parseInt(returnValue);
 				}
 			}
@@ -318,7 +319,7 @@ public class CommandListener implements CommandExecutor {
 
 				for (int i = 0; i < playerWarpObjects.size(); i++) {
 					final String warpText = playerWarpObjects.get(i).getWarpName();
-					final Location warpLocation = p.getOtherFunctions()
+					final Location warpLocation = StringUtils.getInstance()
 							.str2loc(playerWarpObjects.get(i).getWarpLocation());
 					final String warpWorld = warpLocation.getWorld().getName().toString();
 					final String warpXpos = String.valueOf(warpLocation.getX()).split("\\.")[0];
@@ -341,7 +342,7 @@ public class CommandListener implements CommandExecutor {
 				}
 
 				final String warpText = pwo.getWarpName();
-				final Location warpLocation = p.getOtherFunctions().str2loc(pwo.getWarpLocation());
+				final Location warpLocation = StringUtils.getInstance().str2loc(pwo.getWarpLocation());
 				final String warpWorld = warpLocation.getWorld().getName().toString();
 				final String warpXpos = String.valueOf(warpLocation.getX()).split("\\.")[0];
 				final String warpYpos = String.valueOf(warpLocation.getY()).split("\\.")[0];
@@ -423,6 +424,7 @@ public class CommandListener implements CommandExecutor {
 			final int maxSizeAllowed = p.getPlayerWarpObjectHandler().geMaxAmountAllowedFromPerm(player,
 					"pwarps.setwarp", ".");
 			final int currentSize = p.getPlayerWarpObjectHandler().getPlayerWarpObjects(player.getUniqueId()).size();
+			
 			if (currentSize >= maxSizeAllowed) {
 				MessageSender.send(player, "COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed);
 				return false;
@@ -469,7 +471,7 @@ public class CommandListener implements CommandExecutor {
 			// new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon,
 			// loreList);7
 			p.getPlayerWarpObjectHandler().createWarpObjects(player.getUniqueId(), args[1].toString(),
-					p.getOtherFunctions().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
+					StringUtils.getInstance().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
 					new ArrayList<>(Arrays.asList("")));
 
 			MessageSender.send(player, "COMMAND_SET_COMPLETED_TEXT", args[1]);
@@ -608,11 +610,11 @@ public class CommandListener implements CommandExecutor {
 					args[1]);
 
 			// update object
-			pwo.setIcon(p.getOtherFunctions().parseStringFromItemStack(player.getItemInHand()));
+			pwo.setIcon(StringUtils.getInstance().parseStringFromItemStack(player.getItemInHand()));
 
 			p.getPlayerWarpFileHandler().setSingleWarpValue(
 					p.getPlayerWarpFileHandler().checkWarpsExsits(player.getUniqueId()), args[1], "icon",
-					p.getOtherFunctions().parseStringFromItemStack(player.getItemInHand()));
+					StringUtils.getInstance().parseStringFromItemStack(player.getItemInHand()));
 			// chestObject.openGUI(player, 0);
 
 			MessageSender.send(player, "COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]);

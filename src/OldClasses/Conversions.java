@@ -1,4 +1,4 @@
-package PlayerWarpGUI.Others;
+package OldClasses;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +15,7 @@ import PlayerWarpGUI.PlayerWarpGUI;
 
 public class Conversions {
 
-	public PlayerWarpGUI pl;
+	public PlayerWarpGUI pl = PlayerWarpGUI.p;
 
 	// -------------------------------------------------------------------------------------
 	//

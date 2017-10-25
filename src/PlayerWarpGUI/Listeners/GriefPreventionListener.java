@@ -7,10 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 import me.ryanhamshire.GriefPrevention.events.ClaimDeletedEvent;
 
 public class GriefPreventionListener implements Listener {
@@ -33,7 +34,7 @@ public class GriefPreventionListener implements Listener {
 		if (Config.getInstance().getGPRemoveOnDelete()) {
 			for (int i = 0; i < pl.getPlayerWarpObjects().size(); i++) {
 
-				Location loc = pl.getOtherFunctions().str2loc(pl.getPlayerWarpObjects().get(i).getWarpLocation());
+				Location loc = StringUtils.getInstance().str2loc(pl.getPlayerWarpObjects().get(i).getWarpLocation());
 				String warpName = pl.getPlayerWarpObjects().get(i).getWarpName();
 				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID()).getUniqueId();
 

@@ -5,12 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
-import PlayerWarpGUI.Commands.Utils;
-import PlayerWarpGUI.Listeners.CommandListener;
 import PlayerWarpGUI.Objects.GUIObject;
-import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ShowCommand implements CommandExecutor{
 	

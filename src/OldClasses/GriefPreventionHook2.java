@@ -3,9 +3,10 @@ package OldClasses;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import PlayerWarpGUI.PlayerWarpGUI;
+
 import PlayerWarpGUI.Listeners.GriefPreventionListener;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 

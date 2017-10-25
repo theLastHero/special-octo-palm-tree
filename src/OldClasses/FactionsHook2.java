@@ -11,9 +11,9 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Listeners.FactionsListener;
 import PlayerWarpGUI.config.Config;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class FactionsHook2 implements Listener {
 

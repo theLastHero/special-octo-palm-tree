@@ -9,10 +9,11 @@ import org.bukkit.event.Listener;
 
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 
-import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ResidenceListener implements Listener {
 
@@ -33,7 +34,7 @@ public class ResidenceListener implements Listener {
 		if (Config.getInstance().getRSemoveOnDelete()) {
 			for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
 
-				Location loc = p.getOtherFunctions().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
+				Location loc = StringUtils.getInstance().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
 				String warpName = p.getPlayerWarpObjects().get(i).getWarpName();
 				UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();
