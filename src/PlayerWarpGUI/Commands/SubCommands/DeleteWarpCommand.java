@@ -43,7 +43,7 @@ public class DeleteWarpCommand implements CommandExecutor{
 		pwo.removePlayerWarpObject();
 
 		// update file
-		// pl.getPlayerWarpFileHandler().addWarpToPlayerWarpFile((pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId())),
+		// WarpFileUtils.getInstance().addWarpToPlayerWarpFile((WarpFileUtils.getInstance().checkPlayerWarpsExsits(player.getUniqueId())),
 		// player.getLocation(), args[0], title,pwo.getIcon(),pwo.getLoreList());
 		WarpFileUtils.getInstance().removeSingleWarpValue(
 				WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[1]);

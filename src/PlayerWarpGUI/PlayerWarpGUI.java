@@ -19,8 +19,6 @@ import com.google.common.base.Charsets;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Commands.CommandManager;
 import PlayerWarpGUI.Handlers.HookHandler;
-import PlayerWarpGUI.Handlers.PlayerWarpFileHandler;
-import PlayerWarpGUI.Handlers.PlayerWarpObjectHandler;
 import PlayerWarpGUI.Handlers.TeleportHandler;
 import PlayerWarpGUI.Handlers.WarpHandler;
 import PlayerWarpGUI.Hooks.FactionsHook;
@@ -33,9 +31,9 @@ import PlayerWarpGUI.Hooks.WorldGuardHook;
 import PlayerWarpGUI.Listeners.ChestListener;
 import PlayerWarpGUI.Listeners.GriefPreventionListener;
 import PlayerWarpGUI.Listeners.PlayerListener;
-import PlayerWarpGUI.Objects.GUIObject;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
 import PlayerWarpGUI.Others.Metrics;
+import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 import net.milkbowl.vault.economy.Economy;
@@ -58,21 +56,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 	// plugin details
 	public static String pWarpsVersion;
+	
 	// Config Validation Check
 	public boolean noErrorsInConfigFiles = true;
-	// handlers
-	// public LocaleLoader localeLoader;
-	// public MessageSender msgSend;
-	// public ConfigHandler configHandler;
-	// public MessageHandler msgHandler;
 	public static HookHandler hookHandler;
-	public static HookManager<?> hookManager;
-	public PlayerWarpObjectHandler pwoHandler;
 	public WarpHandler warpHandler;
+	public static HookManager<?> hookManager;
 	public TeleportHandler tpHandler;
-	public PlayerWarpFileHandler warpFileHandler;
 	public GriefPreventionListener griefpreventionlistener;
-	// public WarpFileUtils warpUtils = new WarpFileUtils(p);
 
 	public Locale locale;
 	public ResourceBundle resourceBundle;
@@ -81,8 +72,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public MessageFormat messageFormat;
 
 	// others
-	//public Conversions conversions;
-	public GUIObject guiObject;
 	public boolean startup = true;
 
 	// hooks
@@ -99,12 +88,10 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public Economy econ = null;
 
 	// error arrays
-	public static ArrayList<String> criticalErrorList = new ArrayList<String>();
-	public static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
+	private static ArrayList<String> criticalErrorList = new ArrayList<String>();
+	private static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
 
-	// +------------------------------------------------------------------------------------
-	// | onEnable()
-	// +-----------------------------------------------------------------------------------
+	
 	@SuppressWarnings("unused")
 	@Override
 	public void onEnable() {
@@ -116,41 +103,17 @@ public class PlayerWarpGUI extends JavaPlugin {
 			setupFilePaths();
 
 			// others
-			//conversions = new Conversions();
-			// localeLoader = new LocaleLoader(this);
-			// handlers
-			// messageFormat = new MessageFormat("",new Locale("en", "US"));
-			// languageHandler = new LanguageHandler(p);
-			// languageHandler.loadLanguageFile("en_US");
-			// msgHandler = new MessageHandler(p);
-			// msgSend = new MessageSender(p);
-			// configHandler = new ConfigHandler(p);
-
-			// create language files
-			// languageHandler.checkLanguageFileExsists("en_US");
-
-			// configHandler.setUp();
-			// configHandler.msg();
 			CommandManager.registerCommands();
-			// handlers
-			pwoHandler = new PlayerWarpObjectHandler(p);
-			warpFileHandler = new PlayerWarpFileHandler(p);
-			warpFileHandler.checkWarpFolder();
-			warpFileHandler.createAllWarpsFromFile();
+			
 			warpHandler = new WarpHandler(p);
+			WarpFileUtils.getInstance().checkWarpFolder();
+			WarpFileUtils.getInstance().createAllWarpsFromFile();
 			tpHandler = new TeleportHandler(this);
 			hookHandler = new HookHandler(p);
 			// hooks
 
 			setupHooks();
-
-			// guiObject = new GUIObject(p);
-
-			// listeners
-			// this.getCommand("pwarps").setExecutor(new CommandListener(p));
 			registerEvents();
-
-			// metrics
 			useMetrics();
 
 			// console stuff
@@ -203,116 +166,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 		pathWarps = pathMain + File.separator + warpsName + File.separator;
 	}
 
-	/**
-	 * @return the pwoList
-	 */
-	public ArrayList<PlayerWarpObject> getPwoList() {
-		return pwoList;
-	}
-
-	/**
-	 * @param pwoList
-	 *            the pwoList to set
-	 */
-	public void setPwoList(ArrayList<PlayerWarpObject> pwoList) {
-		PlayerWarpGUI.pwoList = pwoList;
-	}
-
-	/**
-	 * @return the pwarpsVersion
-	 */
-	public String getPwarpsVersion() {
-		return pWarpsVersion;
-	}
-
-	/**
-	 * @param pwarpsVersion
-	 *            the pwarpsVersion to set
-	 */
-	public void setPwarpsVersion(String pwarpsVersion) {
-		PlayerWarpGUI.pWarpsVersion = pwarpsVersion;
-	}
-
-	/**
-	 * @return the pwoHandler
-	 */
-	public PlayerWarpObjectHandler getPwoHandler() {
-		return pwoHandler;
-	}
-
-	/**
-	 * @param pwoHandler
-	 *            the pwoHandler to set
-	 */
-	public void setPwoHandler(PlayerWarpObjectHandler pwoHandler) {
-		this.pwoHandler = pwoHandler;
-	}
-
-	/**
-	 * @return the tpHandler
-	 */
-	public TeleportHandler getTpHandler() {
-		return tpHandler;
-	}
-
-	/**
-	 * @param tpHandler
-	 *            the tpHandler to set
-	 */
-	public void setTpHandler(TeleportHandler tpHandler) {
-		this.tpHandler = tpHandler;
-	}
-
-	/**
-	 * @return the warpFileHandler
-	 */
-	public PlayerWarpFileHandler getWarpFileHandler() {
-		return warpFileHandler;
-	}
-
-	/**
-	 * @param warpFileHandler
-	 *            the warpFileHandler to set
-	 */
-	public void setWarpFileHandler(PlayerWarpFileHandler warpFileHandler) {
-		this.warpFileHandler = warpFileHandler;
-	}
-
-
-
-	/**
-	 * @return the criticalErrorList
-	 */
-	public ArrayList<String> getCriticalErrorList() {
-		return criticalErrorList;
-	}
-
-	/**
-	 * @param criticalErrorList
-	 *            the criticalErrorList to set
-	 */
-	public void setCriticalErrorList(ArrayList<String> criticalErrorList) {
-		PlayerWarpGUI.criticalErrorList = criticalErrorList;
-	}
-
-	/**
-	 * @return the nonCriticalErrorList
-	 */
-	public ArrayList<String> getNonCriticalErrorList() {
-		return nonCriticalErrorList;
-	}
-
-	/**
-	 * @param nonCriticalErrorList
-	 *            the nonCriticalErrorList to set
-	 */
-	public void setNonCriticalErrorList(ArrayList<String> nonCriticalErrorList) {
-		PlayerWarpGUI.nonCriticalErrorList = nonCriticalErrorList;
-	}
-
-	// +-----------------------------------------------------------------------------------
-	// | useMetrics()
-	// +-----------------------------------------------------------------------------------
+	
 	public void useMetrics() {
 		// metrics
 		if (Config.getInstance().getMetricsEnabled()) {
@@ -327,16 +181,10 @@ public class PlayerWarpGUI extends JavaPlugin {
 		}
 	}
 
-	// +-----------------------------------------------------------------------------------
-	// | killPlugin()
-	// +-----------------------------------------------------------------------------------
 	public static void killPlugin() {
 		Bukkit.getPluginManager().disablePlugin(PlayerWarpGUI.p);
 	}
 
-	// +-----------------------------------------------------------------------------------
-	// | Getters/Setters
-	// +-----------------------------------------------------------------------------------
 	/**
 	 * @return the startup
 	 */
@@ -352,13 +200,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 		this.startup = startup;
 	}
 
-	/**
-	 * @param playerWarpFileHandler
-	 *            the playerWarpFileHandler to set
-	 */
-	public void setPlayerWarpFileHandler(PlayerWarpFileHandler playerWarpFileHandler) {
-		this.warpFileHandler = playerWarpFileHandler;
-	}
 
 	/**
 	 * @param residenceHook
@@ -404,38 +245,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 		return residenceHook;
 	}
 
-	/**
-	 * @return
-	 */
-	public PlayerWarpFileHandler getPlayerWarpFileHandler() {
-		return warpFileHandler;
-	}
-
-	/**
-	 * @return
-	 */
-	public WarpHandler getWarpHandler() {
-		return warpHandler;
-	}
-
 	public void setWarpHandler(WarpHandler warpHandler) {
 		this.warpHandler = warpHandler;
-	}
-
-	public GUIObject getGuiObject() {
-		return guiObject;
-	}
-
-	public void setGuiObject(GUIObject guiObject) {
-		this.guiObject = guiObject;
-	}
-
-	public PlayerWarpObjectHandler getPlayerWarpObjectHandler() {
-		return pwoHandler;
-	}
-
-	public void setPlayerWarpObjectHandler(PlayerWarpObjectHandler playerWarpObjectHandler) {
-		this.pwoHandler = playerWarpObjectHandler;
 	}
 
 

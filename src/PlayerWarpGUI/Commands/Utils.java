@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
 
-public final class Utils {
+final class Utils {
 
 	private Utils() {}
 	

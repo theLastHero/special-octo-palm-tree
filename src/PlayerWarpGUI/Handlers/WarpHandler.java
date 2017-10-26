@@ -49,6 +49,7 @@ public class WarpHandler {
 	 * @param location
 	 * @return
 	 */
+	
 	public boolean isBlockedWorld(Location location) {
 		
 		for (int i = 0; i < pl.getConfig().getStringList("teleport.blocked-world").size(); i++) {

@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Player.PlayerUtils;
@@ -41,7 +40,7 @@ public class UnbanCommand implements CommandExecutor{
 
 		// is player to be ban a valid player?
 		if (!PlayerUtils.getInstance().isValidPlayer(Bukkit.getOfflinePlayer(args[2]).getUniqueId())) {
-			MessageSender.send(player, "COMMAND_BAN_UNKNOWN_PLAYER");
+			player.sendMessage( "COMMAND_BAN_UNKNOWN_PLAYER");
 			return false;
 		}
 
@@ -51,7 +50,7 @@ public class UnbanCommand implements CommandExecutor{
 		
 		if (!ObjectUtils.getInstance().isPlayerOnBannedList(pwo.getBanList(),
 				Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
-			MessageSender.send(player, "COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]);
+			player.sendMessage(LocaleLoader.getString("COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]));
 			return false;
 		}
 		pwo.getBanList().remove(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());

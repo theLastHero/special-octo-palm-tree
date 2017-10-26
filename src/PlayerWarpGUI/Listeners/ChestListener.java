@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,11 +15,13 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Objects.GUIObject;
 import PlayerWarpGUI.Objects.PlayerWarpObject;
 import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.Utils.Warp.ObjectUtils;
+import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
-import PlayerWarpGUI.PlayerWarpGUI;
 
 public class ChestListener implements Listener {
 
@@ -43,7 +46,7 @@ public class ChestListener implements Listener {
 			Player player = (Player) e.getWhoClicked();
 			// does it match the right inventory name
 			if (e.getInventory().getName()
-					.contains(StringUtils.getInstance().replaceColorVariables(p.getConfig().getString("gui.title")))) {
+					.contains(StringUtils.getInstance().replaceColorVariables(Config.getInstance().getGuiTitle()))) {
 
 				// cancel event, prevent player from removing the item
 				e.setCancelled(true);
@@ -60,35 +63,38 @@ public class ChestListener implements Listener {
 
 					closeInv(player);
 					// open new inventory from next page
-					p.getGuiObject().openGUI(player,
+					GUIObject.getInstance().openGUI(player,
 							getNextPageNumber(e.getCurrentItem().getItemMeta().getDisplayName()));
 					// exit
 					return;
 				}
 
 				// get warp Object
-				PlayerWarpObject pwo = p.getPlayerWarpObjects().get(getWarpID(e.getCurrentItem()) - 1);
+				//PlayerWarpObject pwo = PlayerWarpGUI.pwoList.get(getWarpID(e.getCurrentItem()) - 1);
+				
+				ObjectUtils.getInstance();
+				PlayerWarpObject pwo = ObjectUtils.getPlayerWarpObject(getWarpID(e.getCurrentItem()));
 
 				// check ban list
-				if (p.getPlayerWarpObjectHandler().isPlayerOnBannedList(pwo.getBanList(),
+				if (ObjectUtils.getInstance().isPlayerOnBannedList(pwo.getBanList(),
 						player.getUniqueId().toString())) {
-					MessageSender.send(player,
+					player.sendMessage(
 							LocaleLoader.getString("COMMAND_BANNED_PLAYER"));
 					closeInv(player);
 					return;
 				}
 
 				// do safeWarp checking
-				String errorMsg = p.getWarpHandler().canTeleport(player,
+				String errorMsg = PlayerWarpGUI.p.warpHandler.canTeleport(player,
 						StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
-					MessageSender.send(player, errorMsg);
+					player.sendMessage( errorMsg);
 					closeInv(player);
 					return;
 				}
 
 				// start teleport
-				p.getTeleportHandler().startTeleport(player, StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
+				PlayerWarpGUI.p.tpHandler.startTeleport(player, StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 
 				// close inventory
 				closeInv(player);
@@ -119,6 +125,7 @@ public class ChestListener implements Listener {
 	 * @param s
 	 * @return
 	 */
+	
 	public boolean isNextPageIcon(String s) {
 		if (s.contains(LocaleLoader.getString("NEXTPAGE_TEXT"))) {
 			return true;
@@ -129,12 +136,14 @@ public class ChestListener implements Listener {
 	/**
 	 * @param player
 	 */
+	
 	public void closeInv(Player player) {
 		player.closeInventory();
 	}
 
 	/**
 	 * @param itemStack
+	 
 	 * @return
 	 */
 	public int getWarpID(ItemStack itemStack) {
@@ -145,7 +154,8 @@ public class ChestListener implements Listener {
 		for (int i = 0; i < loreList.size(); i++) {
 			if (loreList.get(i).contains(ChatColor.stripColor(StringUtils.getInstance()
 					.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT"))))) {
-				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(3).replace(StringUtils.getInstance()
+				Bukkit.getConsoleSender().sendMessage("dddddd " + loreList.get(i));
+				warpID = Integer.parseInt(ChatColor.stripColor(loreList.get(i).replace(StringUtils.getInstance()
 						.replaceColorVariables(LocaleLoader.getString("WARP_ID_TEXT")), "")));
 			}
 		}
@@ -155,6 +165,7 @@ public class ChestListener implements Listener {
 
 	/**
 	 * @param s
+	 
 	 * @return
 	 */
 	public boolean isSLotValid(int s) {
@@ -166,6 +177,7 @@ public class ChestListener implements Listener {
 
 	/**
 	 * @param im
+	 
 	 * @return
 	 */
 	public boolean isMetaValid(ItemMeta im) {
@@ -181,6 +193,7 @@ public class ChestListener implements Listener {
 
 	/**
 	 * @param it
+	 
 	 * @return
 	 */
 	public boolean isChestTypeValid(InventoryType it) {

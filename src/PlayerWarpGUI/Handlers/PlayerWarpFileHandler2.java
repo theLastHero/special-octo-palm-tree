@@ -13,9 +13,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.PlayerWarpGUI;
 
-public class PlayerWarpFileHandler {
+public class PlayerWarpFileHandler2 {
 
 	private static PlayerWarpGUI p;
 
@@ -23,8 +24,8 @@ public class PlayerWarpFileHandler {
 	//
 	// -------------------------------------------------------------------------------------
 
-	public PlayerWarpFileHandler(PlayerWarpGUI p) {
-		PlayerWarpFileHandler.p = p;
+	public PlayerWarpFileHandler2(PlayerWarpGUI p) {
+		PlayerWarpFileHandler2.p = p;
 	}
 
 	public void checkWarpFolder() {
@@ -61,6 +62,7 @@ public class PlayerWarpFileHandler {
 	 * @param warpFilesCount
 	 * @param warpCount
 	 */
+	
 	public void consoleMsgWarpCount(int warpFilesCount, int warpCount) {
 		if (p.isStartup()) {
 			MessageSender.sendConsole("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount);
@@ -70,6 +72,7 @@ public class PlayerWarpFileHandler {
 
 	/**
 	 * @param uuid
+	 
 	 * @return
 	 */
 	public File createPlayerWarpFile(UUID uuid) {
@@ -189,6 +192,7 @@ public class PlayerWarpFileHandler {
 	/**
 	 * @param file
 	 * @param playerUUID
+	 
 	 * @return
 	 */
 	public int createWarpFromFile(File file, UUID playerUUID) {
@@ -239,7 +243,7 @@ public class PlayerWarpFileHandler {
 	private int createWarp(UUID playerUUID, int warpCount, String warpName, String warpLocation, String warpIcon,
 			String warpTitle, ArrayList<String> loreList, ArrayList<String> banList) {
 		try {
-			p.getPlayerWarpObjectHandler().createWarpObjects(playerUUID, warpName, warpLocation, warpTitle, warpIcon,
+			ObjectUtils.getInstance().createWarpObjects(playerUUID, warpName, warpLocation, warpTitle, warpIcon,
 					loreList, banList);
 			warpCount++;
 		} catch (Exception e) {
@@ -250,6 +254,7 @@ public class PlayerWarpFileHandler {
 
 	/**
 	 * @param fileName
+	 
 	 * @return
 	 */
 	public UUID getUUIDFromString(String fileName) {
@@ -266,6 +271,7 @@ public class PlayerWarpFileHandler {
 	
 	/**
 	 * @param playerUUID
+	 
 	 * @return
 	 */
 	public boolean isValidPlayer(UUID playerUUID) {

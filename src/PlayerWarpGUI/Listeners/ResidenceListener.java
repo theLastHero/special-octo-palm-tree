@@ -11,6 +11,7 @@ import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
@@ -40,8 +41,8 @@ public class ResidenceListener implements Listener {
 						.getUniqueId();
 
 				if (p.getResidenceHook().getLocationData(loc) != null) {
-					p.getPlayerWarpFileHandler().removeSingleWarpValue(
-							p.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
+					WarpFileUtils.getInstance().removeSingleWarpValue(
+							WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 
 					p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
 					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),LocaleLoader.getString("RESIDENCE_CLAIM_DELETED", warpName));

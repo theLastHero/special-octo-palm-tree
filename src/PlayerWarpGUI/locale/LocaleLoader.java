@@ -57,6 +57,7 @@ public final class LocaleLoader {
         return formatString(bundle.getString(key), messageArguments);
     }
 
+    
     public static String formatString(String string, Object... messageArguments) {
         if (messageArguments != null) {
             MessageFormat formatter = new MessageFormat("");

@@ -11,20 +11,14 @@ import PlayerWarpGUI.PlayerWarpGUI;
 
 public class PlayerListener implements Listener {
 
-	private static PlayerWarpGUI p;
-
-	/**
-	 * @param pl
-	 */
-	public PlayerListener(PlayerWarpGUI p) {
-		PlayerListener.p = p;
+	
+	public PlayerListener(PlayerWarpGUI playerWarpGUI) {
+		// TODO Auto-generated constructor stub
 	}
 
-	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		p.getTeleportHandler();
 		TeleportHandler.checkTeleport(player);
 	}
 	

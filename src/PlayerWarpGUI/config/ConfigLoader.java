@@ -9,19 +9,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import PlayerWarpGUI.PlayerWarpGUI;
 
 
-public abstract class ConfigLoader {
+abstract class ConfigLoader {
     protected static final PlayerWarpGUI plugin = PlayerWarpGUI.p;
     protected String fileName;
     private File configFile;
     protected FileConfiguration config;
 
-    public ConfigLoader(String relativePath, String fileName) {
+    ConfigLoader(String relativePath, String fileName) {
         this.fileName = fileName;
         configFile = new File(plugin.getDataFolder(), relativePath + File.separator + fileName);
         loadFile();
     }
 
-    public ConfigLoader(String fileName) {
+    ConfigLoader(String fileName) {
         this.fileName = fileName;
         configFile = new File(plugin.getDataFolder(), fileName);
         loadFile();

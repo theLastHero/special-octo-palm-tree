@@ -60,7 +60,7 @@ public class SetTitleCommand implements CommandExecutor{
 		pwo.setTitle(title);
 
 		// update file
-		// pl.getPlayerWarpFileHandler().addWarpToPlayerWarpFile((pl.getPlayerWarpFileHandler().checkPlayerWarpsExsits(player.getUniqueId())),
+		// WarpFileUtils.getInstance().addWarpToPlayerWarpFile((WarpFileUtils.getInstance().checkPlayerWarpsExsits(player.getUniqueId())),
 		// player.getLocation(), args[0], title,pwo.getIcon(),pwo.getLoreList());
 		WarpFileUtils.getInstance().setSingleWarpValue(
 				WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[1], "title", title);

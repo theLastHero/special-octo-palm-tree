@@ -8,22 +8,15 @@ import PlayerWarpGUI.Objects.PlayerWarpObject;
 
 public class ObjectUtils {
 	
-	private static PlayerWarpGUI p;
 	private static ObjectUtils instance;
 
-	/**
-	 * @param p
-	 */
-	public ObjectUtils(PlayerWarpGUI p) {
-		ObjectUtils.p = p;
-	}
 
 	/**
 	 * @return
 	 */
 	public static ObjectUtils getInstance() {
 		if (instance == null) {
-			instance = new ObjectUtils(p);
+			instance = new ObjectUtils();
 		}
 
 		return instance;
@@ -88,6 +81,15 @@ public class ObjectUtils {
 		return null;
 	}
 	
+	public static PlayerWarpObject getPlayerWarpObject(int uid) {
+		for (PlayerWarpObject n : PlayerWarpGUI.pwoList) {
+			if (n.getUid() == uid) {
+				return n;
+			}
+		}
+		return null;
+
+	}
 	/**
 	 * @param playerUUID
 	 * @param warpName

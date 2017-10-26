@@ -19,20 +19,25 @@ import PlayerWarpGUI.Utils.StringUtils;
 
 public class GUIObject {
 
-	private PlayerWarpGUI p;
-	
+	private static GUIObject instance;
+	/**
+	 * @return
+	 */
+	public static GUIObject getInstance() {
+		if (instance == null) {
+			instance = new GUIObject();
+		}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+		return instance;
+	}
+	
 	@SuppressWarnings({ "unused" })
 	public void openGUI(Player player, int page) {
 
-		p = PlayerWarpGUI.p;
 		int pageNumber = page;
 		int chestSize = Config.getInstance().getGuiRows() * 9;
 
-		String chestTitle = StringUtils.getInstance().replaceColorVariables(p.getConfig().getString("gui.title"));
+		String chestTitle = StringUtils.getInstance().replaceColorVariables(Config.getInstance().getGuiTitle());
 
 		int pageSize = (chestSize - 1);
 		int startNum = 0; // decalre variable
@@ -48,7 +53,7 @@ public class GUIObject {
 		Inventory inv = Bukkit.createInventory(null, chestSize, chestTitle);
 
 		// create array list of warps by name from hashmap
-		ArrayList<PlayerWarpObject> playerWarpObjects = p.getPlayerWarpObjects();
+		ArrayList<PlayerWarpObject> playerWarpObjects = PlayerWarpGUI.pwoList;
 
 		// set start
 		startNum = pageNum * pageSize;
@@ -100,6 +105,7 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
+	
 	public static ItemMeta getWarpMeta(ItemStack playerWarpItemStack, String playerWarpTitle, ArrayList<String> lore) {
 		ItemMeta playerWarpMeta = playerWarpItemStack.getItemMeta();
 		playerWarpMeta.setDisplayName(playerWarpTitle);
@@ -112,6 +118,7 @@ public class GUIObject {
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
+	
 	public ArrayList<String> getWarpLore(PlayerWarpObject pwo) {
 
 		ArrayList<String> lore = new ArrayList<String>();
@@ -127,9 +134,6 @@ public class GUIObject {
 
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
 	public String getWarpTitle(PlayerWarpObject pwo) {
 		if (!(pwo.getTitle() == null) && !(pwo.getTitle().length() == 0)) {
 			return StringUtils.getInstance().replaceColorVariables(pwo.getTitle());
@@ -139,10 +143,7 @@ public class GUIObject {
 				Bukkit.getOfflinePlayer(pwo.getPlayerUUID()).getName());
 
 	}
-
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
 	public ItemStack getWarpIcon(PlayerWarpObject pwo) {
 		if (Config.getInstance().getUsePlayerHeads()) {
 			return getPlayerSkullItem(pwo.getPlayerUUID());
@@ -152,13 +153,10 @@ public class GUIObject {
 			return StringUtils.getInstance().parseItemStackFromString(pwo.getIcon());
 		}
 
-		return StringUtils.getInstance().parseItemStackFromString(p.getConfig().getString("gui.default-playerwarp-icon"));
+		return StringUtils.getInstance().parseItemStackFromString(Config.getInstance().getDefaultIcon());
 
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
 	@SuppressWarnings("deprecation")
 	public static ItemStack getPlayerSkullItem(UUID uuid) {
 
@@ -174,9 +172,6 @@ public class GUIObject {
 		return Item_Skull;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
 	public ItemStack getNextPageItemStack(int pageNum) {
 
 		ItemStack nextPageItemstack = StringUtils.getInstance()

@@ -516,6 +516,7 @@ public class Metrics {
      * @param input
      * @return
      */
+    
     public static byte[] gzip(String input) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
@@ -642,7 +643,7 @@ public class Metrics {
     /**
      * Represents a custom graph on the website
      */
-    public static class Graph {
+    private static class Graph {
 
         /**
          * The graph's name, alphanumeric and spaces only :) If it does not comply to the above when submitted, it is
@@ -673,7 +674,8 @@ public class Metrics {
          *
          * @param plotter the plotter to add to the graph
          */
-        public void addPlotter(final Plotter plotter) {
+        @SuppressWarnings("unused")
+		public void addPlotter(final Plotter plotter) {
             plotters.add(plotter);
         }
 
@@ -682,7 +684,8 @@ public class Metrics {
          *
          * @param plotter the plotter to remove from the graph
          */
-        public void removePlotter(final Plotter plotter) {
+        @SuppressWarnings("unused")
+		public void removePlotter(final Plotter plotter) {
             plotters.remove(plotter);
         }
 
@@ -713,6 +716,7 @@ public class Metrics {
         /**
          * Called when the server owner decides to opt-out of BukkitMetrics while the server is running.
          */
+        
         protected void onOptOut() {
         }
     }
@@ -720,7 +724,7 @@ public class Metrics {
     /**
      * Interface used to collect custom data for a plugin
      */
-    public static abstract class Plotter {
+    private static abstract class Plotter {
 
         /**
          * The plot's name
@@ -730,7 +734,8 @@ public class Metrics {
         /**
          * Construct a plotter with the default plot name
          */
-        public Plotter() {
+        @SuppressWarnings("unused")
+		public Plotter() {
             this("Default");
         }
 
@@ -739,6 +744,7 @@ public class Metrics {
          *
          * @param name the name of the plotter to use, which will show up on the website
          */
+        
         public Plotter(final String name) {
             this.name = name;
         }
@@ -762,6 +768,7 @@ public class Metrics {
         }
 
         /**
+         
          * Called after the website graphs have been updated
          */
         public void reset() {

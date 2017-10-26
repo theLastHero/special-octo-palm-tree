@@ -11,10 +11,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
-import PlayerWarpGUI.PlayerWarpGUI;
 
 
 public class TeleportHandler {
@@ -39,9 +38,8 @@ public class TeleportHandler {
 	 */
 	public void startTeleport(Player player, Location location) {
 		if (Config.getInstance().getTeleportCancel()) {
-			p.getTeleportHandler();
 			TeleportHandler.tpQueue.put(player.getUniqueId(),
-					new Teleport(p.getConfig().getInt("teleport.movement-cooldown"), player.getUniqueId(), location)
+					new Teleport(Config.getInstance().getTeleportCancelCooldown(), player.getUniqueId(), location)
 							.runTaskTimer(p, 0, 20));
 		}
 	}
@@ -95,7 +93,7 @@ public class TeleportHandler {
 		 * 
 		 */
 		private void teleportCompletedMessage() {
-			MessageSender.send(player,
+			player.sendMessage(
 					LocaleLoader.getString("TELEPORT_COMPLETED"));
 		}
 
@@ -104,7 +102,7 @@ public class TeleportHandler {
 		 * @param count
 		 */
 		private void teleportCountMessage(Player player, int count) {
-			MessageSender.send(player,
+			player.sendMessage(
 					LocaleLoader.getString("TELEPORT_COUNTDOWN", count));
 		}
 	}
@@ -121,10 +119,11 @@ public class TeleportHandler {
 	/**
 	 * @param p
 	 */
+	
 	protected static void cancelTeleportPlayer(Player player) {
 		tpQueue.get(player.getUniqueId()).cancel();
 		tpQueue.remove(player.getUniqueId());
-		MessageSender.send(player, "TELEPORT_CANCEL_MOVEMENT");
+		player.sendMessage(LocaleLoader.getString("TELEPORT_CANCEL_MOVEMENT"));
 	}
 
 }

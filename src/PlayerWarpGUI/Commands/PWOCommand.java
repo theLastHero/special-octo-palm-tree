@@ -20,7 +20,7 @@ import PlayerWarpGUI.Commands.SubCommands.UnbanCommand;
 import PlayerWarpGUI.Commands.SubCommands.ListCommand;
 import PlayerWarpGUI.locale.LocaleLoader;
 
-public class PWOCommand implements TabExecutor {
+class PWOCommand implements TabExecutor {
 	
    
 

@@ -87,6 +87,7 @@ public final class MessageSender {
 	 * @param player
 	 * @param str
 	 */
+	
 	public static void sendMsg(Player player, String str) {
 		initialize();
 		player.sendMessage(colorConvert(msgPrefix + str));
@@ -163,6 +164,7 @@ public final class MessageSender {
 	 * @param str
 	 * @return
 	 */
+	
 	public static String colorConvert(String str) {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}

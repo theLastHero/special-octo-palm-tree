@@ -203,6 +203,7 @@ public class Config extends AutoUpdateConfigLoader {
     public boolean getWGMemberCan() { return config.getBoolean("WorldGuard.member-player-can-set-warp", true); }
     
 
+	
 	public String cc(String str) {
 		return ChatColor.translateAlternateColorCodes('&',str);
 	}

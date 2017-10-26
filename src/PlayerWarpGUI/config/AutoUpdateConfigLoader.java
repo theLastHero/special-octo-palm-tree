@@ -14,7 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 
 
-public abstract class AutoUpdateConfigLoader extends ConfigLoader {
+abstract class AutoUpdateConfigLoader extends ConfigLoader {
     public AutoUpdateConfigLoader(String relativePath, String fileName) {
         super(relativePath, fileName);
     }

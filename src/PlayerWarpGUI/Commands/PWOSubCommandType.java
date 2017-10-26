@@ -1,6 +1,6 @@
 package PlayerWarpGUI.Commands;
 
-public enum PWOSubCommandType {
+enum PWOSubCommandType {
 	
 	    HELP,
 	    SET,
@@ -13,7 +13,7 @@ public enum PWOSubCommandType {
 	    SHOW,
 	    LIST;
 
-	    public static PWOSubCommandType getSubcommand(String commandName) {
+	    static PWOSubCommandType getSubcommand(String commandName) {
 	        for (PWOSubCommandType command : values()) {
 	            if (command.name().equalsIgnoreCase(commandName)) {
 	                return command;

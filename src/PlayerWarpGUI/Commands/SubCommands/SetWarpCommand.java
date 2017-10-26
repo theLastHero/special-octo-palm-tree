@@ -8,7 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Hooks.FactionsHook;
 import PlayerWarpGUI.Hooks.GriefPreventionHook;
 import PlayerWarpGUI.Hooks.RedProtectHook;
@@ -20,6 +19,7 @@ import PlayerWarpGUI.Utils.Perms.PermUtils;
 import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.Utils.World.WorldUtils;
+import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 
 public class SetWarpCommand implements CommandExecutor {
@@ -36,7 +36,7 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 		
 		if (!player.hasPermission(perm)) {
-			MessageSender.send(player, "COMMAND_NO_PERMISSION", "COMMAND_USE_SET");
+			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SET")));
 			return false;
 		}
 
@@ -109,7 +109,7 @@ public class SetWarpCommand implements CommandExecutor {
 				new ArrayList<>(Arrays.asList("", "", "")));
 		
 		ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(), args[1].toString(),
-				StringUtils.getInstance().loc2str(player.getLocation()), "", "", new ArrayList<>(Arrays.asList("")),
+				StringUtils.getInstance().loc2str(player.getLocation()), Config.getInstance().getDefaultTitle(), Config.getInstance().getDefaultIcon(), new ArrayList<>(Arrays.asList("")),
 				new ArrayList<>(Arrays.asList("")));
 
 		player.sendMessage(LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT", args[1]));
@@ -123,6 +123,7 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 		return true;
 	}
+	
 	
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {

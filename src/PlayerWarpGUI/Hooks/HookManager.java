@@ -32,7 +32,7 @@ public abstract class HookManager<OUTPUT> {
 	 * @param hookedPluginName
 	 * @param configEnabled
 	 */
-	public HookManager(String hookedPluginName, boolean configEnabled) {
+	HookManager(String hookedPluginName, boolean configEnabled) {
 		this.hookedPluginName = hookedPluginName;
 		this.isConfigEnabled = configEnabled;
 		setup();
@@ -43,6 +43,7 @@ public abstract class HookManager<OUTPUT> {
 	/**
 	 * 
 	 */
+	
 	public void setup() {
 		if (this.isConfigEnabled) {
 			Plugin pHook = Bukkit.getPluginManager().getPlugin(hookedPluginName);

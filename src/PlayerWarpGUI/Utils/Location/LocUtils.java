@@ -16,6 +16,7 @@ public class LocUtils {
 	/**
 	 * @param p
 	 */
+	
 	public LocUtils(PlayerWarpGUI p) {
 		LocUtils.p = p;
 	}

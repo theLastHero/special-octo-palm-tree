@@ -21,7 +21,7 @@ public class PlayerWarpObject {
 	private ArrayList<String> banList;
 
 	public PlayerWarpObject(UUID playerUUID,String warpName, String warpLocation, String title, String icon, ArrayList<String> loreList, ArrayList<String> banList, PlayerWarpGUI pl) {
-
+		
 		this.pl = pl;
 		this.setPlayerUUID(playerUUID);
 		this.setWarpName(warpName);
@@ -32,6 +32,8 @@ public class PlayerWarpObject {
 		this.setBanList(banList);
 		
 		PlayerWarpGUI.pwoList.add(this);
+		
+		
 
 	}
 	

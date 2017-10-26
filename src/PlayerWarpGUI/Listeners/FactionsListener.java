@@ -14,11 +14,12 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.event.EventFactionsChunksChange;
 import com.massivecraft.massivecore.ps.PS;
 
+import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Utils.StringUtils;
+import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
-import PlayerWarpGUI.PlayerWarpGUI;
 
 public class FactionsListener implements Listener {
 
@@ -52,8 +53,8 @@ public class FactionsListener implements Listener {
 						PS chunk = entry.getKey();
 
 						if (world.getChunkAt(loc) == chunk.asBukkitChunk()) {
-							p.getPlayerWarpFileHandler().removeSingleWarpValue(
-									p.getPlayerWarpFileHandler().checkWarpsExsits(playerUUID), warpName);
+							WarpFileUtils.getInstance().removeSingleWarpValue(
+									WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 
 							p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
 							MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),

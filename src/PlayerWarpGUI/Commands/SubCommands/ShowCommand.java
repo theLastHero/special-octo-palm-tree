@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Objects.GUIObject;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ShowCommand implements CommandExecutor{
 	
@@ -18,7 +18,7 @@ public class ShowCommand implements CommandExecutor{
 		  final Player player = (Player) sender;
 		  
 			if (!player.hasPermission(perm)) {
-				MessageSender.send(player, "COMMAND_NO_PERMISSION", "COMMAND_USE_SHOW");
+				player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SHOW")));
 				return false;
 			}
 	        

@@ -12,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.locale.LocaleLoader;
 
 public class StringUtils {
@@ -31,7 +30,7 @@ public class StringUtils {
 	
 	public boolean checkArgsString(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length < size) {
-			MessageSender.send(player, "COMMAND_USE_INVALID" + errorMsg);
+			player.sendMessage( "COMMAND_USE_INVALID" + errorMsg);
 			return false;
 		}
 		return true;
