@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Hooks.GriefPreventionHook;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
@@ -39,7 +40,7 @@ public class GriefPreventionListener implements Listener {
 				String warpName = pl.getPlayerWarpObjects().get(i).getWarpName();
 				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID()).getUniqueId();
 
-				if (pl.getGriefPreventionHook().getLocationData(loc) != null) {
+				if (new GriefPreventionHook().getLocationData(loc) != null) {
 					WarpFileUtils.getInstance().removeSingleWarpValue(WarpFileUtils.getInstance().checkWarpsExsits(playerUUID),
 							warpName);
 

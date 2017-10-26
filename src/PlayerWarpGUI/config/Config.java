@@ -201,6 +201,10 @@ public class Config extends AutoUpdateConfigLoader {
     public boolean getWGEnabled() { return config.getBoolean("WorldGuard.enabled", true); }  
     public boolean getWGOwnerCan() { return config.getBoolean("WorldGuard.owner-can-set-warp", true); }  
     public boolean getWGMemberCan() { return config.getBoolean("WorldGuard.member-player-can-set-warp", true); }
+
+    /* Essentials */
+    public boolean getESEnabled() { return config.getBoolean("Essentials.enabled", true); }  
+    public boolean getESBack() { return config.getBoolean("Essentials.use-back-command", true); }  
     
 
 	

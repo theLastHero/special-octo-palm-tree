@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Hooks.RedProtectHook;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import br.net.fabiozumbi12.RedProtect.events.DeleteRegionEvent;
@@ -37,7 +38,7 @@ public class RedProtectListener implements Listener {
 				UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();
 
-				if (p.getRedProtectHook().getLocationData(loc) != null) {
+				if (new RedProtectHook().getLocationData(loc) != null) {
 					Bukkit.broadcastMessage("InClaim");
 					WarpFileUtils.getInstance().removeSingleWarpValue(
 							WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);

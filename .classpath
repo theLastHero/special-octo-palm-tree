@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/Residence4.7.2.4.jar"/>
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/Factions.jar"/>
 	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/MassiveCore.jar"/>
+	<classpathentry kind="lib" path="E:/MINECRAFT/PLUGIN_CODE/Libary_1.12.2/Essentials-2.x-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -242,7 +242,7 @@ public class WarpFileUtils {
 	}
 	
 	public File checkWarpsExsits(UUID uuid) {
-		File warpsFolder = new File(PlayerWarpGUI.p.getPathWarps());
+		File warpsFolder = new File(PlayerWarpGUI.pathWarps);
 		if (!(warpsFolder.listFiles() == null)) {
 			for (File file : warpsFolder.listFiles()) {
 				if (file.getName().equals(uuid.toString() + ".yml")) {
@@ -255,7 +255,7 @@ public class WarpFileUtils {
 
 	
 	public File createPlayerWarpFile(UUID uuid) {
-		File f = new File(PlayerWarpGUI.p.getPathWarps() + uuid.toString() + ".yml");
+		File f = new File(PlayerWarpGUI.pathWarps + uuid.toString() + ".yml");
 		StringUtils.getInstance().copy(PlayerWarpGUI.p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}

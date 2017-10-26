@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Hooks.ResidenceHook;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
@@ -40,7 +41,7 @@ public class ResidenceListener implements Listener {
 				UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
 						.getUniqueId();
 
-				if (p.getResidenceHook().getLocationData(loc) != null) {
+				if (new ResidenceHook().getLocationData(loc) != null) {
 					WarpFileUtils.getInstance().removeSingleWarpValue(
 							WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 

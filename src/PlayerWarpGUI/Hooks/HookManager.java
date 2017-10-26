@@ -27,6 +27,7 @@ public abstract class HookManager<OUTPUT> {
 	 * 
 	 */
 	private boolean isConfigEnabled;
+	private Plugin pHook;
 
 	/**
 	 * @param hookedPluginName
@@ -51,6 +52,7 @@ public abstract class HookManager<OUTPUT> {
 			if ((pHook != null) && (pHook.isEnabled())) {
 				status = "SUCCESS";
 				this.isEnabled = true;
+				this.pHook = pHook;
 			} else {
 				this.isEnabled = false;
 				addNonCriticalError(hookedPluginName);
@@ -88,5 +90,11 @@ public abstract class HookManager<OUTPUT> {
 	 * @return
 	 */
 	public abstract OUTPUT getLocationData(Location location);
+
+
+	public Plugin getpHook() {
+		return pHook;
+	}
+
 
 }

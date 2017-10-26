@@ -25,13 +25,13 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ChestListener implements Listener {
 
-	private PlayerWarpGUI p;
+	//private PlayerWarpGUI p;
 	
 	/**
 	 * @param pl
 	 */
 	public ChestListener(PlayerWarpGUI pl) {
-		this.p= pl;
+		//this.p= pl;
 	}
 
 	/**

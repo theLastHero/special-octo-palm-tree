@@ -11,7 +11,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.earth2me.essentials.Essentials;
+
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.Hooks.EssentialsHook;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 
@@ -20,6 +23,7 @@ public class TeleportHandler {
 
 
 	private static PlayerWarpGUI p;
+	public static Essentials ess3 = null;
 
 	/**
 	 * @param pl
@@ -76,10 +80,13 @@ public class TeleportHandler {
 				count--;
 			} else {
 				// Teleport code here
+				if (new EssentialsHook().useBack()){
+					new EssentialsHook().setBackUser(player);
+					}
 				player.teleport(loc);
 				tpQueue.remove(player.getUniqueId());
 				this.cancel();
-				teleportCompletedMessage();
+				player.sendMessage(LocaleLoader.getString("TELEPORT_COMPLETED"));
 				// call godMode Code
 				/*
 				 * if (PlayerWarpGUI.godModeAfterTP > 0) { godModeQueue.put(player, new
@@ -87,14 +94,6 @@ public class TeleportHandler {
 				 * .runTaskTimer(PlayerWarpGUI.getInstance(), 0, 20)); }
 				 */
 			}
-		}
-
-		/**
-		 * 
-		 */
-		private void teleportCompletedMessage() {
-			player.sendMessage(
-					LocaleLoader.getString("TELEPORT_COMPLETED"));
 		}
 
 		/**
