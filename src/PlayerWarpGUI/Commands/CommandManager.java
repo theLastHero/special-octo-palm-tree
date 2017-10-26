@@ -7,7 +7,7 @@ import PlayerWarpGUI.PlayerWarpGUI;
 
 public final class CommandManager {
 
-	private CommandManager() {}
+	public CommandManager() {}
 	
 		
     private static void registerPWOCommand() {

@@ -6,12 +6,10 @@
 # <         https://github.com/FabioZumbi12/RedProtect/wiki            > #
 # +--------------------------------------------------------------------+ #
 #
-general:
-  locale: 'en_us'
 
-# Metrics
-metrics:
- enabled: true
+#Locale: Available, eu_US
+general:
+  locale: 'en_US'
 
 # GUI
 gui:
@@ -85,6 +83,10 @@ Factions:
 Essentials:
  enabled: false
  use-back-command: false
+
+# Metrics
+metrics:
+ enabled: true
 
 # Config.yml compatability version. 
 # DO NOT MODIFY

@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Charsets;
 
 import PlayerWarpGUI.Chat.MessageSender;
+import PlayerWarpGUI.Commands.CommandManager;
 import PlayerWarpGUI.Handlers.TeleportHandler;
 import PlayerWarpGUI.Handlers.WarpHandler;
 import PlayerWarpGUI.Hooks.HookManager;
@@ -50,6 +52,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public WarpHandler warpHandler;
 	public static HookManager<?> hookManager;
 	public TeleportHandler tpHandler;
+	public CommandManager commandManager;
 	public GriefPreventionListener griefpreventionlistener;
 
 	// others
@@ -68,13 +71,15 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 		try {
 			p = this;
-			
+			PluginManager pluginManager = getServer().getPluginManager();
 			setupFilePaths();
 			
 			warpHandler = new WarpHandler(p);
 			WarpFileUtils.getInstance().checkWarpFolder();
 			WarpFileUtils.getInstance().createAllWarpsFromFile();
 			tpHandler = new TeleportHandler(this);
+			commandManager = new CommandManager();
+			CommandManager.registerCommands();
 
 			registerEvents();
 			useMetrics();
