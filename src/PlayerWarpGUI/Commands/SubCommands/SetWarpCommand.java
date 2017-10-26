@@ -12,6 +12,7 @@ import PlayerWarpGUI.Hooks.FactionsHook;
 import PlayerWarpGUI.Hooks.GriefPreventionHook;
 import PlayerWarpGUI.Hooks.RedProtectHook;
 import PlayerWarpGUI.Hooks.ResidenceHook;
+import PlayerWarpGUI.Hooks.VaultHook;
 import PlayerWarpGUI.Hooks.WorldGuardHook;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Location.LocUtils;
@@ -21,6 +22,7 @@ import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.Utils.World.WorldUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public class SetWarpCommand implements CommandExecutor {
 
@@ -34,9 +36,10 @@ public class SetWarpCommand implements CommandExecutor {
 		if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_SET"))) {
 			return false;
 		}
-		
+
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SET")));
+			player.sendMessage(
+					LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SET")));
 			return false;
 		}
 
@@ -63,10 +66,10 @@ public class SetWarpCommand implements CommandExecutor {
 
 		int maxSizeAllowed = PermUtils.getInstance().getLargestPerm(player, "pwarps.setwarp", ".");
 		int currentSize = 0;
-				if(!(ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()) == null)) {
-					currentSize = ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()).size();
-				}
-		
+		if (!(ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()) == null)) {
+			currentSize = ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()).size();
+		}
+
 		if (currentSize >= maxSizeAllowed) {
 			player.sendMessage(LocaleLoader.getString("COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed));
 			return false;
@@ -91,29 +94,27 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 
 		// check if player can afford to set a warp.
-		/*
-		 * if (pl.getConfig().getInt("settings.set-warp-cost") != 0) {
-		 * pl.getVaultHandler(); EconomyResponse r =
-		 * VaultHook.econ.withdrawPlayer(player,
-		 * pl.getConfig().getInt("settings.set-warp-cost")); if
-		 * (!r.transactionSuccess()) { pl.getMessageHandler().sendPlayerMessage(player,
-		 * pl.getLanguageHandler().getMessage("COMMAND_SET_NOT_ENOUGH_MONEY")); return
-		 * true; } else { pl.getMessageHandler().sendPlayerMessage(player,
-		 * pl.getLanguageHandler().getMessage("COMMAND_SET_ENOUGH_MONEY")); } return
-		 * false; }
-		 */
+		VaultHook vh = new VaultHook();
+		if (vh.isEnabled) {
 
-		WarpFileUtils.getInstance().addWarpToPlayerWarpFile(
-				(WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId())), player.getLocation(),
-				args[1], "", "", new ArrayList<>(Arrays.asList("", "", "")),
-				new ArrayList<>(Arrays.asList("", "", "")));
+			EconomyResponse r = vh.econ.withdrawPlayer(player, Config.getInstance().getSetWarpCost());
+
+			if (!r.transactionSuccess()) {
+				player.sendMessage(LocaleLoader.getString("COMMAND_SET_NOT_ENOUGH_MONEY"));
+				return false;
+			} else {
+				player.sendMessage(LocaleLoader.getString("COMMAND_SET_ENOUGH_MONEY",  Config.getInstance().getSetWarpCost()));
+			}
 		
-		ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(), args[1].toString(),
-				StringUtils.getInstance().loc2str(player.getLocation()), Config.getInstance().getDefaultTitle(), Config.getInstance().getDefaultIcon(), new ArrayList<>(Arrays.asList("")),
-				new ArrayList<>(Arrays.asList("")));
+		}
 
-		player.sendMessage(LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT", args[1]));
-		return true;
+
+	WarpFileUtils.getInstance().addWarpToPlayerWarpFile((WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId())),player.getLocation(),args[1],"","",new ArrayList<>(Arrays.asList("","","")),new ArrayList<>(Arrays.asList("","","")));
+
+	ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(),args[1].toString(),StringUtils.getInstance().loc2str(player.getLocation()),Config.getInstance().getDefaultTitle(),Config.getInstance().getDefaultIcon(),new ArrayList<>(Arrays.asList("")),new ArrayList<>(Arrays.asList("")));
+
+	player.sendMessage(LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT",args[1]));return true;
+
 	}
 
 	private boolean checkCanSetWarp(Player player, String checkCanSetWarp) {
@@ -123,8 +124,7 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 		return true;
 	}
-	
-	
+
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {
 			player.sendMessage(LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
@@ -132,6 +132,5 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 		return true;
 	}
-
 
 }

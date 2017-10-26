@@ -26,7 +26,7 @@ public abstract class HookManager<OUTPUT> {
 	/**
 	 * 
 	 */
-	private boolean isConfigEnabled;
+	protected boolean isConfigEnabled;
 	private Plugin pHook;
 
 	/**

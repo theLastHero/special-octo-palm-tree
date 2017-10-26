@@ -1,78 +1,46 @@
 package PlayerWarpGUI.Hooks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import PlayerWarpGUI.Chat.MessageSender;
-import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.config.Config;
+import br.net.fabiozumbi12.RedProtect.Region;
+import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
 import net.milkbowl.vault.economy.Economy;
 
-public class VaultHook {
+public class VaultHook extends HookManager<Object>{
 
-	private static PlayerWarpGUI p;
-	public String plName;
+	private static String plName = "Vault";
+	private static boolean configEnabled = false;
 	public Economy econ = null;
-
-	/**
-	 * @param p 
-	 * @param playerWarpGUI
-	 */
-	public VaultHook(PlayerWarpGUI p) {
-		VaultHook.p = p;
-		plName = "Vault";
-		checkVault();
-	}
-
-	/**
-	 * 
-	 */
-	private void checkVault() {
-		Plugin pVT = Bukkit.getPluginManager().getPlugin(plName);
-		if ((pVT != null) && (pVT.isEnabled())) {
-			setupEconomy();
-			consoleMsgPassed(plName);
-			return;
+	
+	public VaultHook() {
+		super(plName, configEnabled);
+		if((Config.getInstance().getSetWarpCost() > 0) && setupEconomy()) {
+			isEnabled = true;
 		}
-		consoleMsgError(plName);
 	}
+	
+	
 
-	/**
-	 * 
-	 */
-	private void consoleMsgPassed(String plName) {
-		MessageSender.sendConsole("CONSOLE_MSG_HOOK", plName,
-				LocaleLoader.getString("SUCCESS"));
-	}
-
-	/**
-	 * 
-	 */
-	private void consoleMsgError(String plName) {
-		MessageSender.sendConsole(LocaleLoader.getString("CONSOLE_MSG_HOOK", plName,
-				LocaleLoader.getString("FAILED")));
-		PlayerWarpGUI.getCriticalErrors().add(LocaleLoader.getString("CONSOLE_CRITIAL_ERROR_HOOK", plName));
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean setupEconomy() {
-		if (p.getServer().getPluginManager().getPlugin("Vault") == null) {
-			return false;
-		}
-		RegisteredServiceProvider<Economy> rsp = p.getServer().getServicesManager().getRegistration(Economy.class);
+	public boolean setupEconomy() {
+		RegisteredServiceProvider<Economy> rsp = PlayerWarpGUI.p.getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
 			return false;
 		}
-		p.setEcon(rsp.getProvider());
-		return p.getEcon() != null;
+		econ = rsp.getProvider();
+		return econ != null;
 	}
-	/*
-	 * private boolean setupPermissions() { RegisteredServiceProvider<Permission>
-	 * rsp = pl.getServer().getServicesManager().getRegistration(Permission.class);
-	 * pl.setPerms(rsp.getProvider()); return pl.perms != null; }
-	 */
+	@Override
+	public String warpHookCheck(Player player) {
+		return hookedPluginName;
+			}
+
+	@Override
+	public Region getLocationData(Location location) {
+		return RedProtectAPI.getRegion(location);
+	}
 
 }
