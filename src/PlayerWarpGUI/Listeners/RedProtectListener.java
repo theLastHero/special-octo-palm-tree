@@ -18,32 +18,29 @@ import PlayerWarpGUI.PlayerWarpGUI;
 
 public class RedProtectListener implements Listener {
 
-	private static PlayerWarpGUI p;
-
 	/**
 	 * @param p
 	 */
 	public RedProtectListener(PlayerWarpGUI p) {
-		RedProtectListener.p = p;
 	}
 
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(DeleteRegionEvent e) {
 		if(Config.getInstance().getRPEnabled()) {
 		if (Config.getInstance().getRPRemoveOnDelete()) {
-			for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
+			for (int i = 0; i < PlayerWarpGUI.getPwoList().size(); i++) {
 
-				Location loc = StringUtils.getInstance().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
-				String warpName = p.getPlayerWarpObjects().get(i).getWarpName();
-				UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
+				Location loc = StringUtils.getInstance().str2loc(PlayerWarpGUI.getPwoList().get(i).getWarpLocation());
+				String warpName = PlayerWarpGUI.getPwoList().get(i).getWarpName();
+				UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.getPwoList().get(i).getPlayerUUID())
 						.getUniqueId();
-
+				
 				if (new RedProtectHook().getLocationData(loc) != null) {
 					Bukkit.broadcastMessage("InClaim");
 					WarpFileUtils.getInstance().removeSingleWarpValue(
 							WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 
-					PlayerWarpGUI.pwoList.get(i).removePlayerWarpObject();
+					PlayerWarpGUI.getPwoList().get(i).removePlayerWarpObject();
 					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),LocaleLoader.getString("REDPROTECT_CLAIM_DELETED", warpName));
 					return;
 				}

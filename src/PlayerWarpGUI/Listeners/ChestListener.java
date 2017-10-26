@@ -85,7 +85,7 @@ public class ChestListener implements Listener {
 				}
 
 				// do safeWarp checking
-				String errorMsg = PlayerWarpGUI.p.warpHandler.canTeleport(player,
+				String errorMsg = PlayerWarpGUI.p.getWarpHandler().canTeleport(player,
 						StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
 					player.sendMessage( errorMsg);
@@ -94,7 +94,7 @@ public class ChestListener implements Listener {
 				}
 
 				// start teleport
-				PlayerWarpGUI.p.tpHandler.startTeleport(player, StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
+				PlayerWarpGUI.p.getTpHandler().startTeleport(player, StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 
 				// close inventory
 				closeInv(player);

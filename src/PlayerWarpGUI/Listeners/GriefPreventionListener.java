@@ -32,11 +32,11 @@ public class GriefPreventionListener implements Listener {
 
 		if(Config.getInstance().getGPEnabled()) {
 			if (Config.getInstance().getGPRemoveOnDelete()) {
-				for (int i = 0; i < PlayerWarpGUI.pwoList.size(); i++) {
+				for (int i = 0; i < PlayerWarpGUI.getPwoList().size(); i++) {
 
-					Location location = StringUtils.getInstance().str2loc(PlayerWarpGUI.pwoList.get(i).getWarpLocation());
-					String warpName = PlayerWarpGUI.pwoList.get(i).getWarpName();
-					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.pwoList.get(i).getPlayerUUID()).getUniqueId();
+					Location location = StringUtils.getInstance().str2loc(PlayerWarpGUI.getPwoList().get(i).getWarpLocation());
+					String warpName = PlayerWarpGUI.getPwoList().get(i).getWarpName();
+					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.getPwoList().get(i).getPlayerUUID()).getUniqueId();
 
 					if(e.getClaim().contains(location, false, false)) {
 						WarpFileUtils.getInstance().removeSingleWarpValue(WarpFileUtils.getInstance().checkWarpsExsits(playerUUID),

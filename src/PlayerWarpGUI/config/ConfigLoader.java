@@ -3,12 +3,10 @@ package PlayerWarpGUI.config;
 import java.io.File;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import PlayerWarpGUI.locale.LocaleLoader;
 
 
 abstract class ConfigLoader {
@@ -68,7 +66,7 @@ abstract class ConfigLoader {
         else {
             plugin.getLogger().warning("Errors were found in " + fileName + "! mcMMO was disabled!");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
-            plugin.noErrorsInConfigFiles = false;
+            plugin.setNoErrorsInConfigFiles(false);
         }
     }
 

@@ -1,5 +1,6 @@
 package PlayerWarpGUI.Commands.SubCommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +22,8 @@ public class SetIconCommand implements CommandExecutor{
 
 		final Player player = (Player) sender;
 
-		if (!StringUtils.getInstance().checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_ICON"))) {
+		if (!(args.length == 1)) {
+			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("COMMAND_USE_ICON"));
 			return false;
 		}
 		
@@ -36,24 +38,24 @@ public class SetIconCommand implements CommandExecutor{
 			return true;
 		}
 		
-		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[0]));
 			return false;
 		}
 
 		// update warp file
 		PlayerWarpObject pwo = ObjectUtils.getInstance().getPlayerWarpObject(player.getUniqueId(),
-				args[1]);
+				args[0]);
 
 		// update object
 		pwo.setIcon(StringUtils.getInstance().parseStringFromItemStack(player.getItemInHand()));
 
 		WarpFileUtils.getInstance().setSingleWarpValue(
-				WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[1], "icon",
+				WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[0], "icon",
 				StringUtils.getInstance().parseStringFromItemStack(player.getItemInHand()));
 		// chestObject.openGUI(player, 0);
 
-		player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]));
+		player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[0]));
 
 		return true;
 	

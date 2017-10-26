@@ -10,3 +10,36 @@ commands:
   playerwarpsgui:
     description: Set and go to player warps.
     aliases: [pwarp, pwarps]
+  setpwarp:
+    description: Set and go to player warps.
+    aliases: [spwarp, pset, pwarpset, pwset]
+  deletepwarp:
+    description: Set and go to player warps.
+    aliases: [delpwarp, dpwarp, pdel, pdelete, pwarpdelete, pwarpdel, pwdel, pwdelete]
+  pwarpban:
+    description: Set and go to player warps.
+    aliases: [pwarpb, pban, pwban]
+  pwarpunban:
+    description: Set and go to player warps.
+    aliases: [pwarpub, punban, pwunban]
+  pwarphelp:
+    description: Set and go to player warps.
+    aliases: [pwarph, pwarphe, phelp, pwhelp]
+  pwarplist:
+    description: Set and go to player warps.
+    aliases: [pwarpl, plist, pwlist]
+  pwarpicon:
+    description: Set and go to player warps.
+    aliases: [picon, piconset, pwicon]
+  pwarplore:
+    description: Set and go to player warps.
+    aliases: [plore, pwarpl, pwlore]
+  pwarplist:
+    description: Set and go to player warps.
+    aliases: [pwarpl, plist, pwlist]
+  pwarpshow:
+    description: Set and go to player warps.
+    aliases: [pwarps, pshow, pwshow]
+  pwarptitle:
+    description: Set and go to player warps.
+    aliases: [pwarpt, ptitle, pwtitle]

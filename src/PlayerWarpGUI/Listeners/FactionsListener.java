@@ -23,13 +23,10 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class FactionsListener implements Listener {
 
-	private static PlayerWarpGUI p;
-	
 	/**
 	 * @param pl
 	 */
 	public FactionsListener(PlayerWarpGUI p) {
-		FactionsListener.p = p;
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -37,11 +34,11 @@ public class FactionsListener implements Listener {
 
 		if (Config.getInstance().getFAEnabled()) {
 			if (Config.getInstance().getFARemoveOnDelete()) {
-				for (int i = 0; i < PlayerWarpGUI.pwoList.size(); i++) {
+				for (int i = 0; i < PlayerWarpGUI.getPwoList().size(); i++) {
 
-					Location loc = StringUtils.getInstance().str2loc(PlayerWarpGUI.pwoList.get(i).getWarpLocation());
-					String warpName = PlayerWarpGUI.pwoList.get(i).getWarpName();
-					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.pwoList.get(i).getPlayerUUID())
+					Location loc = StringUtils.getInstance().str2loc(PlayerWarpGUI.getPwoList().get(i).getWarpLocation());
+					String warpName = PlayerWarpGUI.getPwoList().get(i).getWarpName();
+					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.getPwoList().get(i).getPlayerUUID())
 							.getUniqueId();
 					World world = loc.getWorld();
 					// loop through warps
@@ -55,7 +52,7 @@ public class FactionsListener implements Listener {
 							WarpFileUtils.getInstance().removeSingleWarpValue(
 									WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 
-							PlayerWarpGUI.pwoList.get(i).removePlayerWarpObject();
+							PlayerWarpGUI.getPwoList().get(i).removePlayerWarpObject();
 							MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),
 									LocaleLoader.getString("FACTIONS_CLAIM_DELETED", warpName));
 						}

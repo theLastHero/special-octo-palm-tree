@@ -33,10 +33,10 @@ public class WarpFileUtils {
 	}
 
 	public void checkWarpFolder() {
-		File directory = new File(PlayerWarpGUI.pathWarps);
+		File directory = new File(PlayerWarpGUI.getPathWarps());
 		if (!directory.exists()) {
 			Bukkit.getConsoleSender()
-					.sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_CREATE_FOLDER", PlayerWarpGUI.pathWarps));
+					.sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_CREATE_FOLDER", PlayerWarpGUI.getPathWarps()));
 			directory.mkdirs();
 		}
 	}
@@ -48,9 +48,9 @@ public class WarpFileUtils {
 		int warpFilesCount = 0;
 		int warpCount = 0;
 
-		File warpsFolder = new File(PlayerWarpGUI.pathWarps);
+		File warpsFolder = new File(PlayerWarpGUI.getPathWarps());
 
-		if (!(new File(PlayerWarpGUI.pathWarps).listFiles() == null)) {
+		if (!(new File(PlayerWarpGUI.getPathWarps()).listFiles() == null)) {
 			for (File file : warpsFolder.listFiles()) {
 				if (isValidPlayer(getUUIDFromString(file.getName()))) {
 					// increase file count
@@ -69,12 +69,10 @@ public class WarpFileUtils {
 	 */
 
 	public void consoleMsgWarpCount(int warpFilesCount, int warpCount) {
-		if (PlayerWarpGUI.p.startup) {
 			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX")
 					+ LocaleLoader.getString("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount));
 			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX")
 					+ LocaleLoader.getString("CONSOLE_MSG_WARPS_COUNT", "" + warpCount));
-		}
 	}
 
 	/**
@@ -240,7 +238,7 @@ public class WarpFileUtils {
 	}
 
 	public File checkWarpsExsits(UUID uuid) {
-		File warpsFolder = new File(PlayerWarpGUI.pathWarps);
+		File warpsFolder = new File(PlayerWarpGUI.getPathWarps());
 		if (!(warpsFolder.listFiles() == null)) {
 			for (File file : warpsFolder.listFiles()) {
 				if (file.getName().equals(uuid.toString() + ".yml")) {
@@ -252,7 +250,7 @@ public class WarpFileUtils {
 	}
 
 	public File createPlayerWarpFile(UUID uuid) {
-		File f = new File(PlayerWarpGUI.pathWarps + uuid.toString() + ".yml");
+		File f = new File(PlayerWarpGUI.getPathWarps() + uuid.toString() + ".yml");
 		StringUtils.getInstance().copy(PlayerWarpGUI.p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}

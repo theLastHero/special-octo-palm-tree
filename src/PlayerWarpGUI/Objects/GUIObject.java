@@ -53,7 +53,7 @@ public class GUIObject {
 		Inventory inv = Bukkit.createInventory(null, chestSize, chestTitle);
 
 		// create array list of warps by name from hashmap
-		ArrayList<PlayerWarpObject> playerWarpObjects = PlayerWarpGUI.pwoList;
+		ArrayList<PlayerWarpObject> playerWarpObjects = PlayerWarpGUI.getPwoList();
 
 		// set start
 		startNum = pageNum * pageSize;

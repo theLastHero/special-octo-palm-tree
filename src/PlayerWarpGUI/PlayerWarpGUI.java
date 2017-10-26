@@ -32,39 +32,49 @@ import PlayerWarpGUI.Others.Metrics;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
-import net.milkbowl.vault.economy.Economy;
+
+/**
+* PlayerWarpGUI
+* 
+* <P>Bukkit/Spigot plugin. Allowing players to to
+* there own warp, and using a gui interface to show warps.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 
 public class PlayerWarpGUI extends JavaPlugin {
 
-	// this plugin
+	 /** Return instance of plugin.  */
 	public static PlayerWarpGUI p;
 
-	// objects
-	public static ArrayList<PlayerWarpObject> pwoList = new ArrayList<PlayerWarpObject>();;
+	/** List of all warps objects in an ArrayList.  */
+	private static ArrayList<PlayerWarpObject> pwoList = new ArrayList<PlayerWarpObject>();;
 
-	// file paths
-	public static String pathMain;
-	public static String pathLangs;
-	public static String configName;
-	public static String pathConfig;
-	public static String warpsName;
-	public static String pathWarps;
+	/** Paths. */
+	/**========*/
+	
+	/** Plugin folder path.  */
+	private static String pathMain;
+	/** Locale folder path.  */
+	private static String pathLangs;
+	/** Name of config file.  */
+	private static String configName;
+	/** Path of config file.  */
+	private static String pathConfig;
+	/** Folder name, where player warp files are located/saved.  */
+	private static String warpsName;
+	/** Full path of warp Files location.  */
+	private static String pathWarps;
 
-	// plugin details
+	/** Contains verison number of the plugin, taken from pugin.yml  */
 	public static String playerwarpsguiVersion;
 	
-	// Config Validation Check
-	public boolean noErrorsInConfigFiles = true;
-	public WarpHandler warpHandler;
-	public static HookManager<?> hookManager;
-	public TeleportHandler tpHandler;
+	/** Config Validation Check */
+	private boolean noErrorsInConfigFiles = true;
+	private WarpHandler warpHandler;
+	private TeleportHandler tpHandler;
 	public CommandManager commandManager;
-
-	// others
-	public boolean startup = true;
-
-	// econ/perms
-	public Economy econ = null;
 
 	// error arrays
 	public static ArrayList<String> criticalErrorList = new ArrayList<String>();
@@ -76,13 +86,13 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 		try {
 			p = this;
-			PluginManager pluginManager = getServer().getPluginManager();
+			getServer().getPluginManager();
 			setupFilePaths();
 			
-			warpHandler = new WarpHandler(p);
+			setWarpHandler(new WarpHandler(p));
 			WarpFileUtils.getInstance().checkWarpFolder();
 			WarpFileUtils.getInstance().createAllWarpsFromFile();
-			tpHandler = new TeleportHandler(this);
+			setTpHandler(new TeleportHandler(this));
 			commandManager = new CommandManager();
 			CommandManager.registerCommands();
 			
@@ -93,7 +103,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 			// console stuff
 			MessageSender.sendTitle();
-			setStartup(false);
 
 		} catch (Throwable t) {
 
@@ -133,11 +142,11 @@ public class PlayerWarpGUI extends JavaPlugin {
 	private void setupFilePaths() {
 		playerwarpsguiVersion = p.getDescription().getVersion();
 		pathMain = p.getDataFolder().toString();
-		pathLangs = pathMain + File.separator + "languages" + File.separator;
+		setPathLangs(pathMain + File.separator + "languages" + File.separator);
 		configName = "config.yml";
-		pathConfig = pathMain + File.separator + configName;
+		setPathConfig(pathMain + File.separator + configName);
 		warpsName = "warps";
-		pathWarps = pathMain + File.separator + warpsName + File.separator;
+		setPathWarps(pathMain + File.separator + warpsName + File.separator);
 	}
 
 	
@@ -159,33 +168,18 @@ public class PlayerWarpGUI extends JavaPlugin {
 		Bukkit.getPluginManager().disablePlugin(PlayerWarpGUI.p);
 	}
 	
-	public boolean isStartup() {
-		return startup;
-	}
-	
-	public void setStartup(boolean startup) {
-		this.startup = startup;
-	}
-
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects() {
-		return pwoList;
+		return getPwoList();
 	}
 
 	public void setPlayerWarpObjects(ArrayList<PlayerWarpObject> playerWarpObjects) {
-		PlayerWarpGUI.pwoList = playerWarpObjects;
+		PlayerWarpGUI.setPwoList(playerWarpObjects);
 	}
 
 	public static ArrayList<String> getNonCriticalErrors() {
 		return nonCriticalErrorList;
 	}
 
-	public Economy getEcon() {
-		return econ;
-	}
-
-	public void setEcon(Economy econ) {
-		this.econ = econ;
-	}
 
 	public static ArrayList<String> getCriticalErrors() {
 		return criticalErrorList;
@@ -198,6 +192,104 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 	public Plugin getInstance() {
 		return this;
+	}
+
+	/**
+	 * @return the pathConfig
+	 */
+	public static String getPathConfig() {
+		return pathConfig;
+	}
+
+	/**
+	 * @param pathConfig the pathConfig to set
+	 */
+	public static void setPathConfig(String pathConfig) {
+		PlayerWarpGUI.pathConfig = pathConfig;
+	}
+
+	/**
+	 * @return the pathWarps
+	 */
+	public static String getPathWarps() {
+		return pathWarps;
+	}
+
+	/**
+	 * @param pathWarps the pathWarps to set
+	 */
+	public static void setPathWarps(String pathWarps) {
+		PlayerWarpGUI.pathWarps = pathWarps;
+	}
+
+	/**
+	 * @return the pathLangs
+	 */
+	public static String getPathLangs() {
+		return pathLangs;
+	}
+
+	/**
+	 * @param pathLangs the pathLangs to set
+	 */
+	public static void setPathLangs(String pathLangs) {
+		PlayerWarpGUI.pathLangs = pathLangs;
+	}
+
+	/**
+	 * @return the pwoList
+	 */
+	public static ArrayList<PlayerWarpObject> getPwoList() {
+		return pwoList;
+	}
+
+	/**
+	 * @param pwoList the pwoList to set
+	 */
+	public static void setPwoList(ArrayList<PlayerWarpObject> pwoList) {
+		PlayerWarpGUI.pwoList = pwoList;
+	}
+
+	/**
+	 * @return the noErrorsInConfigFiles
+	 */
+	public boolean isNoErrorsInConfigFiles() {
+		return noErrorsInConfigFiles;
+	}
+
+	/**
+	 * @param noErrorsInConfigFiles the noErrorsInConfigFiles to set
+	 */
+	public void setNoErrorsInConfigFiles(boolean noErrorsInConfigFiles) {
+		this.noErrorsInConfigFiles = noErrorsInConfigFiles;
+	}
+
+	/**
+	 * @return the warpHandler
+	 */
+	public WarpHandler getWarpHandler() {
+		return warpHandler;
+	}
+
+	/**
+	 * @param warpHandler the warpHandler to set
+	 */
+	public void setWarpHandler(WarpHandler warpHandler) {
+		this.warpHandler = warpHandler;
+	}
+
+	/**
+	 * @return the tpHandler
+	 */
+	public TeleportHandler getTpHandler() {
+		return tpHandler;
+	}
+
+	/**
+	 * @param tpHandler the tpHandler to set
+	 */
+	public void setTpHandler(TeleportHandler tpHandler) {
+		this.tpHandler = tpHandler;
 	}
 
 }

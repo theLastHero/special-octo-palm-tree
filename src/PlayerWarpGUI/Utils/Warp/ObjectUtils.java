@@ -59,7 +59,7 @@ public class ObjectUtils {
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
 		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
 		
-		for (PlayerWarpObject pwo : PlayerWarpGUI.pwoList) {
+		for (PlayerWarpObject pwo : PlayerWarpGUI.getPwoList()) {
 			if (pwo.getPlayerUUID().equals(playerUUID)) {
 				playWarpObjectsList.add(pwo);
 			}
@@ -73,7 +73,7 @@ public class ObjectUtils {
 	 * @return
 	 */
 	public PlayerWarpObject getPlayerWarpObject(UUID playerUUID, String warpName) {
-		for (PlayerWarpObject pwo : PlayerWarpGUI.pwoList) {
+		for (PlayerWarpObject pwo : PlayerWarpGUI.getPwoList()) {
 			if (pwo.getPlayerUUID().equals(playerUUID) && pwo.getWarpName().equals(warpName)) {
 				return pwo;
 			}
@@ -82,7 +82,7 @@ public class ObjectUtils {
 	}
 	
 	public static PlayerWarpObject getPlayerWarpObject(int uid) {
-		for (PlayerWarpObject n : PlayerWarpGUI.pwoList) {
+		for (PlayerWarpObject n : PlayerWarpGUI.getPwoList()) {
 			if (n.getUid() == uid) {
 				return n;
 			}

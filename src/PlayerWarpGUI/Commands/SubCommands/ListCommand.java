@@ -2,6 +2,7 @@ package PlayerWarpGUI.Commands.SubCommands;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,22 +16,16 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ListCommand implements CommandExecutor{
 
-	private String perm = "playerwarpsgui.list";
-
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
 		final Player player = (Player) sender;
 
-		/*if (!StringUtils.getInstance().checkArgs(player, args, 3, LocaleLoader.getString("COMMAND_USE_LIST"))) {
-			return false;
-		}*/
 
-		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LIST"));
+		if ((args.length > 1)) {
+			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("COMMAND_USE_LIST"));
 			return false;
 		}
-		
 
 		final ArrayList<PlayerWarpObject> playerWarpObjects = ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId());
 
@@ -41,7 +36,7 @@ public class ListCommand implements CommandExecutor{
 			return true;
 		}
 
-		if (args.length == 1) {
+		if (args.length == 0) {
 
 			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARPS_TITLE"));
 
@@ -61,11 +56,11 @@ public class ListCommand implements CommandExecutor{
 			}
 		}
 
-		if (args.length == 2) {
+		if (args.length == 1) {
 			final PlayerWarpObject pwo = ObjectUtils.getInstance().getPlayerWarpObject(player.getUniqueId(),
-					args[1]);
+					args[0]);
 			if (pwo == null) {
-				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[0]));
 				return false;
 			}
 

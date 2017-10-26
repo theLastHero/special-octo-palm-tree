@@ -26,22 +26,10 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 public class SetWarpCommand implements CommandExecutor {
 
-	private String perm = "playerwarpsgui.setwarp";
-
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
 		final Player player = (Player) sender;
-
-		if (!checkArgs(player, args, 2, LocaleLoader.getString("COMMAND_USE_SET"))) {
-			return false;
-		}
-
-		if (!player.hasPermission(perm)) {
-			player.sendMessage(
-					LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SET")));
-			return false;
-		}
 
 		// GP check
 		
@@ -77,20 +65,20 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 
 		// check if player has warp named same;
-		if (ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]));
+		if (ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[0])) {
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[0]));
 			return false;
 		}
 
 		// isafe location
 		if (!LocUtils.getInstance().isSafeLocation(player.getLocation())) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[0]));
 			return false;
 		}
 
 		// world blocked
 		if (WorldUtils.getInstance().isBlockedWorld(player.getLocation())) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[0]));
 			return false;
 		}
 
@@ -110,11 +98,11 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 
 
-	WarpFileUtils.getInstance().addWarpToPlayerWarpFile((WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId())),player.getLocation(),args[1],"","",new ArrayList<>(Arrays.asList("","","")),new ArrayList<>(Arrays.asList("","","")));
+	WarpFileUtils.getInstance().addWarpToPlayerWarpFile((WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId())),player.getLocation(),args[0],"","",new ArrayList<>(Arrays.asList("","","")),new ArrayList<>(Arrays.asList("","","")));
 
-	ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(),args[1].toString(),StringUtils.getInstance().loc2str(player.getLocation()),Config.getInstance().getDefaultTitle(),Config.getInstance().getDefaultIcon(),new ArrayList<>(Arrays.asList("")),new ArrayList<>(Arrays.asList("")));
+	ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(),args[0].toString(),StringUtils.getInstance().loc2str(player.getLocation()),Config.getInstance().getDefaultTitle(),Config.getInstance().getDefaultIcon(),new ArrayList<>(Arrays.asList("")),new ArrayList<>(Arrays.asList("")));
 
-	player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT",args[1]));return true;
+	player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT",args[0]));return true;
 
 	}
 
@@ -126,12 +114,5 @@ public class SetWarpCommand implements CommandExecutor {
 		return true;
 	}
 
-	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
-		if (args.length != size) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
-			return false;
-		}
-		return true;
-	}
 
 }
