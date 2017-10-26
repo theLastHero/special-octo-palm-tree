@@ -26,7 +26,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 public class SetWarpCommand implements CommandExecutor {
 
-	private String perm = "pwarps.setwarp";
+	private String perm = "playerwarpsgui.setwarp";
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -44,6 +44,7 @@ public class SetWarpCommand implements CommandExecutor {
 		}
 
 		// GP check
+		
 		if (!checkCanSetWarp(player, new GriefPreventionHook().warpHookCheck(player))) {
 			return false;
 		}
@@ -64,32 +65,32 @@ public class SetWarpCommand implements CommandExecutor {
 			return false;
 		}
 
-		int maxSizeAllowed = PermUtils.getInstance().getLargestPerm(player, "pwarps.setwarp", ".");
+		int maxSizeAllowed = PermUtils.getInstance().getLargestPerm(player, "playerwarpsgui.setwarp", ".");
 		int currentSize = 0;
 		if (!(ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()) == null)) {
 			currentSize = ObjectUtils.getInstance().getPlayerWarpObjects(player.getUniqueId()).size();
 		}
 
 		if (currentSize >= maxSizeAllowed) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_MAX_ALLOWED_TEXT", maxSizeAllowed));
 			return false;
 		}
 
 		// check if player has warp named same;
 		if (ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_ALLREADY_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
 		// isafe location
 		if (!LocUtils.getInstance().isSafeLocation(player.getLocation())) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_UNSAFE_LOCATION", args[1]));
 			return false;
 		}
 
 		// world blocked
 		if (WorldUtils.getInstance().isBlockedWorld(player.getLocation())) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_CANCEL_WORLD_BLOCKED", args[1]));
 			return false;
 		}
 
@@ -100,10 +101,10 @@ public class SetWarpCommand implements CommandExecutor {
 			EconomyResponse r = vh.econ.withdrawPlayer(player, Config.getInstance().getSetWarpCost());
 
 			if (!r.transactionSuccess()) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_SET_NOT_ENOUGH_MONEY"));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_NOT_ENOUGH_MONEY"));
 				return false;
 			} else {
-				player.sendMessage(LocaleLoader.getString("COMMAND_SET_ENOUGH_MONEY",  Config.getInstance().getSetWarpCost()));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_ENOUGH_MONEY",  Config.getInstance().getSetWarpCost()));
 			}
 		
 		}
@@ -113,12 +114,12 @@ public class SetWarpCommand implements CommandExecutor {
 
 	ObjectUtils.getInstance().createWarpObjects(player.getUniqueId(),args[1].toString(),StringUtils.getInstance().loc2str(player.getLocation()),Config.getInstance().getDefaultTitle(),Config.getInstance().getDefaultIcon(),new ArrayList<>(Arrays.asList("")),new ArrayList<>(Arrays.asList("")));
 
-	player.sendMessage(LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT",args[1]));return true;
+	player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_SET_COMPLETED_TEXT",args[1]));return true;
 
 	}
 
 	private boolean checkCanSetWarp(Player player, String checkCanSetWarp) {
-		if (!(checkCanSetWarp == (null))) {
+		if ((checkCanSetWarp != (null))) {
 			player.sendMessage(LocaleLoader.getString(checkCanSetWarp));
 			return false;
 		}
@@ -127,7 +128,7 @@ public class SetWarpCommand implements CommandExecutor {
 
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
 			return false;
 		}
 		return true;

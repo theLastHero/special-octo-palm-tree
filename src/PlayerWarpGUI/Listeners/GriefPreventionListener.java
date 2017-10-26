@@ -7,13 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import PlayerWarpGUI.Chat.MessageSender;
-import PlayerWarpGUI.Hooks.GriefPreventionHook;
+import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
-import PlayerWarpGUI.PlayerWarpGUI;
 import me.ryanhamshire.GriefPrevention.events.ClaimDeletedEvent;
 
 public class GriefPreventionListener implements Listener {
@@ -33,22 +31,24 @@ public class GriefPreventionListener implements Listener {
 	public void deleteWarpOnDeleteClaim(ClaimDeletedEvent e) {
 
 		if(Config.getInstance().getGPEnabled()) {
-		if (Config.getInstance().getGPRemoveOnDelete()) {
-			for (int i = 0; i < pl.getPlayerWarpObjects().size(); i++) {
+			if (Config.getInstance().getGPRemoveOnDelete()) {
+				for (int i = 0; i < PlayerWarpGUI.pwoList.size(); i++) {
 
-				Location loc = StringUtils.getInstance().str2loc(pl.getPlayerWarpObjects().get(i).getWarpLocation());
-				String warpName = pl.getPlayerWarpObjects().get(i).getWarpName();
-				UUID playerUUID = Bukkit.getOfflinePlayer(pl.getPlayerWarpObjects().get(i).getPlayerUUID()).getUniqueId();
+					Location location = StringUtils.getInstance().str2loc(PlayerWarpGUI.pwoList.get(i).getWarpLocation());
+					String warpName = PlayerWarpGUI.pwoList.get(i).getWarpName();
+					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.pwoList.get(i).getPlayerUUID()).getUniqueId();
 
-				if (new GriefPreventionHook().getLocationData(loc) != null) {
-					WarpFileUtils.getInstance().removeSingleWarpValue(WarpFileUtils.getInstance().checkWarpsExsits(playerUUID),
-							warpName);
+					if(e.getClaim().contains(location, false, false)) {
+						WarpFileUtils.getInstance().removeSingleWarpValue(WarpFileUtils.getInstance().checkWarpsExsits(playerUUID),
+								warpName);
 
-					pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();
-					MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(), LocaleLoader.getString("GRIEFPREVENTION_CLAIM_DELETED", warpName));
+						pl.getPlayerWarpObjects().get(i).removePlayerWarpObject();
+						Bukkit.getOfflinePlayer(playerUUID).getPlayer().sendMessage(LocaleLoader.getString("GRIEFPREVENTION_CLAIM_DELETED", warpName));
+
+					}
+					
 					
 				}
-			}
 			}
 		}
 	}

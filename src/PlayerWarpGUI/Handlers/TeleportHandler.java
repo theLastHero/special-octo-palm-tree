@@ -86,7 +86,7 @@ public class TeleportHandler {
 				player.teleport(loc);
 				tpQueue.remove(player.getUniqueId());
 				this.cancel();
-				player.sendMessage(LocaleLoader.getString("TELEPORT_COMPLETED"));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("TELEPORT_COMPLETED"));
 				// call godMode Code
 				/*
 				 * if (PlayerWarpGUI.godModeAfterTP > 0) { godModeQueue.put(player, new
@@ -122,7 +122,7 @@ public class TeleportHandler {
 	protected static void cancelTeleportPlayer(Player player) {
 		tpQueue.get(player.getUniqueId()).cancel();
 		tpQueue.remove(player.getUniqueId());
-		player.sendMessage(LocaleLoader.getString("TELEPORT_CANCEL_MOVEMENT"));
+		player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("TELEPORT_CANCEL_MOVEMENT"));
 	}
 
 }

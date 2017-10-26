@@ -15,7 +15,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class SetTitleCommand implements CommandExecutor{
 	
-	private String perm = "pwarps.settitle";
+	private String perm = "playerwarpsgui.settitle";
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -27,13 +27,13 @@ public class SetTitleCommand implements CommandExecutor{
 		}
 		
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_TITLE"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_TITLE"));
 			return false;
 		}
 		
 
 		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
@@ -47,7 +47,7 @@ public class SetTitleCommand implements CommandExecutor{
 		title = ChatColor.translateAlternateColorCodes('&',title);
 
 		if (title.length() > Config.getInstance().getMaxTitleSize()) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_TITLE_TOOLONG_TEXT",
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_TITLE_TOOLONG_TEXT",
 					"" + Config.getInstance().getMaxTitleSize()));
 			return false;
 		}
@@ -66,7 +66,7 @@ public class SetTitleCommand implements CommandExecutor{
 				WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[1], "title", title);
 		// chestObject.openGUI(player, 0);
 
-		player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[1], title));
+		player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_TITLE_COMPLETED_TEXT", args[1], title));
 
 		return true;
 		

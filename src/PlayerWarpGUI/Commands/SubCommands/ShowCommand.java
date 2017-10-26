@@ -10,7 +10,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ShowCommand implements CommandExecutor{
 	
-	private String perm = "pwarps.show";
+	private String perm = "playerwarpsgui.show";
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -18,7 +18,7 @@ public class ShowCommand implements CommandExecutor{
 		  final Player player = (Player) sender;
 		  
 			if (!player.hasPermission(perm)) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SHOW")));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", LocaleLoader.getString("COMMAND_USE_SHOW")));
 				return false;
 			}
 	        

@@ -3,10 +3,12 @@ package PlayerWarpGUI.config;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 
 abstract class ConfigLoader {
@@ -29,7 +31,7 @@ abstract class ConfigLoader {
 
     protected void loadFile() {
         if (!configFile.exists()) {
-           // plugin.debug("Creating mcMMO " + fileName + " File...");
+          // Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_CREATE_CONFIG", configFile.getName()));
 
             try {
                 plugin.saveResource(fileName, false); // Normal files

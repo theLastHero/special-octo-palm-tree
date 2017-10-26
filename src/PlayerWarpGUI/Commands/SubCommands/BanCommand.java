@@ -15,7 +15,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class BanCommand implements CommandExecutor {
 
-	private String perm = "pwarps.ban";
+	private String perm = "playerwarpsgui.ban";
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -28,19 +28,19 @@ public class BanCommand implements CommandExecutor {
 		}
 
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_BAN"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_BAN"));
 			return false;
 		}
 
 		// update warp file
 		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
 		// is player to be ban a valid player?
 		if (!PlayerUtils.getInstance().isValidPlayer(Bukkit.getOfflinePlayer(args[2]).getUniqueId())) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_BAN_UNKNOWN_PLAYER"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_BAN_UNKNOWN_PLAYER"));
 			return false;
 		}
 
@@ -48,7 +48,7 @@ public class BanCommand implements CommandExecutor {
 		String error = "";
 		if (ObjectUtils.getInstance().isPlayerOnBannedList(pwo.getBanList(),
 				Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_BANNED_PLAYER_ALREADY", args[2], args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_BANNED_PLAYER_ALREADY", args[2], args[1]));
 			return false;
 		}
 		pwo.getBanList().add(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());

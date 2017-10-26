@@ -38,7 +38,7 @@ public class StringUtils {
 	
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
 			return false;
 		}
 		return true;

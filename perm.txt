@@ -1,20 +1,20 @@
 
-# Allow use of /pwarps & pwarps show
+# Allow use of /playerwarpsgui & playerwarpsgui show
 playerwarpgui.show
 
-# Allows the use of  pwarps list
+# Allows the use of  playerwarpsgui list
 playerwarpgui.list
 
-# Allows the use od /pwarps set & /pwarps delete
+# Allows the use od /playerwarpsgui set & /playerwarpsgui delete
 playerwarpgui.setwarp
 
-# Allows the use of /pwarps title
+# Allows the use of /playerwarpsgui title
 playerwarpgui.settitle 
 
-# Allows the use of /pwarps setlore
+# Allows the use of /playerwarpsgui setlore
 playerwarpgui.setlore 
 
-# Allows the use of /pwarps ban & unban 
+# Allows the use of /playerwarpsgui ban & unban 
 playerwarpgui.ban 
 
 #Allow use of color codes in text

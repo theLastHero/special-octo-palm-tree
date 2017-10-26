@@ -17,7 +17,13 @@ import PlayerWarpGUI.Chat.MessageSender;
 import PlayerWarpGUI.Commands.CommandManager;
 import PlayerWarpGUI.Handlers.TeleportHandler;
 import PlayerWarpGUI.Handlers.WarpHandler;
+import PlayerWarpGUI.Hooks.FactionsHook;
+import PlayerWarpGUI.Hooks.GriefPreventionHook;
 import PlayerWarpGUI.Hooks.HookManager;
+import PlayerWarpGUI.Hooks.RedProtectHook;
+import PlayerWarpGUI.Hooks.ResidenceHook;
+import PlayerWarpGUI.Hooks.VaultHook;
+import PlayerWarpGUI.Hooks.WorldGuardHook;
 import PlayerWarpGUI.Listeners.ChestListener;
 import PlayerWarpGUI.Listeners.GriefPreventionListener;
 import PlayerWarpGUI.Listeners.PlayerListener;
@@ -45,7 +51,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public static String pathWarps;
 
 	// plugin details
-	public static String pWarpsVersion;
+	public static String playerwarpsguiVersion;
 	
 	// Config Validation Check
 	public boolean noErrorsInConfigFiles = true;
@@ -53,7 +59,6 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public static HookManager<?> hookManager;
 	public TeleportHandler tpHandler;
 	public CommandManager commandManager;
-	public GriefPreventionListener griefpreventionlistener;
 
 	// others
 	public boolean startup = true;
@@ -62,8 +67,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	public Economy econ = null;
 
 	// error arrays
-	private static ArrayList<String> criticalErrorList = new ArrayList<String>();
-	private static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
+	public static ArrayList<String> criticalErrorList = new ArrayList<String>();
+	public static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
 
 	
 	@Override
@@ -80,7 +85,9 @@ public class PlayerWarpGUI extends JavaPlugin {
 			tpHandler = new TeleportHandler(this);
 			commandManager = new CommandManager();
 			CommandManager.registerCommands();
-
+			
+			
+			setupHooks();
 			registerEvents();
 			useMetrics();
 
@@ -101,6 +108,15 @@ public class PlayerWarpGUI extends JavaPlugin {
 		}
 
 	}
+	
+	public void setupHooks() {
+		new GriefPreventionHook().displayStatus();
+		new FactionsHook().displayStatus();
+		new RedProtectHook().displayStatus();
+		new ResidenceHook().displayStatus();
+		new WorldGuardHook().displayStatus();
+		new VaultHook().displayStatus();
+	}
 
 	/**
 	 * 
@@ -108,13 +124,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 	private void registerEvents() {
 		Bukkit.getServer().getPluginManager().registerEvents(new ChestListener(this), this);
 		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new GriefPreventionListener(this), this);
 	}
 
 	/**
 	 * 
 	 */
 	private void setupFilePaths() {
-		pWarpsVersion = p.getDescription().getVersion();
+		playerwarpsguiVersion = p.getDescription().getVersion();
 		pathMain = p.getDataFolder().toString();
 		pathLangs = pathMain + File.separator + "languages" + File.separator;
 		configName = "config.yml";

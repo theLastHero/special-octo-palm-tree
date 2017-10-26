@@ -5,9 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import PlayerWarpGUI.Chat.MessageSender;
-import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
+import PlayerWarpGUI.locale.LocaleLoader;
 
 public abstract class HookManager<OUTPUT> {
 
@@ -40,11 +39,17 @@ public abstract class HookManager<OUTPUT> {
 
 	}
 
+	public void displayStatus() {
+		setup();
+		if (this.isConfigEnabled) {
+			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_HOOK", hookedPluginName, status));
+		}
+	}
 
 	/**
 	 * 
 	 */
-	
+
 	public void setup() {
 		if (this.isConfigEnabled) {
 			Plugin pHook = Bukkit.getPluginManager().getPlugin(hookedPluginName);
@@ -57,7 +62,6 @@ public abstract class HookManager<OUTPUT> {
 				this.isEnabled = false;
 				addNonCriticalError(hookedPluginName);
 			}
-			consoleStatusMessage(hookedPluginName);
 		}
 
 	}
@@ -72,12 +76,6 @@ public abstract class HookManager<OUTPUT> {
 		}
 	}
 
-	/**
-	 * @param pluginName
-	 */
-	private void consoleStatusMessage(String pluginName) {
-		MessageSender.sendConsole("CONSOLE_MSG_HOOK", pluginName, LocaleLoader.getString(status));
-	}
 
 	/**
 	 * @param player
@@ -91,10 +89,8 @@ public abstract class HookManager<OUTPUT> {
 	 */
 	public abstract OUTPUT getLocationData(Location location);
 
-
 	public Plugin getpHook() {
 		return pHook;
 	}
-
 
 }

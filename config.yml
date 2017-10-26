@@ -13,50 +13,50 @@ general:
 
 # GUI
 gui:
- rows: 9
- title: '&2PlayerWarps'
- default-playerwarp-icon: '35:9'
- default-playerwarp-title: 'Go to &6[playername]s &fwarp'
- use-playerheads-as-icons: true
- nextpage-icon: '35:8'
+  rows: 9
+  title: '&2PlayerWarps'
+  default-playerwarp-icon: '35:9'
+  default-playerwarp-title: 'Go to &6[playername]s &fwarp'
+  use-playerheads-as-icons: true
+  nextpage-icon: '35:8'
  
 settings:
- set-warp-cost: 400
- max-title-text-size: 40
- max-lore-text-size: 40
+  set-warp-cost: 400
+  max-title-text-size: 40
+  max-lore-text-size: 40
 
 # Teleport
 teleport:
- cancel-on-movement: true
- movement-cooldown: 9
- use-safelocation: true
- unsafe-blocks:
- - '8'
- - '9'
- - '10'
- - '11'
- - '70'
- - '71'
- - '147'
- - '148'
- blocked-world:
- - 'world_nether'
- - 'world_end'
+  cancel-on-movement: true
+  movement-cooldown: 9
+  use-safelocation: true
+  unsafe-blocks:
+  - '8'
+  - '9'
+  - '10'
+  - '11'
+  - '70'
+  - '71'
+  - '147'
+  - '148'
+  blocked-world:
+  - 'world_nether'
+  - 'world_end'
 
 # GreifProtection
 GriefPrevention:
- enabled: false
- owner-can-set-warp: true
- trusted-player-can-set-warp: true
- delete-warps-if-claim-is-deleted: true
+  enabled: false
+  owner-can-set-warp: true
+  trusted-player-can-set-warp: true
+  delete-warps-if-claim-is-deleted: true
 
 # RedProtect
 RedProtect:
- enabled: false
- leader-player-can-set-warp: true
- admin-player-can-set-warp: true
- member-player-can-set-warp: true
- delete-warps-if-region-is-deleted: true
+  enabled: false
+  leader-player-can-set-warp: true
+  admin-player-can-set-warp: true
+  member-player-can-set-warp: true
+  delete-warps-if-region-is-deleted: true
 
 # Residence
 Residence:

@@ -37,18 +37,17 @@ public class FactionsListener implements Listener {
 
 		if (Config.getInstance().getFAEnabled()) {
 			if (Config.getInstance().getFARemoveOnDelete()) {
-				for (int i = 0; i < p.getPlayerWarpObjects().size(); i++) {
+				for (int i = 0; i < PlayerWarpGUI.pwoList.size(); i++) {
 
-					Location loc = StringUtils.getInstance().str2loc(p.getPlayerWarpObjects().get(i).getWarpLocation());
-					String warpName = p.getPlayerWarpObjects().get(i).getWarpName();
-					UUID playerUUID = Bukkit.getOfflinePlayer(p.getPlayerWarpObjects().get(i).getPlayerUUID())
+					Location loc = StringUtils.getInstance().str2loc(PlayerWarpGUI.pwoList.get(i).getWarpLocation());
+					String warpName = PlayerWarpGUI.pwoList.get(i).getWarpName();
+					UUID playerUUID = Bukkit.getOfflinePlayer(PlayerWarpGUI.pwoList.get(i).getPlayerUUID())
 							.getUniqueId();
 					World world = loc.getWorld();
 					// loop through warps
 					// is warp in the chunk that just got deleted
 					// then delete warp
 					//
-
 					for (Entry<PS, Faction> entry : e.getOldChunkFaction().entrySet()) {
 						PS chunk = entry.getKey();
 
@@ -56,7 +55,7 @@ public class FactionsListener implements Listener {
 							WarpFileUtils.getInstance().removeSingleWarpValue(
 									WarpFileUtils.getInstance().checkWarpsExsits(playerUUID), warpName);
 
-							p.getPlayerWarpObjects().get(i).removePlayerWarpObject();
+							PlayerWarpGUI.pwoList.get(i).removePlayerWarpObject();
 							MessageSender.send(Bukkit.getOfflinePlayer(playerUUID).getPlayer(),
 									LocaleLoader.getString("FACTIONS_CLAIM_DELETED", warpName));
 						}

@@ -31,12 +31,12 @@ public class WarpFileUtils {
 
 		return instance;
 	}
-	
 
 	public void checkWarpFolder() {
 		File directory = new File(PlayerWarpGUI.pathWarps);
 		if (!directory.exists()) {
-			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_CREATE_FOLDER", PlayerWarpGUI.warpsName));
+			Bukkit.getConsoleSender()
+					.sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_CREATE_FOLDER", PlayerWarpGUI.pathWarps));
 			directory.mkdirs();
 		}
 	}
@@ -67,15 +67,15 @@ public class WarpFileUtils {
 	 * @param warpFilesCount
 	 * @param warpCount
 	 */
-	
+
 	public void consoleMsgWarpCount(int warpFilesCount, int warpCount) {
 		if (PlayerWarpGUI.p.startup) {
-			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount));
-			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_WARPS_COUNT", "" + warpCount));
+			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX")
+					+ LocaleLoader.getString("CONSOLE_MSG_WARPFILE_COUNT", "" + warpFilesCount));
+			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX")
+					+ LocaleLoader.getString("CONSOLE_MSG_WARPS_COUNT", "" + warpCount));
 		}
 	}
-
-
 
 	/**
 	 * @param playerDataFile
@@ -94,7 +94,7 @@ public class WarpFileUtils {
 	/**
 	 * @param file
 	 * @param playerUUID
-	 
+	 * 
 	 * @return
 	 */
 	public int createWarpFromFile(File file, UUID playerUUID) {
@@ -126,7 +126,7 @@ public class WarpFileUtils {
 						banList);
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return warpCount;
 	}
@@ -156,7 +156,7 @@ public class WarpFileUtils {
 
 	/**
 	 * @param fileName
-	 
+	 * 
 	 * @return
 	 */
 	public UUID getUUIDFromString(String fileName) {
@@ -170,10 +170,9 @@ public class WarpFileUtils {
 		return fileUUID;
 	}
 
-	
 	/**
 	 * @param playerUUID
-	 
+	 * 
 	 * @return
 	 */
 	public boolean isValidPlayer(UUID playerUUID) {
@@ -184,9 +183,8 @@ public class WarpFileUtils {
 		}
 		return true;
 
-	}	
+	}
 
-	
 	/**
 	 * @param playerDataFile
 	 * @param warpName
@@ -199,7 +197,7 @@ public class WarpFileUtils {
 		warpConfig.set("warps." + warpName + "." + subName, value);
 		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
-	
+
 	/**
 	 * @param playerDataFile
 	 * @param warpName
@@ -210,14 +208,14 @@ public class WarpFileUtils {
 		warpConfig.set("warps." + warpName, null);
 		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
-	
+
 	public boolean addWarpToPlayerWarpFile(File playerDataFile, Location location, String name, String title,
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
 
 		FileConfiguration warpConfig = setWarpConfigData(playerDataFile, location, name, title, icon, lore, ban);
 		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
-	
+
 	private FileConfiguration setWarpConfigData(File playerDataFile, Location location, String name, String title,
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
@@ -229,7 +227,7 @@ public class WarpFileUtils {
 		warpConfig.set("warps." + name + ".ban", ban);
 		return warpConfig;
 	}
-	
+
 	private boolean savePlayerDataFile(File playerDataFile, FileConfiguration warpConfig) {
 		try {
 			warpConfig.save(playerDataFile);
@@ -240,7 +238,7 @@ public class WarpFileUtils {
 		}
 		return false;
 	}
-	
+
 	public File checkWarpsExsits(UUID uuid) {
 		File warpsFolder = new File(PlayerWarpGUI.pathWarps);
 		if (!(warpsFolder.listFiles() == null)) {
@@ -253,13 +251,12 @@ public class WarpFileUtils {
 		return createPlayerWarpFile(uuid);
 	}
 
-	
 	public File createPlayerWarpFile(UUID uuid) {
 		File f = new File(PlayerWarpGUI.pathWarps + uuid.toString() + ".yml");
 		StringUtils.getInstance().copy(PlayerWarpGUI.p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}
-	
+
 	/**
 	 * @param playerUUID
 	 * @param warpName
@@ -273,7 +270,7 @@ public class WarpFileUtils {
 			ArrayList<String> loreList, ArrayList<String> banList) {
 		new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon, loreList, banList, PlayerWarpGUI.p);
 	}
-	
+
 	/**
 	 * @param banList
 	 * @param playerUUIDString
@@ -281,20 +278,20 @@ public class WarpFileUtils {
 	 */
 	public boolean isPlayerOnBannedList(ArrayList<String> banList, String playerUUIDString) {
 		for (int i = 0; i < banList.size(); i++) {
-			if(banList.get(i).equals(playerUUIDString)) {
+			if (banList.get(i).equals(playerUUIDString)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param playerUUID
 	 * @return
 	 */
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
 		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
-		
+
 		for (PlayerWarpObject pwo : PlayerWarpGUI.p.getPlayerWarpObjects()) {
 			if (pwo.getPlayerUUID().equals(playerUUID)) {
 				playWarpObjectsList.add(pwo);
@@ -302,12 +299,12 @@ public class WarpFileUtils {
 		}
 		return playWarpObjectsList;
 	}
-	
+
 	/**
 	 * @param playerUUID
 	 * @param warpName
 	 * @return
-	 
+	 * 
 	 */
 	public PlayerWarpObject getPlayerWarpObject(UUID playerUUID, String warpName) {
 		for (PlayerWarpObject pwo : PlayerWarpGUI.p.getPlayerWarpObjects()) {
@@ -317,19 +314,19 @@ public class WarpFileUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param playerUUID
 	 * @param warpName
 	 * @return
 	 */
 	public boolean checkPlayerWarpObject(UUID playerUUID, String warpName) {
-		if(getPlayerWarpObject(playerUUID, warpName) != null) {
+		if (getPlayerWarpObject(playerUUID, warpName) != null) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param player
 	 * @param perm
@@ -356,8 +353,8 @@ public class WarpFileUtils {
 			returnAllowed = 1;
 		}
 
-		if (permission.getPermission().startsWith(perm+splitter)) {
-			String result[] = permission.getPermission().split(perm+splitter);
+		if (permission.getPermission().startsWith(perm + splitter)) {
+			String result[] = permission.getPermission().split(perm + splitter);
 			String returnValue = result[result.length - 1];
 			if (returnValue != null && StringUtils.getInstance().isInt(returnValue)) {
 				int validInt = Integer.parseInt(returnValue);

@@ -13,7 +13,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class SetIconCommand implements CommandExecutor{
 	
-	private String perm = "pwarps.seticon";
+	private String perm = "playerwarpsgui.seticon";
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -26,18 +26,18 @@ public class SetIconCommand implements CommandExecutor{
 		}
 		
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_ICON"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_ICON"));
 			return false;
 		}
 		
 
 		if (player.getItemInHand().getItemMeta() == null) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_ICON_NOICON_TEXT"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_ICON_NOICON_TEXT"));
 			return true;
 		}
 		
 		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
@@ -53,7 +53,7 @@ public class SetIconCommand implements CommandExecutor{
 				StringUtils.getInstance().parseStringFromItemStack(player.getItemInHand()));
 		// chestObject.openGUI(player, 0);
 
-		player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]));
+		player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_ICON_COMPLETED_TEXT", args[1]));
 
 		return true;
 	

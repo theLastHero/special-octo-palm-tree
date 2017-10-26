@@ -15,7 +15,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class UnbanCommand implements CommandExecutor{
 
-	private String perm = "pwarps.ban";
+	private String perm = "playerwarpsgui.ban";
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -28,13 +28,13 @@ public class UnbanCommand implements CommandExecutor{
 		}
 
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_BAN"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_BAN"));
 			return false;
 		}
 
 		// update warp file
 		if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 			return false;
 		}
 
@@ -50,7 +50,7 @@ public class UnbanCommand implements CommandExecutor{
 		
 		if (!ObjectUtils.getInstance().isPlayerOnBannedList(pwo.getBanList(),
 				Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString())) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_BANNED_PLAYER_NOTBANNED", args[2], args[1]));
 			return false;
 		}
 		pwo.getBanList().remove(Bukkit.getOfflinePlayer(args[2]).getUniqueId().toString());

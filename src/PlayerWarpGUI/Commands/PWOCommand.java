@@ -85,9 +85,9 @@ class PWOCommand implements TabExecutor {
     }
 
     private boolean printUsage(Player player) {
-        player.sendMessage(LocaleLoader.getString("Party.Help.0", "/party join"));
-        player.sendMessage(LocaleLoader.getString("Party.Help.1", "/party create"));
-        player.sendMessage(LocaleLoader.getString("Party.Help.2", "/party ?"));
+        player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("Party.Help.0", "/party join"));
+        player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("Party.Help.1", "/party create"));
+        player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("Party.Help.2", "/party ?"));
         return true;
     }
 

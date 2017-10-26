@@ -18,7 +18,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class SetLoreCommand implements CommandExecutor{
 
-		private String perm = "pwarps.setlore";
+		private String perm = "playerwarpsgui.setlore";
 		
 		@Override
 		public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -30,14 +30,14 @@ public class SetLoreCommand implements CommandExecutor{
 			}
 			
 			if (!player.hasPermission(perm)) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LORE"));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LORE"));
 				return false;
 			}
 			
 
 			// update warp file
 			if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 				return false;
 			}
 			
@@ -52,8 +52,8 @@ public class SetLoreCommand implements CommandExecutor{
 
 			// get allowed amount
 			if (LoreRow > 1) {
-				if (!PermUtils.getInstance().checkPerm(player, "pwarps.setlore." + LoreRow,
-						LocaleLoader.getString("COMMAND_NO_PERMISSION", "pwarps.setlore." + LoreRow))) {
+				if (!PermUtils.getInstance().checkPerm(player, "playerwarpsgui.setlore." + LoreRow,
+						LocaleLoader.getString("COMMAND_NO_PERMISSION", "playerwarpsgui.setlore." + LoreRow))) {
 					return false;
 				}
 			}
@@ -68,7 +68,7 @@ public class SetLoreCommand implements CommandExecutor{
 
 			// check lenght of text
 			if (loreText.length() > Config.getInstance().getMaxLoreSize()) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_LORE_TOOLONG_TEXT",
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_LORE_TOOLONG_TEXT",
 						Config.getInstance().getMaxLoreSize()));
 				return false;
 			}
@@ -93,7 +93,7 @@ public class SetLoreCommand implements CommandExecutor{
 					WarpFileUtils.getInstance().checkWarpsExsits(player.getUniqueId()), args[1], "lore",
 					pwo.getLoreList());
 
-			player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[1], loreText));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_LORE_COMPLETED_TEXT", args[1], loreText));
 
 		return true;
 	}

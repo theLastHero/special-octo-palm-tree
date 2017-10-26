@@ -33,7 +33,7 @@ public class PermUtils {
 	
 	public boolean checkPerm(final Player player, final String perm, final String msg) {
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", msg));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", msg));
 			return false;
 		}
 		return true;

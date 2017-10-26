@@ -7,6 +7,6 @@ website: http://thelasthero.net
 main: PlayerWarpGUI.PlayerWarpGUI
 softdepend: [GriefPrevention, worldguard, WorldGuard, RedProtect, Vault, Residence, Factions, MassiveCore]
 commands:
-  pwarps:
+  playerwarpsgui:
     description: Set and go to player warps.
-    aliases: [pwarp]
+    aliases: [pwarp, pwarps]

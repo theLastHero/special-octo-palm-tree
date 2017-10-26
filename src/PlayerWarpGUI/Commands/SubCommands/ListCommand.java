@@ -15,7 +15,7 @@ import PlayerWarpGUI.locale.LocaleLoader;
 
 public class ListCommand implements CommandExecutor{
 
-	private String perm = "pwarps.list";
+	private String perm = "playerwarpsgui.list";
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -27,7 +27,7 @@ public class ListCommand implements CommandExecutor{
 		}*/
 
 		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LIST"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LIST"));
 			return false;
 		}
 		
@@ -36,14 +36,14 @@ public class ListCommand implements CommandExecutor{
 
 		if (playerWarpObjects.size() <= 0) {
 
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARPS_TITLE"));
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_NONE_TEXT"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARPS_TITLE"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_NONE_TEXT"));
 			return true;
 		}
 
 		if (args.length == 1) {
 
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARPS_TITLE"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARPS_TITLE"));
 
 			for (int i = 0; i < playerWarpObjects.size(); i++) {
 				final String warpText = playerWarpObjects.get(i).getWarpName();
@@ -55,7 +55,7 @@ public class ListCommand implements CommandExecutor{
 				final String warpZpos = String.valueOf(warpLocation.getZ()).split("\\.")[0];
 				if (!(i >= playerWarpObjects.size())) {
 
-					player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP", new Object[] { String.valueOf(i + 1), warpText,
+					player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP", new Object[] { String.valueOf(i + 1), warpText,
 							warpWorld, warpXpos, warpYpos, warpZpos }));
 				}
 			}
@@ -65,7 +65,7 @@ public class ListCommand implements CommandExecutor{
 			final PlayerWarpObject pwo = ObjectUtils.getInstance().getPlayerWarpObject(player.getUniqueId(),
 					args[1]);
 			if (pwo == null) {
-				player.sendMessage(LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
+				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_UPDATE_DOESNT_EXSISTS_TEXT", args[1]));
 				return false;
 			}
 
@@ -81,29 +81,29 @@ public class ListCommand implements CommandExecutor{
 			final ArrayList<String> warpLore = pwo.getLoreList();
 			final ArrayList<String> warpBan = pwo.getBanList();
 
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARPS_DETAILS_TITLE", warpText));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARPS_DETAILS_TITLE", warpText));
 			// title
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_TITLE", warpTitle));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_TITLE", warpTitle));
 			// Location
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_LOCATION", warpWorld, warpXpos, warpYpos, warpZpos));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_LOCATION", warpWorld, warpXpos, warpYpos, warpZpos));
 			// ICON
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_ICON", warpIcon));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_ICON", warpIcon));
 			// LOREMAIN
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_LORE_MAIN"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_LORE_MAIN"));
 			// LORE LOOP
 			int i = 0;
 			for (final String lore : warpLore) {
 				i++;
 				if (lore.length() > 0) {
-					player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_LORE", lore, i));
+					player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_LORE", lore, i));
 				}
 			}
 			// BAN MAIN
-			player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_BAN_MAIN"));
+			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_BAN_MAIN"));
 			// BAN LOOP
 			for (final String ban : warpBan) {
 				if (ban.length() > 0) {
-					player.sendMessage(LocaleLoader.getString("COMMAND_LIST_WARP_BAN", ban));
+					player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_LIST_WARP_BAN", ban));
 				}
 			}
 
