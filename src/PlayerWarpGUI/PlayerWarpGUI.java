@@ -90,8 +90,11 @@ public class PlayerWarpGUI extends JavaPlugin {
 			setupFilePaths();
 			
 			setWarpHandler(new WarpHandler(p));
+			
+			
 			WarpFileUtils.getInstance().checkWarpFolder();
 			WarpFileUtils.getInstance().createAllWarpsFromFile();
+			
 			setTpHandler(new TeleportHandler(this));
 			commandManager = new CommandManager();
 			CommandManager.registerCommands();
