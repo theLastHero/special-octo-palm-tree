@@ -5,33 +5,42 @@ import org.bukkit.Location;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.config.Config;
 
+/**
+ * Holds methods related to World processing. <br>
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class WorldUtils {
 	
-	private static PlayerWarpGUI p;
-	private static WorldUtils instance;
-
 	/**
-	 * @param p
+	 * This class instance.
 	 */
-	
-	public WorldUtils(PlayerWarpGUI p) {
-		WorldUtils.p = p;
+	private static WorldUtils instance;
+	/**
+	 * Constructor
+	 */
+	public WorldUtils() {
 	}
 
 	/**
-	 * @return
+	 * Return this classes instance.
+	 * 
+	 * @return WorldUtils
 	 */
 	public static WorldUtils getInstance() {
 		if (instance == null) {
-			instance = new WorldUtils(p);
+			instance = new WorldUtils();
 		}
-
 		return instance;
 	}
 	
 	/**
+	 * Check is world is on the block worlds list in the config file.<br>
+	 * If enabled.
+	 * 
 	 * @param location
-	 * @return
+	 * @return true/false
 	 */
 	public boolean isBlockedWorld(Location location) {
 		if(Config.getInstance().getBlockedWorlds().size() > 0) {

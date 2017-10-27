@@ -65,7 +65,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/** Full path of warp Files location.  */
 	private static String pathWarps;
 
-	/** Value - {@value}, Contains verison number of the plugin, taken from pugin.yml  */
+	/** Value Contains verison number of the plugin, taken from pugin.yml  */
 	public static String playerwarpsguiVersion;
 	
 	/** Config Validation Check */
@@ -162,7 +162,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 			try {
 				Metrics metrics = new Metrics(this);
 				metrics.start();
-				MessageSender.sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("SUCCESS"));
+				Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_METRICS", LocaleLoader.getString("SUCCESS")));
 			} catch (IOException e) {
 				MessageSender.sendConsole("CONSOLE_MSG_METRICS", LocaleLoader.getString("FAILED"));
 				getNonCriticalErrors().add(LocaleLoader.getString("CONSOLE_NONCRITIAL_ERROR"));
@@ -178,7 +178,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns complete list of loaded PlayerWarpObjects
 	 * 
-	 * @return ArrayList<PlayerWarpObject>
+	 * @return ArrayList of PlayerWarpObject
 	 */
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects() {
 		return getPwoList();
@@ -187,7 +187,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns list of non critical errors
 	 * 
-	 * @return ArrayList<String> of non critical errors
+	 * @return ArrayList of String of non critical errors
 	 */
 	public static ArrayList<String> getNonCriticalErrors() {
 		return getNonCriticalErrorList();
@@ -196,7 +196,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns list of critical errors.
 	 * 
-	 * @return ArrayList<String> of critical errors.
+	 * @return ArrayList of String of critical errors.
 	 */
 	public static ArrayList<String> getCriticalErrors() {
 		return getCriticalErrorList();
@@ -205,7 +205,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns stream from filename.
 	 * 
-	 * @return 
+	 * @return InputStreamReader
 	 */
 	public InputStreamReader getResourceAsReader(String fileName) {
 		InputStream in = getResource(fileName);
@@ -278,7 +278,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns complete list of loaded PlayerWarpObjects
 	 * 
-	 * @return ArrayList<PlayerWarpObject>
+	 * @return ArrayList of PlayerWarpObject
 	 */
 	public static ArrayList<PlayerWarpObject> getPwoList() {
 		return pwoList;
@@ -359,7 +359,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns list of critical errors
 	 * 
-	 * @return criticalErrorList ArrayList<String>
+	 * @return criticalErrorList ArrayList of String
 	 */
 	public static ArrayList<String> getCriticalErrorList() {
 		return criticalErrorList;
@@ -368,7 +368,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Sets the  list of critical errors
 	 * 
-	 * @param criticalErrorList ArrayList<String>
+	 * @param criticalErrorList ArrayList of String
 	 */
 	public static void setCriticalErrorList(ArrayList<String> criticalErrorList) {
 		PlayerWarpGUI.criticalErrorList = criticalErrorList;
@@ -377,7 +377,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Returns list of non critical errors
 	 * 
-	 * @return ArrayList<String> of non critical errors
+	 * @return ArrayList of String of non critical errors
 	 */
 	public static ArrayList<String> getNonCriticalErrorList() {
 		return nonCriticalErrorList;
@@ -386,7 +386,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/**
 	 * Sets list of non critical errors
 	 * 
-	 * @param nonCriticalErrorList ArrayList<String>
+	 * @param nonCriticalErrorList ArrayList of String
 	 */
 	public static void setNonCriticalErrorList(ArrayList<String> nonCriticalErrorList) {
 		PlayerWarpGUI.nonCriticalErrorList = nonCriticalErrorList;

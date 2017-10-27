@@ -14,8 +14,17 @@ import org.bukkit.inventory.ItemStack;
 
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+ * Holds methods related to String processing. <br>
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class StringUtils {
 	
+	/**
+	 * Holds this classes instance.
+	 */
 	private static StringUtils instance;
 	/**
 	 * create instance if null
@@ -28,6 +37,15 @@ public class StringUtils {
 		return instance;
 	}
 	
+	/**
+	 * Checks if list is less than the size of size.
+	 * 
+	 * @param player
+	 * @param args
+	 * @param size
+	 * @param errorMsg
+	 * @return true/false
+	 */
 	public boolean checkArgsString(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length < size) {
 			player.sendMessage( "COMMAND_USE_INVALID" + errorMsg);
@@ -36,6 +54,16 @@ public class StringUtils {
 		return true;
 	}
 	
+
+	/**
+	 * Checks if list is equale to the size of size.
+	 * 
+	 * @param player
+	 * @param args
+	 * @param size
+	 * @param errorMsg
+	 * @return true/false
+	 */
 	public boolean checkArgs(final Player player, final String[] args, final int size, final String errorMsg) {
 		if (args.length != size) {
 			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_USE_INVALID") + errorMsg);
@@ -44,9 +72,13 @@ public class StringUtils {
 		return true;
 	}
 	
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * Check if a string is a int.
+	 * 
+	 * @param s
+	 * @return true/false
+	 */
 	public boolean isInt(String s) // assuming integer is in decimal number system
 	{
 		for (int a = 0; a < s.length(); a++) {
@@ -58,18 +90,28 @@ public class StringUtils {
 		return true;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * Transform &color symbols to bukkit.chatcolor
+	 * 
+	 * @param str
+	 * @return String
+	 */
 	public String replaceColorVariables(String str) {
 		str = ChatColor.translateAlternateColorCodes('&', str);
 		return str;
 
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * Replace holders for match string.
+	 * [username] replace with players name.
+	 * 
+	 * @param str
+	 * @param playerName
+	 * @return String
+	 */
 	public String replaceHolders(String str, String playerName) {
 
 		// replace [username] variable
@@ -79,9 +121,13 @@ public class StringUtils {
 		return str;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
+	
+	/**
+	 * Create a ItemStack from a item id.
+	 * 
+	 * @param itemId
+	 * @return ItemStack
+	 */
 	@SuppressWarnings("deprecation")
 	public ItemStack parseItemStackFromString(String itemId) {
 		String[] parts = itemId.split(":");
@@ -93,6 +139,13 @@ public class StringUtils {
 		return new ItemStack(Material.getMaterial(matId));
 	}
 	
+	
+	/**
+	 * Get item ID from a ItemStack.
+	 * 
+	 * @param iStack
+	 * @return String
+	 */
 	@SuppressWarnings("deprecation")
 	public String parseStringFromItemStack(ItemStack iStack) {
 
@@ -101,18 +154,16 @@ public class StringUtils {
 		return "" + iconID + ":" + iconData;
 	}
 
-	public Location parseLoc(String str) {
-		String[] arg = str.split(",");
-		double[] parsed = new double[5];
-		for (int a = 0; a < 3; a++) {
-			parsed[a] = Double.parseDouble(arg[a + 1]);
-		}
+	
 
-		Location location = new Location(Bukkit.getServer().getWorld(arg[0]), parsed[0], parsed[1], parsed[2],
-				(float) parsed[3], (float) parsed[4]);
-		return location;
-	}
-
+	/**
+	 * Convert a string into a bukkit location. Used <br>
+	 * to convert warp locations in player warp files into<br>
+	 * a usable format. 
+	 * 
+	 * @param str
+	 * @return Location
+	 */
 	public Location str2loc(String str) {
 
 		String str2loc[] = str.split("\\:");
@@ -132,11 +183,26 @@ public class StringUtils {
 		return loc;
 	}
 
+	
+
+	/**
+	 * Convert a bukkit location into a string format we can save<br>
+	 * in player warp files.
+	 * 
+	 * @param loc
+	 * @return String
+	 */
 	public String loc2str(Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ() + ":"
 				+ (float) loc.getYaw() + ":" + (float) loc.getPitch();
 	}
 	
+	/**
+	 * Copy a file from resource to a file.
+	 * 
+	 * @param in
+	 * @param file
+	 */
 	public void copy(InputStream in, File file) {
 
 		try {

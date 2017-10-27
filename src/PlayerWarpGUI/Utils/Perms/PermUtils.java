@@ -7,13 +7,27 @@ import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+ * Holds  methods related to Permissions processing. <br>
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class PermUtils {
 	
+	/**
+	 * Plugin instance
+	 */
 	private static PlayerWarpGUI p;
+	/**
+	 * This class instance
+	 */
 	private static PermUtils instance;
 
 	/**
-	 * @param p
+	 * Constructor
+	 * 
+	 * @param p plugin reference
 	 */
 	
 	public PermUtils(PlayerWarpGUI p) {
@@ -21,6 +35,8 @@ public class PermUtils {
 	}
 
 	/**
+	 * Get this classes instance
+	 * 
 	 * @return PermUtils
 	 */
 	public static PermUtils getInstance() {
@@ -31,6 +47,14 @@ public class PermUtils {
 		return instance;
 	}
 	
+	/**
+	 * Check player has permission, else send a no permission message.
+	 * 
+	 * @param player
+	 * @param perm
+	 * @param msg
+	 * @return
+	 */
 	public boolean checkPerm(final Player player, final String perm, final String msg) {
 		if (!player.hasPermission(perm)) {
 			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", msg));
@@ -39,6 +63,20 @@ public class PermUtils {
 		return true;
 	}
 	
+	/**
+	 * Get largest permission value of a group.
+	 * eg:
+	 * playerwarp.setlore.1
+	 * playerwarp.setlore.2
+	 * playerwarp.setlore.3
+	 * 
+	 * Method will return 3 as it is the largest permission in that group.
+	 * 
+	 * @param player
+	 * @param perm perm
+	 * @param splitter splitter
+	 * @return integer integer
+	 */
 	public int getLargestPerm(Player player, String perm, String splitter) {
 		int maxAllowed = 1;
 		for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
@@ -48,11 +86,19 @@ public class PermUtils {
 	}
 
 	/**
+	 * Break down a group of permissions and find the largest value.
+	 * eg:
+	 * playerwarp.setlore.1
+	 * playerwarp.setlore.2
+	 * playerwarp.setlore.3
+	 * 
+	 * Method will return 3 as it is the largest permission in that group.
+	 * 
 	 * @param perm
 	 * @param splitter
 	 * @param returnAllowed
 	 * @param permission
-	 * @return
+	 * @return integer
 	 */
 	private int permSubCount(String perm, String splitter, int returnAllowed, PermissionAttachmentInfo permission) {
 		if (permission.getPermission().equals(perm)) {

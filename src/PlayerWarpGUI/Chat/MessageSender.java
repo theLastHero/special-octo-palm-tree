@@ -142,9 +142,7 @@ public final class MessageSender {
 	 */
 	private static void startupStatus() {
 		initialize();
-		sendConsole(
-				LocaleLoader.getString("CONSOLE_MSG_FINAL", PlayerWarpGUI.playerwarpsguiVersion, statusValue(PlayerWarpGUI.getNonCriticalErrorList().isEmpty())),
-				"");
+		Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_FINAL", PlayerWarpGUI.playerwarpsguiVersion, statusValue(PlayerWarpGUI.getNonCriticalErrorList().isEmpty())));
 	}
 
 	/**

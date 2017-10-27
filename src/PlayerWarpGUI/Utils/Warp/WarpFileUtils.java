@@ -10,11 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import PlayerWarpGUI.PlayerWarpGUI;
-import PlayerWarpGUI.Objects.PlayerWarpObject;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
@@ -27,6 +24,10 @@ import PlayerWarpGUI.locale.LocaleLoader;
  * @version 1.0
  */
 
+/**
+ * @author Tony
+ *
+ */
 public class WarpFileUtils {
 	private static WarpFileUtils instance;
 
@@ -58,7 +59,8 @@ public class WarpFileUtils {
 	}
 	
 	/**
-	 * 
+	 * Loop through all warp file and through all warps in<br>
+	 * each file and create warp object from that data.
 	 */
 	public void createAllWarpsFromFile() {
 		int warpFilesCount = 0;
@@ -80,6 +82,8 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * Display console message with warp file count and total number of warps.
+	 * 
 	 * @param warpFilesCount
 	 * @param warpCount
 	 */
@@ -92,6 +96,9 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * Set an ArrayList in a warp file.<br>
+	 * This can be used for any array in a warpfile. such as banlist, lorelist etc.
+	 * 
 	 * @param playerDataFile
 	 * @param warpName
 	 * @param arrayName
@@ -106,16 +113,20 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * public access to create warp from file.
+	 * 
 	 * @param file
 	 * @param playerUUID
 	 * 
-	 * @return File
+	 * @return integer
 	 */
 	public int createWarpFromFile(File file, UUID playerUUID) {
 		return loadCreateWarp(file, playerUUID, 0);
 	}
 
 	/**
+	 * Grab all the data from a warp ina  warp file.
+	 * 
 	 * @param file
 	 * @param playerUUID
 	 * @param warpCount
@@ -146,6 +157,9 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * Create warp object???
+	 * TODO is this double method?
+	 * 
 	 * @param playerUUID
 	 * @param warpCount
 	 * @param warpName
@@ -169,9 +183,11 @@ public class WarpFileUtils {
 	}
 
 	/**
-	 * @param fileName
+	 * Get the UUID from a filename.<br>
+	 * If not valid return null.
 	 * 
-	 * @return UUID
+	 * @param fileName
+	 * @return UUID/null
 	 */
 	public UUID getUUIDFromString(String fileName) {
 		// check if file name is a validate UUID
@@ -185,9 +201,10 @@ public class WarpFileUtils {
 	}
 
 	/**
-	 * @param playerUUID
+	 * Check if player is valid.
 	 * 
-	 * @return boolean
+	 * @param playerUUID
+	 * @return true/false
 	 */
 	public boolean isValidPlayer(UUID playerUUID) {
 		try {
@@ -200,6 +217,9 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * Set one value in a warp file to String value.<br>
+	 * Such as title, icon.
+	 * 
 	 * @param playerDataFile
 	 * @param warpName
 	 * @param subName
@@ -213,9 +233,12 @@ public class WarpFileUtils {
 	}
 
 	/**
+	 * Set one value in a warp file to null.<br>
+	 * Such as title, icon.
+	 * 
 	 * @param playerDataFile
 	 * @param warpName
-	 * @return boolean
+	 * @return true/false
 	 */
 	public boolean removeSingleWarpValue(File playerDataFile, String warpName) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
@@ -223,6 +246,19 @@ public class WarpFileUtils {
 		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
 
+	
+	/**
+	 * Add a new warp to a player warp file.
+	 * 
+	 * @param playerDataFile
+	 * @param location
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param lore
+	 * @param ban
+	 * @return
+	 */
 	public boolean addWarpToPlayerWarpFile(File playerDataFile, Location location, String name, String title,
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
 
@@ -230,6 +266,19 @@ public class WarpFileUtils {
 		return savePlayerDataFile(playerDataFile, warpConfig);
 	}
 
+	
+	/**
+	 * Set the complete data of a warp in a players warp file by name.
+	 * 
+	 * @param playerDataFile
+	 * @param location
+	 * @param name
+	 * @param title
+	 * @param icon
+	 * @param lore
+	 * @param ban
+	 * @return {@link FileConfiguration}
+	 */
 	private FileConfiguration setWarpConfigData(File playerDataFile, Location location, String name, String title,
 			String icon, ArrayList<String> lore, ArrayList<String> ban) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
@@ -242,6 +291,13 @@ public class WarpFileUtils {
 		return warpConfig;
 	}
 
+	/**
+	 * Save the changes to a players warp file.
+	 * 
+	 * @param playerDataFile
+	 * @param warpConfig
+	 * @return true/false
+	 */
 	private boolean savePlayerDataFile(File playerDataFile, FileConfiguration warpConfig) {
 		try {
 			warpConfig.save(playerDataFile);
@@ -253,6 +309,12 @@ public class WarpFileUtils {
 		return false;
 	}
 
+	/**
+	 * Check if a player warps file exists.
+	 * 
+	 * @param uuid
+	 * @return File
+	 */
 	public File checkWarpsExsits(UUID uuid) {
 		File warpsFolder = new File(PlayerWarpGUI.getPathWarps());
 		if (!(warpsFolder.listFiles() == null)) {
@@ -265,120 +327,17 @@ public class WarpFileUtils {
 		return createPlayerWarpFile(uuid);
 	}
 
+	/**
+	 * Create a new empty players warp file.
+	 * 
+	 * @param uuid
+	 * @return File
+	 */
 	public File createPlayerWarpFile(UUID uuid) {
 		File f = new File(PlayerWarpGUI.getPathWarps() + uuid.toString() + ".yml");
 		StringUtils.getInstance().copy(PlayerWarpGUI.p.getResource("defaults/" + "defaultWarpConfig.yml"), f);
 		return f;
 	}
 
-	/**
-	 * @param playerUUID
-	 * @param warpName
-	 * @param warpLocation
-	 * @param title
-	 * @param icon
-	 * @param loreList
-	 * @param banList
-	 */
-	public void createWarpObjects(UUID playerUUID, String warpName, String warpLocation, String title, String icon,
-			ArrayList<String> loreList, ArrayList<String> banList) {
-		new PlayerWarpObject(playerUUID, warpName, warpLocation, title, icon, loreList, banList, PlayerWarpGUI.p);
-	}
-
-	/**
-	 * @param banList
-	 * @param playerUUIDString
-	 * @return boolean
-	 */
-	public boolean isPlayerOnBannedList(ArrayList<String> banList, String playerUUIDString) {
-		for (int i = 0; i < banList.size(); i++) {
-			if (banList.get(i).equals(playerUUIDString)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @param playerUUID
-	 * @return ArrayList<PlayerWarpObject>
-	 */
-	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
-		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
-
-		for (PlayerWarpObject pwo : PlayerWarpGUI.p.getPlayerWarpObjects()) {
-			if (pwo.getPlayerUUID().equals(playerUUID)) {
-				playWarpObjectsList.add(pwo);
-			}
-		}
-		return playWarpObjectsList;
-	}
-
-	/**
-	 * @param playerUUID
-	 * @param warpName
-	 * @return PlayerWarpObject
-	 * 
-	 */
-	public PlayerWarpObject getPlayerWarpObject(UUID playerUUID, String warpName) {
-		for (PlayerWarpObject pwo : PlayerWarpGUI.p.getPlayerWarpObjects()) {
-			if (pwo.getPlayerUUID().equals(playerUUID) && pwo.getWarpName().equals(warpName)) {
-				return pwo;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param playerUUID
-	 * @param warpName
-	 * @return boolean
-	 */
-	public boolean checkPlayerWarpObject(UUID playerUUID, String warpName) {
-		if (getPlayerWarpObject(playerUUID, warpName) != null) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @param player
-	 * @param perm
-	 * @param splitter
-	 * @return integer
-	 */
-	public int geMaxAmountAllowedFromPerm(Player player, String perm, String splitter) {
-		int maxAllowed = 1;
-		for (PermissionAttachmentInfo permission : player.getEffectivePermissions()) {
-			maxAllowed = permSubCount(perm, splitter, maxAllowed, permission);
-		}
-		return maxAllowed;
-	}
-
-	/**
-	 * @param perm
-	 * @param splitter
-	 * @param returnAllowed
-	 * @param permission
-	 * @return integer
-	 */
-	private int permSubCount(String perm, String splitter, int returnAllowed, PermissionAttachmentInfo permission) {
-		if (permission.getPermission().equals(perm)) {
-			returnAllowed = 1;
-		}
-
-		if (permission.getPermission().startsWith(perm + splitter)) {
-			String result[] = permission.getPermission().split(perm + splitter);
-			String returnValue = result[result.length - 1];
-			if (returnValue != null && StringUtils.getInstance().isInt(returnValue)) {
-				int validInt = Integer.parseInt(returnValue);
-				if (validInt > returnAllowed) {
-					returnAllowed = validInt;
-				}
-			}
-
-		}
-		return returnAllowed;
-	}
 
 }

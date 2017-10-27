@@ -35,14 +35,14 @@ public class PlayerWarpObject {
 	/**
 	 * Constructor
 	 * 
-	 * @param playerUUID
-	 * @param warpName
-	 * @param warpLocation
-	 * @param title
-	 * @param icon
-	 * @param loreList
-	 * @param banList
-	 * @param pl
+	 * @param playerUUID player uuid
+	 * @param warpName warp name
+	 * @param warpLocation location
+	 * @param title title
+	 * @param icon icon
+	 * @param loreList lorelist
+	 * @param banList warp objects ban list
+	 * @param pl Plugin instance
 	 */
 	public PlayerWarpObject(UUID playerUUID,String warpName, String warpLocation, String title, String icon, ArrayList<String> loreList, ArrayList<String> banList, PlayerWarpGUI pl) {
 		
@@ -81,7 +81,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects ID
 	 * 
-	 * @param uNIQUE_ID
+	 * @param uNIQUE_ID u_id
 	 */
 	public static void setUNIQUE_ID(int uNIQUE_ID) {
 		UNIQUE_ID = uNIQUE_ID;
@@ -99,7 +99,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects warp name.
 	 * 
-	 * @param warpName
+	 * @param warpName warp name
 	 */
 	public void setWarpName(String warpName) {
 		this.warpName = warpName;
@@ -108,7 +108,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this warps uid.
 	 * 
-	 * @param uid
+	 * @param uid objects uid
 	 */
 	public void setUid(int uid) {
 		this.uid = uid;
@@ -143,7 +143,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects PlayerUUID
 	 * 
-	 * @param playerUUID
+	 * @param playerUUID players uuid
 	 */
 	public void setPlayerUUID(UUID playerUUID) {
 		this.playerUUID = playerUUID;
@@ -161,7 +161,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects warp location
 	 * 
-	 * @param warpLocation
+	 * @param warpLocation location of warp
 	 */
 	public void setWarpLocation(String warpLocation) {
 		this.warpLocation = warpLocation;
@@ -179,7 +179,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects title
 	 * 
-	 * @param title
+	 * @param title title string
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -197,7 +197,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects icon
 	 * 
-	 * @param icon
+	 * @param icon icon string
 	 */
 	public void setIcon(String icon) {
 		this.icon = icon;
@@ -207,7 +207,7 @@ public class PlayerWarpObject {
 	/**
 	 * Get this object lorelist
 	 * 
-	 * @return ArrayList<String>
+	 * @return  ArrayList of String
 	 */
 	public ArrayList<String> getLoreList() {
 		return loreList;
@@ -217,7 +217,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects lorelist
 	 * 
-	 * @param loreList
+	 * @param loreList ArrayList of String
 	 */
 	public void setLoreList(ArrayList<String> loreList) {
 		this.loreList = loreList;
@@ -226,7 +226,7 @@ public class PlayerWarpObject {
 	/**
 	 * Get this objects ban list.
 	 * 
-	 * @return ArrayList<String>
+	 * @return ArrayList of String
 	 */
 	public ArrayList<String> getBanList() {
 		return banList;
@@ -235,7 +235,7 @@ public class PlayerWarpObject {
 	/**
 	 * Set this objects ban list.
 	 * 
-	 * @param banList
+	 * @param banList ArrayList of String
 	 */
 	public void setBanList(ArrayList<String> banList) {
 		this.banList = banList;

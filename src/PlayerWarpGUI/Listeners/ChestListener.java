@@ -28,10 +28,9 @@ public class ChestListener implements Listener {
 	//private PlayerWarpGUI p;
 	
 	/**
-	 * @param pl
+	 * Constructor
 	 */
 	public ChestListener() {
-		//this.p= pl;
 	}
 
 	/**
@@ -42,7 +41,7 @@ public class ChestListener implements Listener {
 	 * Perform safeLocation/ blocked worlds checks etc.
 	 * TODO move some section into there own methods for better explanation/readability
 	 * 
-	 * @param e
+	 * @param e click event
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onWarpItemClick(final InventoryClickEvent e) {
@@ -113,7 +112,7 @@ public class ChestListener implements Listener {
 	/**
 	 * Return the next page number for the GUI to show to player.
 	 * 
-	 * @param s
+	 * @param s String
 	 * @return integer
 	 */
 	@SuppressWarnings("resource")

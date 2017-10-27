@@ -8,6 +8,12 @@ import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.config.Config;
 
+/**
+ * Holds a bunch of methods related to Location processing. <br>
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class LocUtils {
 	
 	private static PlayerWarpGUI p;
@@ -22,7 +28,7 @@ public class LocUtils {
 	}
 
 	/**
-	 * @return
+	 * @return LocUtils
 	 */
 	public static LocUtils getInstance() {
 		if (instance == null) {

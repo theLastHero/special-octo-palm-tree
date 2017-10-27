@@ -198,7 +198,7 @@ public class GUIObject {
 	 * Gets the Player skull itemstack.
 	 * 
 	 * @param uuid
-	 * @return
+	 * @return ItemStack
 	 */
 	@SuppressWarnings("deprecation")
 	public static ItemStack getPlayerSkullItem(UUID uuid) {

@@ -33,10 +33,8 @@ public class FactionsListener implements Listener {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param pl
 	 */
-	public FactionsListener(PlayerWarpGUI p) {
+	public FactionsListener() {
 	}
 
 	/**
