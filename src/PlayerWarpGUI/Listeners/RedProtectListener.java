@@ -16,14 +16,28 @@ import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
 
+/**
+ * Listened to RedProtect Plugin to delete region event.<br>
+ * If config enabled, remove any warps when a region is deleted.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class RedProtectListener implements Listener {
 
 	/**
+	 * Constructor
 	 * @param p
 	 */
 	public RedProtectListener(PlayerWarpGUI p) {
 	}
 
+	/**
+	 * Catches when a RedProtect region is deleted. Deletes any warps found in
+	 * the deleted region.
+	 * 
+	 * @param e
+	 */
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(DeleteRegionEvent e) {
 		if(Config.getInstance().getRPEnabled()) {

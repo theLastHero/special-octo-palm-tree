@@ -9,16 +9,40 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import PlayerWarpGUI.config.Config;
 
+/**
+* Hooks into WorldGuard Plugin.<br>
+* Performs various actions depending on config settings.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class WorldGuardHook extends HookManager<Object>{
 
+	/**
+	 * Hooked plugin name
+	 */
 	private static String plName = "WorldGuard";
+	/**
+	 * Holds if plugin is enabled in config.
+	 */
 	private static boolean configEnabled = Config.getInstance().getWGEnabled();
 	
+	/**
+	 * Constructor. Pass variables to super.
+	 */
 	public WorldGuardHook() {
 		super(plName, configEnabled);
 	}
 
-
+	/**
+	 * Overridden method. Checks based on is enabled in config.<br>
+	 * Only set warps in regions.<br>
+	 * Region owner can set warp.<br>
+	 * Region member can set warp.<br>
+	 * 
+	 * @return String representing any errors or else null
+	 * @see PlayerWarpGUI.Hooks.HookManager#warpHookCheck(org.bukkit.entity.Player)
+	 */
 	@Override
 	public String warpHookCheck(Player player) {
 
@@ -52,6 +76,10 @@ public class WorldGuardHook extends HookManager<Object>{
 	}
 
 
+	/**
+	 * @return ApplicableRegionSet
+	 * @see PlayerWarpGUI.Hooks.HookManager#getLocationData(org.bukkit.Location)
+	 */
 	@Override
 	public ApplicableRegionSet getLocationData(Location location) {
 		return WGBukkit.getRegionManager(location.getWorld())

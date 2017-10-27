@@ -5,9 +5,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import PlayerWarpGUI.locale.LocaleLoader;
-
+/**
+* Help Command: Shows help menu to the user.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class HelpCommand implements CommandExecutor {
 
+	    /* (non-Javadoc)
+	     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	     */
 	    @Override
 	    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	        

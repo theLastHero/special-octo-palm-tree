@@ -18,11 +18,22 @@ import PlayerWarpGUI.Objects.PlayerWarpObject;
 import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+ * WarpFileUtils
+ * 
+ * <P> Contains methods used in reading from and writing to warp files.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
+
 public class WarpFileUtils {
 	private static WarpFileUtils instance;
 
 	/**
-	 * @return
+	 * Return instance of this class.
+	 * 
+	 * @return instance
 	 */
 	public static WarpFileUtils getInstance() {
 		if (instance == null) {
@@ -32,7 +43,12 @@ public class WarpFileUtils {
 		return instance;
 	}
 
-	public void checkWarpFolder() {
+	
+	/**
+	 * Check to see if warp folder exists. If not creates warp folder.
+	 * And send message to console.
+	 */
+	public void checkCreateWarpFolder() {
 		File directory = new File(PlayerWarpGUI.getPathWarps());
 		if (!directory.exists()) {
 			Bukkit.getConsoleSender()
@@ -40,7 +56,7 @@ public class WarpFileUtils {
 			directory.mkdirs();
 		}
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -80,7 +96,7 @@ public class WarpFileUtils {
 	 * @param warpName
 	 * @param arrayName
 	 * @param aArray
-	 * @return
+	 * @return File
 	 */
 	public boolean setsingleWarpArray(File playerDataFile, String warpName, String arrayName,
 			ArrayList<String> aArray) {
@@ -93,7 +109,7 @@ public class WarpFileUtils {
 	 * @param file
 	 * @param playerUUID
 	 * 
-	 * @return
+	 * @return File
 	 */
 	public int createWarpFromFile(File file, UUID playerUUID) {
 		return loadCreateWarp(file, playerUUID, 0);
@@ -103,7 +119,7 @@ public class WarpFileUtils {
 	 * @param file
 	 * @param playerUUID
 	 * @param warpCount
-	 * @return
+	 * @return integer
 	 */
 	@SuppressWarnings("unchecked")
 	private int loadCreateWarp(File file, UUID playerUUID, int warpCount) {
@@ -138,7 +154,7 @@ public class WarpFileUtils {
 	 * @param warpTitle
 	 * @param loreList
 	 * @param banList
-	 * @return
+	 * @return integer
 	 */
 	private int createWarp(UUID playerUUID, int warpCount, String warpName, String warpLocation, String warpIcon,
 			String warpTitle, ArrayList<String> loreList, ArrayList<String> banList) {
@@ -155,7 +171,7 @@ public class WarpFileUtils {
 	/**
 	 * @param fileName
 	 * 
-	 * @return
+	 * @return UUID
 	 */
 	public UUID getUUIDFromString(String fileName) {
 		// check if file name is a validate UUID
@@ -171,7 +187,7 @@ public class WarpFileUtils {
 	/**
 	 * @param playerUUID
 	 * 
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isValidPlayer(UUID playerUUID) {
 		try {
@@ -188,7 +204,7 @@ public class WarpFileUtils {
 	 * @param warpName
 	 * @param subName
 	 * @param value
-	 * @return
+	 * @return boolean
 	 */
 	public boolean setSingleWarpValue(File playerDataFile, String warpName, String subName, String value) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
@@ -199,7 +215,7 @@ public class WarpFileUtils {
 	/**
 	 * @param playerDataFile
 	 * @param warpName
-	 * @return
+	 * @return boolean
 	 */
 	public boolean removeSingleWarpValue(File playerDataFile, String warpName) {
 		FileConfiguration warpConfig = YamlConfiguration.loadConfiguration(playerDataFile);
@@ -272,7 +288,7 @@ public class WarpFileUtils {
 	/**
 	 * @param banList
 	 * @param playerUUIDString
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isPlayerOnBannedList(ArrayList<String> banList, String playerUUIDString) {
 		for (int i = 0; i < banList.size(); i++) {
@@ -285,7 +301,7 @@ public class WarpFileUtils {
 
 	/**
 	 * @param playerUUID
-	 * @return
+	 * @return ArrayList<PlayerWarpObject>
 	 */
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects(UUID playerUUID) {
 		ArrayList<PlayerWarpObject> playWarpObjectsList = new ArrayList<PlayerWarpObject>();
@@ -301,7 +317,7 @@ public class WarpFileUtils {
 	/**
 	 * @param playerUUID
 	 * @param warpName
-	 * @return
+	 * @return PlayerWarpObject
 	 * 
 	 */
 	public PlayerWarpObject getPlayerWarpObject(UUID playerUUID, String warpName) {
@@ -316,7 +332,7 @@ public class WarpFileUtils {
 	/**
 	 * @param playerUUID
 	 * @param warpName
-	 * @return
+	 * @return boolean
 	 */
 	public boolean checkPlayerWarpObject(UUID playerUUID, String warpName) {
 		if (getPlayerWarpObject(playerUUID, warpName) != null) {
@@ -329,7 +345,7 @@ public class WarpFileUtils {
 	 * @param player
 	 * @param perm
 	 * @param splitter
-	 * @return
+	 * @return integer
 	 */
 	public int geMaxAmountAllowedFromPerm(Player player, String perm, String splitter) {
 		int maxAllowed = 1;
@@ -344,7 +360,7 @@ public class WarpFileUtils {
 	 * @param splitter
 	 * @param returnAllowed
 	 * @param permission
-	 * @return
+	 * @return integer
 	 */
 	private int permSubCount(String perm, String splitter, int returnAllowed, PermissionAttachmentInfo permission) {
 		if (permission.getPermission().equals(perm)) {

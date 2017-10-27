@@ -9,20 +9,35 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-
-
+/**
+* Auto Updates Config file for missing or new keys.<br>
+* 
+* @author Judgetread
+* @version 1.0
+*/
 abstract class AutoUpdateConfigLoader extends ConfigLoader {
+    /**
+     * @param relativePath
+     * @param fileName
+     */
     public AutoUpdateConfigLoader(String relativePath, String fileName) {
         super(relativePath, fileName);
     }
 
+    /**
+     * @param fileName
+     */
     public AutoUpdateConfigLoader(String fileName) {
         super(fileName);
     }
 
+    /* 
+     * @see PlayerWarpGUI.config.ConfigLoader#loadFile()
+     */
     @Override
     protected void loadFile() {
         super.loadFile();
@@ -51,7 +66,7 @@ abstract class AutoUpdateConfigLoader extends ConfigLoader {
         }
 
         for (String key : newKeys) {
-           // plugin.debug("Adding new key: " + key + " = " + internalConfig.get(key));
+           Bukkit.getConsoleSender().sendMessage("Adding new key: " + key + " = " + internalConfig.get(key));
             config.set(key, internalConfig.get(key));
         }
 

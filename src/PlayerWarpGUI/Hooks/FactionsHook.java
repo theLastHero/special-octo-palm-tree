@@ -11,18 +11,40 @@ import com.massivecraft.massivecore.ps.PS;
 
 import PlayerWarpGUI.config.Config;
 
+/**
+* Hooks into Factions Plugin.<br>
+* Performs various actions depending on config settings.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class FactionsHook extends HookManager<Object>{
 	
-	@SuppressWarnings("unused")
-	private Factions faction;
-
+	/**
+	 * Hooked plugin name
+	 */
 	private static String plName = "Factions";
+	/**
+	 * Holds if plugin is enabled in config.
+	 */
 	private static boolean configEnabled = Config.getInstance().getFAEnabled();
 	
+	/**
+	 * Constructor. Pass variables to super.
+	 */
 	public FactionsHook() {
 		super(plName, configEnabled);
 	}
 
+	/**
+	 * Overridden method. Checks based on is enabled in config.<br>
+	 * Faction Leader can set warp in faction land<br>
+	 * Allow player to set warp in own territory<br>
+	 * Allow player to set warp in wilderness<br>
+	 * 
+	 * @return String representing any errors or else null
+	 * @see PlayerWarpGUI.Hooks.HookManager#warpHookCheck(org.bukkit.entity.Player)
+	 */
 	@Override
 	public String warpHookCheck(Player player) {
 
@@ -62,6 +84,14 @@ public class FactionsHook extends HookManager<Object>{
 		return "FACTIONS_NO_PERMISSION";
 
 	}
+	
+	
+	/**
+	 * Check what faction owns this location the player is at.
+	 * 
+	 * @return Faction
+	 * @see PlayerWarpGUI.Hooks.HookManager#getLocationData(org.bukkit.Location)
+	 */
 	@Override
 	public Faction getLocationData(Location location) {
 		return BoardColl.get().getFactionAt(PS.valueOf(location));

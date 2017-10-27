@@ -11,8 +11,18 @@ import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Command: Delete a warp from a users warpfile <br>
+* and remove warp object from list and destory it.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class DeleteWarpCommand implements CommandExecutor {
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 

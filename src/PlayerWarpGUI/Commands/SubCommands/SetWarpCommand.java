@@ -24,8 +24,18 @@ import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 import net.milkbowl.vault.economy.EconomyResponse;
 
+/**
+* Setwarp Command: <br>
+* Sets a warp at the current players location for that player.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class SetWarpCommand implements CommandExecutor {
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 

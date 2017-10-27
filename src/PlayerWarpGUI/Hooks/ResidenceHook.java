@@ -10,16 +10,40 @@ import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 
 import PlayerWarpGUI.config.Config;
 
+/**
+* Hooks into Residence Plugin.<br>
+* Performs various actions depending on config settings.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class ResidenceHook extends HookManager<Object>{
 
+	/**
+	 * Hooked plugin name
+	 */
 	private static String plName = "Residence";
+	/**
+	 * Holds if plugin is enabled in config.
+	 */
 	private static boolean configEnabled = Config.getInstance().getRSEnabled();
 	
+	/**
+	 * Constructor. Pass variables to super.
+	 */
 	public ResidenceHook() {
 		super(plName, configEnabled);
 	}
 	
-
+	/**
+	 * Overridden method. Checks based on is enabled in config.<br>
+	 * Only set warp in a region
+	 * Region owner can set warp in claim<br>
+	 * Builder can set warp in claim<br>
+	 * 
+	 * @return String representing any errors or else null
+	 * @see PlayerWarpGUI.Hooks.HookManager#warpHookCheck(org.bukkit.entity.Player)
+	 */
 	@Override
 	public String warpHookCheck(Player player) {
 
@@ -52,6 +76,10 @@ public class ResidenceHook extends HookManager<Object>{
 
 	}
 
+	/**
+	 * @return ClaimedResidence
+	 * @see PlayerWarpGUI.Hooks.HookManager#getLocationData(org.bukkit.Location)
+	 */
 	@Override
 	public ClaimedResidence getLocationData(Location location) {
 		return ResidenceApi.getResidenceManager().getByLoc(location);

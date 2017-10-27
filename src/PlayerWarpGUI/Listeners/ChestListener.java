@@ -30,11 +30,18 @@ public class ChestListener implements Listener {
 	/**
 	 * @param pl
 	 */
-	public ChestListener(PlayerWarpGUI pl) {
+	public ChestListener() {
 		//this.p= pl;
 	}
 
 	/**
+	 * When a item in a inventoryChest is clicked. Check if it in our GUI chest.<br>
+	 * If it is a player warp item, then teleport player to that warps location.
+	 * If its a next page icon, show player the next page of warp icons.
+	 * 
+	 * Perform safeLocation/ blocked worlds checks etc.
+	 * TODO move some section into there own methods for better explanation/readability
+	 * 
 	 * @param e
 	 */
 	@EventHandler(priority = EventPriority.HIGH)
@@ -44,6 +51,7 @@ public class ChestListener implements Listener {
 		if (e.getWhoClicked() instanceof Player) {
 
 			Player player = (Player) e.getWhoClicked();
+			
 			// does it match the right inventory name
 			if (e.getInventory().getName()
 					.contains(StringUtils.getInstance().replaceColorVariables(Config.getInstance().getGuiTitle()))) {
@@ -85,10 +93,9 @@ public class ChestListener implements Listener {
 				}
 
 				// do safeWarp checking
-				String errorMsg = PlayerWarpGUI.p.getWarpHandler().canTeleport(player,
-						StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
+				String errorMsg = PlayerWarpGUI.p.getWarpHandler().canTeleport(StringUtils.getInstance().str2loc(pwo.getWarpLocation()));
 				if (errorMsg != null) {
-					player.sendMessage( errorMsg);
+					player.sendMessage(errorMsg);
 					closeInv(player);
 					return;
 				}
@@ -104,8 +111,10 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Return the next page number for the GUI to show to player.
+	 * 
 	 * @param s
-	 * @return
+	 * @return integer
 	 */
 	@SuppressWarnings("resource")
 	public int getNextPageNumber(String s) {
@@ -122,10 +131,11 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Checks if item clicked is next page icon.
+	 * 
 	 * @param s
-	 * @return
+	 * @return true/false
 	 */
-	
 	public boolean isNextPageIcon(String s) {
 		if (s.contains(LocaleLoader.getString("NEXTPAGE_TEXT"))) {
 			return true;
@@ -134,6 +144,8 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Close the inventory for Player
+	 * 
 	 * @param player
 	 */
 	
@@ -142,9 +154,10 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Get the warp id from the item that was clicked.
+	 * 
 	 * @param itemStack
-	 
-	 * @return
+	 * @return integer
 	 */
 	public int getWarpID(ItemStack itemStack) {
 		int warpID = 0;
@@ -164,9 +177,10 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Make sure a slot was clicked. Throws console error otherwise.
+	 * 
 	 * @param s
-	 
-	 * @return
+	 * @return true/false
 	 */
 	public boolean isSLotValid(int s) {
 		if (s < 0) {
@@ -176,9 +190,10 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Make sure a Meta Data is valid. Throws console error otherwise.
+	 * 
 	 * @param im
-	 
-	 * @return
+	 * @return true/false
 	 */
 	public boolean isMetaValid(ItemMeta im) {
 		if (im == null) {
@@ -192,9 +207,10 @@ public class ChestListener implements Listener {
 	}
 
 	/**
+	 * Check inventory type matches ours.
+	 * 
 	 * @param it
-	 
-	 * @return
+	 * @return true/false
 	 */
 	public boolean isChestTypeValid(InventoryType it) {
 		if (it != InventoryType.CHEST) {

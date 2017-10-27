@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.base.Charsets;
@@ -19,7 +18,6 @@ import PlayerWarpGUI.Handlers.TeleportHandler;
 import PlayerWarpGUI.Handlers.WarpHandler;
 import PlayerWarpGUI.Hooks.FactionsHook;
 import PlayerWarpGUI.Hooks.GriefPreventionHook;
-import PlayerWarpGUI.Hooks.HookManager;
 import PlayerWarpGUI.Hooks.RedProtectHook;
 import PlayerWarpGUI.Hooks.ResidenceHook;
 import PlayerWarpGUI.Hooks.VaultHook;
@@ -67,18 +65,22 @@ public class PlayerWarpGUI extends JavaPlugin {
 	/** Full path of warp Files location.  */
 	private static String pathWarps;
 
-	/** Contains verison number of the plugin, taken from pugin.yml  */
+	/** Value - {@value}, Contains verison number of the plugin, taken from pugin.yml  */
 	public static String playerwarpsguiVersion;
 	
 	/** Config Validation Check */
 	private boolean noErrorsInConfigFiles = true;
+	/** Warphandler */
 	private WarpHandler warpHandler;
+	/** TeleportHandler */
 	private TeleportHandler tpHandler;
-	public CommandManager commandManager;
+	/** CommandManager */
+	private CommandManager commandManager;
 
-	// error arrays
-	public static ArrayList<String> criticalErrorList = new ArrayList<String>();
-	public static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
+	/** Holds list of critical error at startup */
+	private static ArrayList<String> criticalErrorList = new ArrayList<String>();
+	/** Holds list of NONcritical error at startup */
+	private static ArrayList<String> nonCriticalErrorList = new ArrayList<String>();
 
 	
 	@Override
@@ -86,22 +88,26 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 		try {
 			p = this;
+			
 			getServer().getPluginManager();
+			
 			setupFilePaths();
 			
-			setWarpHandler(new WarpHandler(p));
-			
-			
-			WarpFileUtils.getInstance().checkWarpFolder();
-			WarpFileUtils.getInstance().createAllWarpsFromFile();
-			
-			setTpHandler(new TeleportHandler(this));
-			commandManager = new CommandManager();
+			setWarpHandler(new WarpHandler());
+
+			setTpHandler(new TeleportHandler());
+			setCommandManager(new CommandManager());
 			CommandManager.registerCommands();
 			
+			WarpFileUtils.getInstance().checkCreateWarpFolder();
+			WarpFileUtils.getInstance().createAllWarpsFromFile();
 			
-			setupHooks();
+			
+			
+			startUpHookTests();
+			
 			registerEvents();
+			
 			useMetrics();
 
 			// console stuff
@@ -121,7 +127,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 
 	}
 	
-	public void setupHooks() {
+	/** Display status of each hook on startup */
+	private void startUpHookTests() {
 		new GriefPreventionHook().displayStatus();
 		new FactionsHook().displayStatus();
 		new RedProtectHook().displayStatus();
@@ -130,18 +137,14 @@ public class PlayerWarpGUI extends JavaPlugin {
 		new VaultHook().displayStatus();
 	}
 
-	/**
-	 * 
-	 */
+	/** Register Listeners */
 	private void registerEvents() {
-		Bukkit.getServer().getPluginManager().registerEvents(new ChestListener(this), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		Bukkit.getServer().getPluginManager().registerEvents(new GriefPreventionListener(this), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new ChestListener(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+		Bukkit.getServer().getPluginManager().registerEvents(new GriefPreventionListener(), this);
 	}
 
-	/**
-	 * 
-	 */
+	/** setupFilePaths */
 	private void setupFilePaths() {
 		playerwarpsguiVersion = p.getDescription().getVersion();
 		pathMain = p.getDataFolder().toString();
@@ -152,7 +155,7 @@ public class PlayerWarpGUI extends JavaPlugin {
 		setPathWarps(pathMain + File.separator + warpsName + File.separator);
 	}
 
-	
+	/** useMetrics */
 	private void useMetrics() {
 		// metrics
 		if (Config.getInstance().getMetricsEnabled()) {
@@ -167,44 +170,69 @@ public class PlayerWarpGUI extends JavaPlugin {
 		}
 	}
 
+	/** Instantly kill this plugin */
 	public static void killPlugin() {
 		Bukkit.getPluginManager().disablePlugin(PlayerWarpGUI.p);
 	}
 	
+	/**
+	 * Returns complete list of loaded PlayerWarpObjects
+	 * 
+	 * @return ArrayList<PlayerWarpObject>
+	 */
 	public ArrayList<PlayerWarpObject> getPlayerWarpObjects() {
 		return getPwoList();
 	}
 
-	public void setPlayerWarpObjects(ArrayList<PlayerWarpObject> playerWarpObjects) {
-		PlayerWarpGUI.setPwoList(playerWarpObjects);
-	}
-
+	/**
+	 * Returns list of non critical errors
+	 * 
+	 * @return ArrayList<String> of non critical errors
+	 */
 	public static ArrayList<String> getNonCriticalErrors() {
-		return nonCriticalErrorList;
+		return getNonCriticalErrorList();
 	}
 
-
+	/**
+	 * Returns list of critical errors.
+	 * 
+	 * @return ArrayList<String> of critical errors.
+	 */
 	public static ArrayList<String> getCriticalErrors() {
-		return criticalErrorList;
+		return getCriticalErrorList();
 	}
 
+	/**
+	 * Returns stream from filename.
+	 * 
+	 * @return 
+	 */
 	public InputStreamReader getResourceAsReader(String fileName) {
 		InputStream in = getResource(fileName);
 		return in == null ? null : new InputStreamReader(in, Charsets.UTF_8);
 	}
 
+	/**
+	 * Returns plugin instance.
+	 * 
+	 * @return Plugin
+	 */
 	public Plugin getInstance() {
 		return this;
 	}
 
 	/**
-	 * @return the pathConfig
+	 * Returns the location of the config file path
+	 * 
+	 * @return pathConfig value.
 	 */
 	public static String getPathConfig() {
 		return pathConfig;
 	}
 
 	/**
+	 * Set the location of the config file.
+	 * 
 	 * @param pathConfig the pathConfig to set
 	 */
 	public static void setPathConfig(String pathConfig) {
@@ -212,6 +240,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Returns the location of the warps files.
+	 * 
 	 * @return the pathWarps
 	 */
 	public static String getPathWarps() {
@@ -219,6 +249,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Set the path of the warp file location.
+	 * 
 	 * @param pathWarps the pathWarps to set
 	 */
 	public static void setPathWarps(String pathWarps) {
@@ -226,6 +258,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Returns the location of the locale files.
+	 * 
 	 * @return the pathLangs
 	 */
 	public static String getPathLangs() {
@@ -233,6 +267,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Sets the location of the locale files
+	 * 
 	 * @param pathLangs the pathLangs to set
 	 */
 	public static void setPathLangs(String pathLangs) {
@@ -240,20 +276,17 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
-	 * @return the pwoList
+	 * Returns complete list of loaded PlayerWarpObjects
+	 * 
+	 * @return ArrayList<PlayerWarpObject>
 	 */
 	public static ArrayList<PlayerWarpObject> getPwoList() {
 		return pwoList;
 	}
 
 	/**
-	 * @param pwoList the pwoList to set
-	 */
-	public static void setPwoList(ArrayList<PlayerWarpObject> pwoList) {
-		PlayerWarpGUI.pwoList = pwoList;
-	}
-
-	/**
+	 * Returns true/false if any errors are found in config file.
+	 * 
 	 * @return the noErrorsInConfigFiles
 	 */
 	public boolean isNoErrorsInConfigFiles() {
@@ -261,6 +294,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Set true/false when any errors are found in config file.
+	 * 
 	 * @param noErrorsInConfigFiles the noErrorsInConfigFiles to set
 	 */
 	public void setNoErrorsInConfigFiles(boolean noErrorsInConfigFiles) {
@@ -268,6 +303,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Gets WarpHandler instance.
+	 * 
 	 * @return the warpHandler
 	 */
 	public WarpHandler getWarpHandler() {
@@ -275,6 +312,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Sets WarpHandler instance.
+	 * 
 	 * @param warpHandler the warpHandler to set
 	 */
 	public void setWarpHandler(WarpHandler warpHandler) {
@@ -282,6 +321,8 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Gets TeleportHandler instance.
+	 * 
 	 * @return the tpHandler
 	 */
 	public TeleportHandler getTpHandler() {
@@ -289,10 +330,66 @@ public class PlayerWarpGUI extends JavaPlugin {
 	}
 
 	/**
+	 * Sets TeleportHandler instance.
+	 * 
 	 * @param tpHandler the tpHandler to set
 	 */
 	public void setTpHandler(TeleportHandler tpHandler) {
 		this.tpHandler = tpHandler;
+	}
+
+	/**
+	 * Gets the CommandManger instance.
+	 * 
+	 * @return the commandManager
+	 */
+	public CommandManager getCommandManager() {
+		return commandManager;
+	}
+	
+	/**
+	 * Sets the CommandManger instance.
+	 * 
+	 * @param commandManager the commandManager to set
+	 */
+	public void setCommandManager(CommandManager commandManager) {
+		this.commandManager = commandManager;
+	}
+
+	/**
+	 * Returns list of critical errors
+	 * 
+	 * @return criticalErrorList ArrayList<String>
+	 */
+	public static ArrayList<String> getCriticalErrorList() {
+		return criticalErrorList;
+	}
+
+	/**
+	 * Sets the  list of critical errors
+	 * 
+	 * @param criticalErrorList ArrayList<String>
+	 */
+	public static void setCriticalErrorList(ArrayList<String> criticalErrorList) {
+		PlayerWarpGUI.criticalErrorList = criticalErrorList;
+	}
+
+	/**
+	 * Returns list of non critical errors
+	 * 
+	 * @return ArrayList<String> of non critical errors
+	 */
+	public static ArrayList<String> getNonCriticalErrorList() {
+		return nonCriticalErrorList;
+	}
+
+	/**
+	 * Sets list of non critical errors
+	 * 
+	 * @param nonCriticalErrorList ArrayList<String>
+	 */
+	public static void setNonCriticalErrorList(ArrayList<String> nonCriticalErrorList) {
+		PlayerWarpGUI.nonCriticalErrorList = nonCriticalErrorList;
 	}
 
 }

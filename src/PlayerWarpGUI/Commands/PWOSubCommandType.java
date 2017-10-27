@@ -1,5 +1,12 @@
 package PlayerWarpGUI.Commands;
 
+/**
+* Enums for sub commands.<br>
+* @deprecated Moved to full command system. 
+* 
+* @author Judgetread
+* @version 1.0
+*/
 enum PWOSubCommandType {
 	
 	    HELP,

@@ -3,89 +3,124 @@ package PlayerWarpGUI.config;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import PlayerWarpGUI.PlayerWarpGUI;
 
-
+/**
+ * Config abstract class.<br>
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 abstract class ConfigLoader {
-    protected static final PlayerWarpGUI plugin = PlayerWarpGUI.p;
-    protected String fileName;
-    private File configFile;
-    protected FileConfiguration config;
+	protected static final PlayerWarpGUI plugin = PlayerWarpGUI.p;
+	protected String fileName;
+	private File configFile;
+	protected FileConfiguration config;
 
-    ConfigLoader(String relativePath, String fileName) {
-        this.fileName = fileName;
-        configFile = new File(plugin.getDataFolder(), relativePath + File.separator + fileName);
-        loadFile();
-    }
+	/**
+	 * @param relativePath
+	 * @param fileName
+	 */
+	ConfigLoader(String relativePath, String fileName) {
+		this.fileName = fileName;
+		configFile = new File(plugin.getDataFolder(), relativePath + File.separator + fileName);
+		loadFile();
+	}
 
-    ConfigLoader(String fileName) {
-        this.fileName = fileName;
-        configFile = new File(plugin.getDataFolder(), fileName);
-        loadFile();
-    }
+	/**
+	 * @param fileName
+	 */
+	ConfigLoader(String fileName) {
+		this.fileName = fileName;
+		configFile = new File(plugin.getDataFolder(), fileName);
+		loadFile();
+	}
 
-    protected void loadFile() {
-        if (!configFile.exists()) {
-          // Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("CONSOLE_MSG_PREFIX") + LocaleLoader.getString("CONSOLE_MSG_CREATE_CONFIG", configFile.getName()));
+	/**
+	 * Try load config file for this instance. If not try create it from a resource.
+	 */
+	protected void loadFile() {
+		if (!configFile.exists()) {
+			try {
+				plugin.saveResource(fileName, false); // Normal files
+			} catch (IllegalArgumentException ex) {
+				plugin.saveResource(configFile.getParentFile().getName() + File.separator + fileName, false); // Mod
+																												// files
+			}
+		}
+		config = YamlConfiguration.loadConfiguration(configFile);
+	}
 
-            try {
-                plugin.saveResource(fileName, false); // Normal files
-            }
-            catch (IllegalArgumentException ex) {
-                plugin.saveResource(configFile.getParentFile().getName() + File.separator + fileName, false); // Mod files
-            }
-        }
-        else {
-          //  plugin.debug("Loading mcMMO " + fileName + " File...");
-        }
+	/**
+	 * loadKeys, method to overwrite from abstract.<br>
+	 * {@link Config#loadKeys()}
+	 */
+	protected abstract void loadKeys();
 
-        config = YamlConfiguration.loadConfiguration(configFile);
-    }
+	/**
+	 * validateKeys, method to overwrite from abstract.<br>
+	 * {@link Config#validateKeys()}
+	 */
+	protected boolean validateKeys() {
+		return true;
+	}
 
-    protected abstract void loadKeys();
+	/**
+	 * Checks for saved error in config. Print errors to console.
+	 * 
+	 * @param issues
+	 * @return boolean of true/false.
+	 */
+	protected boolean noErrorsInConfig(List<String> issues) {
+		for (String issue : issues) {
+			plugin.getLogger().warning(issue);
+		}
 
-    protected boolean validateKeys() {
-        return true;
-    }
+		return issues.isEmpty();
+	}
 
-    protected boolean noErrorsInConfig(List<String> issues) {
-        for (String issue : issues) {
-            plugin.getLogger().warning(issue);
-        }
+	
+	/**
+	 * Check {@link #validateKeys()}, if errors shut plugin down.
+	 */
+	protected void validate() {
+		if (validateKeys()) {
+			Bukkit.getConsoleSender().sendMessage("No errors found in " + fileName + "!");
+		} else {
+			Bukkit.getConsoleSender().sendMessage("Errors were found in " + fileName + "! mcMMO was disabled!");
+			PlayerWarpGUI.killPlugin();
+			PlayerWarpGUI.p.setNoErrorsInConfigFiles(false);
+		}
+	}
 
-        return issues.isEmpty();
-    }
+	
+	/**
+	 * @return File
+	 */
+	public File getFile() {
+		return configFile;
+	}
 
-    protected void validate() {
-        if (validateKeys()) {
-         //   plugin.debug("No errors found in " + fileName + "!");
-        }
-        else {
-            plugin.getLogger().warning("Errors were found in " + fileName + "! mcMMO was disabled!");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
-            plugin.setNoErrorsInConfigFiles(false);
-        }
-    }
+	/**
+	 * Create backup copy of old config. Create new updated config.
+	 */
+	public void backup() {
+		plugin.getLogger().warning("You are using an old version of the " + fileName + " file.");
+		plugin.getLogger().warning(
+				"Your old file has been renamed to " + fileName + ".old and has been replaced by an updated version.");
 
-    public File getFile() {
-        return configFile;
-    }
+		configFile.renameTo(new File(configFile.getPath() + ".old"));
 
-    public void backup() {
-        plugin.getLogger().warning("You are using an old version of the " + fileName + " file.");
-        plugin.getLogger().warning("Your old file has been renamed to " + fileName + ".old and has been replaced by an updated version.");
+		if (plugin.getResource(fileName) != null) {
+			plugin.saveResource(fileName, true);
+		}
 
-        configFile.renameTo(new File(configFile.getPath() + ".old"));
-
-        if (plugin.getResource(fileName) != null) {
-            plugin.saveResource(fileName, true);
-        }
-
-        plugin.getLogger().warning("Reloading " + fileName + " with new values...");
-        loadFile();
-        loadKeys();
-    }
+		plugin.getLogger().warning("Reloading " + fileName + " with new values...");
+		loadFile();
+		loadKeys();
+	}
 }

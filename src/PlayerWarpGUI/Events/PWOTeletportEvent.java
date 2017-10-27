@@ -27,7 +27,7 @@ public class PWOTeletportEvent extends PlayerTeleportEvent{
 	}
 	
 	/**
-	 * @return
+	 * @return Location - location teleporting to.
 	 */
 	public Location getToLocation() {
 		return toLocation;

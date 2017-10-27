@@ -21,7 +21,7 @@ public class PermUtils {
 	}
 
 	/**
-	 * @return
+	 * @return PermUtils
 	 */
 	public static PermUtils getInstance() {
 		if (instance == null) {

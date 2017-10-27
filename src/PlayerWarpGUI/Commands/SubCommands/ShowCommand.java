@@ -9,8 +9,18 @@ import org.bukkit.entity.Player;
 import PlayerWarpGUI.Objects.GUIObject;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Show Command: <br>
+* SHow the GUI menu to the player.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class ShowCommand implements CommandExecutor{
 	
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 		 

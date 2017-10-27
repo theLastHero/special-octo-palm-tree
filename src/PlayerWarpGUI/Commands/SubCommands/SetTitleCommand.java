@@ -13,8 +13,18 @@ import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* SetTitle Command: <br>
+* Sets the title text shown in the gui menu for the specified warp.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class SetTitleCommand implements CommandExecutor{
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 

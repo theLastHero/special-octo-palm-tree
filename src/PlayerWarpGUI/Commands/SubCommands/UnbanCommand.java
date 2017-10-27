@@ -12,6 +12,13 @@ import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Unban Command: <br>
+* Removed player from a warps banned list for that warp and player<br>
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class UnbanCommand implements CommandExecutor{
 
 	@SuppressWarnings("deprecation")

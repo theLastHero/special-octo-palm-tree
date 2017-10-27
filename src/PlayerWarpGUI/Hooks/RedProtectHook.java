@@ -6,16 +6,41 @@ import br.net.fabiozumbi12.RedProtect.Region;
 import br.net.fabiozumbi12.RedProtect.API.RedProtectAPI;
 import PlayerWarpGUI.config.Config;
 
+/**
+* Hooks into RedProtectHook Plugin.<br>
+* Performs various actions depending on config settings.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class RedProtectHook extends HookManager<Object>{
 
+	/**
+	 * Hooked plugin name
+	 */
 	private static String plName = "RedProtect";
+	/**
+	 * Holds if plugin is enabled in config.
+	 */
 	private static boolean configEnabled = Config.getInstance().getRPEnabled();
 	
+	/**
+	 * Constructor. Pass variables to super.
+	 */
 	public RedProtectHook() {
 		super(plName, configEnabled);
 	}
 
-
+	/**
+	 * Overridden method. Checks based on is enabled in config.<br>
+	 * Only set warp in a RP region.<br>
+	 * Leader of region can set warp<br>
+	 * Admin of region can set warp<br>
+	 * Member of region can set warp<br>
+	 * 
+	 * @return String representing any errors or else null
+	 * @see PlayerWarpGUI.Hooks.HookManager#warpHookCheck(org.bukkit.entity.Player)
+	 */
 	@Override
 	public String warpHookCheck(Player player) {
 
@@ -50,6 +75,10 @@ public class RedProtectHook extends HookManager<Object>{
 
 	}
 
+	/**
+	 * @return Region
+	 * @see PlayerWarpGUI.Hooks.HookManager#getLocationData(org.bukkit.Location)
+	 */
 	@Override
 	public Region getLocationData(Location location) {
 		return RedProtectAPI.getRegion(location);

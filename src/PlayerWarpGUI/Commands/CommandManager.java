@@ -15,12 +15,31 @@ import PlayerWarpGUI.Commands.SubCommands.ShowCommand;
 import PlayerWarpGUI.Commands.SubCommands.UnbanCommand;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+ * CommandManager
+ * 
+ * <P> Registers all commands.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
+
 public final class CommandManager {
 	
+	/*
+	 * Constructor.
+	 */
 	public CommandManager() {};
 	
+	/** Constant String used for if player doesn't have permission*/
 	 private static String permissionsMessage = LocaleLoader.getString("COMMAND_NO_PERMISSION");
 		
+	 
+    /**
+     * registerPWOCommand
+     * Setup and register commands used. Set permission, permission message
+     * usage and executor.
+     */
     private static void registerPWOCommand() {
        PluginCommand command = PlayerWarpGUI.p.getCommand("playerwarpsgui");
        command.setPermission("playerwarpgui.show");
@@ -89,7 +108,7 @@ public final class CommandManager {
       titleCommand.setExecutor(new SetTitleCommand());
       
 }
-    
+    /** registerCommands public access */
     public static void registerCommands() {
         // Generic Commands
     	registerPWOCommand();

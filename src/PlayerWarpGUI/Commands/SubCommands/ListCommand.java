@@ -14,8 +14,19 @@ import PlayerWarpGUI.Utils.StringUtils;
 import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* List Command: <br>
+* Show player a list of their warp they have set.<br>
+* If warp name is added then show details of that specific warp.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class ListCommand implements CommandExecutor{
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 

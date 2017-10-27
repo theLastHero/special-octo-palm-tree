@@ -20,9 +20,14 @@ import PlayerWarpGUI.Commands.SubCommands.UnbanCommand;
 import PlayerWarpGUI.Commands.SubCommands.ListCommand;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Fires executor for sub commands.<br>
+* @deprecated Moved to full command system. 
+* 
+* @author Judgetread
+* @version 1.0
+*/
 class PWOCommand implements TabExecutor {
-	
-   
 
     private CommandExecutor helpWarpCommand          = new HelpCommand();
     private CommandExecutor setWarpCommand       = new SetWarpCommand();
@@ -35,6 +40,9 @@ class PWOCommand implements TabExecutor {
     private CommandExecutor showCommand          = new ShowCommand();
     private CommandExecutor listCommand          = new ListCommand();
 
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (Utils.noConsoleUsage(sender)) {
@@ -84,6 +92,10 @@ class PWOCommand implements TabExecutor {
 		return false;
     }
 
+    /**
+     * @param player
+     * @return boolean
+     */
     private boolean printUsage(Player player) {
         player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("Party.Help.0", "/party join"));
         player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("Party.Help.1", "/party create"));
@@ -91,6 +103,9 @@ class PWOCommand implements TabExecutor {
         return true;
     }
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.TabCompleter#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public List<String> onTabComplete(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
 		// TODO Auto-generated method stub

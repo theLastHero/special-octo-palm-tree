@@ -6,22 +6,39 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 
+/**
+* Handles all calls to get config data. Verifys data.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class Config extends AutoUpdateConfigLoader {
     private static Config instance;
 
+    /**
+     * Constructor
+     */
     private Config() {
         super("config.yml");
         validate();
     }
 
+    /**
+     * @return Config instance
+     */
     public static Config getInstance() {
         if (instance == null) {
             instance = new Config();
         }
-
         return instance;
     }
 
+    /**
+     * check key KEYS are valid type and/or size.
+     * 
+     * @Return true/false id keys are valid 
+     * @see PlayerWarpGUI.config.ConfigLoader#validateKeys()
+     */
     @Override
     protected boolean validateKeys() {
         // Validate all the settings!
@@ -138,6 +155,11 @@ public class Config extends AutoUpdateConfigLoader {
         return noErrorsInConfig(reason);
     }
 
+    
+    /**
+     * Overwritten abstract method. Load keys grab config data.
+     * @see PlayerWarpGUI.config.ConfigLoader#loadKeys()
+     */
     @Override
     protected void loadKeys() {}
 
@@ -207,7 +229,9 @@ public class Config extends AutoUpdateConfigLoader {
     public boolean getESBack() { return config.getBoolean("Essentials.use-back-command", true); }  
     
 
-	
+	/** Translate color codes from config data
+	 *  TODO change to StringUtils calls
+	 * */
 	public String cc(String str) {
 		return ChatColor.translateAlternateColorCodes('&',str);
 	}

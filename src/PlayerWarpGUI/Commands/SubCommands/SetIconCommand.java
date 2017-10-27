@@ -12,10 +12,19 @@ import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Icon Command: <br>
+* Sets the icon to show for that warp in the gui menu.
+* This is per warp.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class SetIconCommand implements CommandExecutor{
-	
-	private String perm = "playerwarpsgui.seticon";
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -24,11 +33,6 @@ public class SetIconCommand implements CommandExecutor{
 
 		if (!(args.length == 1)) {
 			Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString("COMMAND_USE_ICON"));
-			return false;
-		}
-		
-		if (!player.hasPermission(perm)) {
-			player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_ICON"));
 			return false;
 		}
 		

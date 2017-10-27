@@ -12,8 +12,20 @@ import PlayerWarpGUI.Utils.Warp.ObjectUtils;
 import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* Command: Add players to the ban list of a specific warp.
+* Stores banned players UUID in a list of the warp file
+* they are banned for.
+*  
+* @author Judgetread
+* @version 1.0
+*/
 public class BanCommand implements CommandExecutor {
 
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {

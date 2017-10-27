@@ -17,11 +17,21 @@ import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
 import PlayerWarpGUI.Utils.StringUtils;
 
+/**
+ * Create and display the GUI inventory listing warps.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class GUIObject {
 
-	private static GUIObject instance;
 	/**
-	 * @return
+	 * Hold the class instance
+	 */
+	private static GUIObject instance;
+	
+	/**
+	 * @return instance of this class created.
 	 */
 	public static GUIObject getInstance() {
 		if (instance == null) {
@@ -31,6 +41,12 @@ public class GUIObject {
 		return instance;
 	}
 	
+	/**
+	 * Creates and show the inventory populated with warps to the Player.
+	 * 
+	 * @param player
+	 * @param page
+	 */
 	@SuppressWarnings({ "unused" })
 	public void openGUI(Player player, int page) {
 
@@ -102,10 +118,15 @@ public class GUIObject {
 		player.openInventory(inv);
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
 	
+	/**
+	 * Sets Meta data of the item being displayed.
+	 * 
+	 * @param playerWarpItemStack
+	 * @param playerWarpTitle
+	 * @param lore
+	 * @return ItemMeta
+	 */
 	public static ItemMeta getWarpMeta(ItemStack playerWarpItemStack, String playerWarpTitle, ArrayList<String> lore) {
 		ItemMeta playerWarpMeta = playerWarpItemStack.getItemMeta();
 		playerWarpMeta.setDisplayName(playerWarpTitle);
@@ -115,10 +136,13 @@ public class GUIObject {
 		return playerWarpMeta;
 	}
 
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
 	
+	/**
+	 * Sets the lore of the item being displayed
+	 * 
+	 * @param pwo
+	 * @return ArrayList<String>
+	 */
 	public ArrayList<String> getWarpLore(PlayerWarpObject pwo) {
 
 		ArrayList<String> lore = new ArrayList<String>();
@@ -134,6 +158,12 @@ public class GUIObject {
 
 	}
 
+	/**
+	 * Sets the title of the item being displayed
+	 * 
+	 * @param pwo
+	 * @return String
+	 */
 	public String getWarpTitle(PlayerWarpObject pwo) {
 		if (!(pwo.getTitle() == null) && !(pwo.getTitle().length() == 0)) {
 			return StringUtils.getInstance().replaceColorVariables(pwo.getTitle());
@@ -144,6 +174,13 @@ public class GUIObject {
 
 	}
 	
+	/**
+	 * Sets the icon of the item being displayed.
+	 * Set as the warp owner player head if enabled in config.
+	 * 
+	 * @param pwo
+	 * @return ItemStack
+	 */
 	public ItemStack getWarpIcon(PlayerWarpObject pwo) {
 		if (Config.getInstance().getUsePlayerHeads()) {
 			return getPlayerSkullItem(pwo.getPlayerUUID());
@@ -157,6 +194,12 @@ public class GUIObject {
 
 	}
 
+	/**
+	 * Gets the Player skull itemstack.
+	 * 
+	 * @param uuid
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	public static ItemStack getPlayerSkullItem(UUID uuid) {
 
@@ -172,8 +215,14 @@ public class GUIObject {
 		return Item_Skull;
 	}
 
+	
+	/**
+	 * sets the next page itemstack.
+	 * 
+	 * @param pageNum
+	 * @return ItemStack
+	 */
 	public ItemStack getNextPageItemStack(int pageNum) {
-
 		ItemStack nextPageItemstack = StringUtils.getInstance()
 				.parseItemStackFromString(Config.getInstance().getNextpageIcon());
 		ItemMeta nextPageMeta = nextPageItemstack.getItemMeta();

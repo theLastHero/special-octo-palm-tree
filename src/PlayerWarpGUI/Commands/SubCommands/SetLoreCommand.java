@@ -16,10 +16,18 @@ import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+* SetLore Command: <br>
+* Sets the lore lines for the specified warp.
+* 
+* @author Judgetread
+* @version 1.0
+*/
 public class SetLoreCommand implements CommandExecutor{
-
-		private String perm = "playerwarpsgui.setlore";
 		
+		/* (non-Javadoc)
+		 * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+		 */
 		@Override
 		public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
 
@@ -28,12 +36,6 @@ public class SetLoreCommand implements CommandExecutor{
 			if (!StringUtils.getInstance().checkArgsString(player, args, 3, LocaleLoader.getString("COMMAND_USE_LORE"))) {
 				return false;
 			}
-			
-			if (!player.hasPermission(perm)) {
-				player.sendMessage(LocaleLoader.getString("MESSAGE_PREFIX") + LocaleLoader.getString("COMMAND_NO_PERMISSION", "COMMAND_USE_LORE"));
-				return false;
-			}
-			
 
 			// update warp file
 			if (!ObjectUtils.getInstance().checkPlayerWarpObject(player.getUniqueId(), args[1])) {

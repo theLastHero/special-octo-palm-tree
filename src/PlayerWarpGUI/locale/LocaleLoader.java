@@ -10,6 +10,13 @@ import org.bukkit.ChatColor;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.PlayerWarpGUI;
 
+/**
+ * Class  for loading locale files <br>
+ * and serving getStrings from these files.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public final class LocaleLoader {
     private static final String BUNDLE_ROOT = "locale";
     private static ResourceBundle bundle = null;

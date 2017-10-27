@@ -18,7 +18,7 @@ public class StringUtils {
 	
 	private static StringUtils instance;
 	/**
-	 * @return
+	 * create instance if null
 	 */
 	public static StringUtils getInstance() {
 		if (instance == null) {

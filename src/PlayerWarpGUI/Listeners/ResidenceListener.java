@@ -16,14 +16,28 @@ import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 import PlayerWarpGUI.PlayerWarpGUI;
 
+/**
+ * Listened to Residence Plugin to delete claim event.<br>
+ * If config enabled, remove any warps when a claim is deleted.
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class ResidenceListener implements Listener {
 
 	/**
+	 * Constructor
 	 * @param p
 	 */
 	public ResidenceListener(PlayerWarpGUI p) {
 	}
 
+	/**
+	 * Catches when a Residence claim is deleted. Deletes any warps found in
+	 * the deleted claim.
+	 * 
+	 * @param e
+	 */
 	@EventHandler
 	public void deleteWarpOnDeleteClaim(ResidenceDeleteEvent e) {
 		Bukkit.broadcastMessage("Event Called");

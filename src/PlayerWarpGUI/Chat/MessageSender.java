@@ -121,15 +121,15 @@ public final class MessageSender {
 	 */
 	private static void showErrors() {
 		initialize();
-		if (!PlayerWarpGUI.nonCriticalErrorList.isEmpty()) {
-			for (String error : PlayerWarpGUI.nonCriticalErrorList) {
+		if (!PlayerWarpGUI.getNonCriticalErrorList().isEmpty()) {
+			for (String error : PlayerWarpGUI.getNonCriticalErrorList()) {
 				sendConsole(LocaleLoader.getString("CONSOLE_MSG_NONCRITIAL_ERROR_PREFIX") + error);
 			}
 		}
 
-		if (!PlayerWarpGUI.criticalErrorList.isEmpty()) {
+		if (!PlayerWarpGUI.getCriticalErrorList().isEmpty()) {
 			initialize();
-			for (String error : PlayerWarpGUI.criticalErrorList) {
+			for (String error : PlayerWarpGUI.getCriticalErrorList()) {
 				sendConsole(LocaleLoader.getString("CONSOLE_MSG_CRITIAL_ERROR_PREFIX") + error);
 			}
 			PlayerWarpGUI.killPlugin();
@@ -143,7 +143,7 @@ public final class MessageSender {
 	private static void startupStatus() {
 		initialize();
 		sendConsole(
-				LocaleLoader.getString("CONSOLE_MSG_FINAL", PlayerWarpGUI.playerwarpsguiVersion, statusValue(PlayerWarpGUI.nonCriticalErrorList.isEmpty())),
+				LocaleLoader.getString("CONSOLE_MSG_FINAL", PlayerWarpGUI.playerwarpsguiVersion, statusValue(PlayerWarpGUI.getNonCriticalErrorList().isEmpty())),
 				"");
 	}
 

@@ -21,14 +21,30 @@ import PlayerWarpGUI.Utils.Warp.WarpFileUtils;
 import PlayerWarpGUI.config.Config;
 import PlayerWarpGUI.locale.LocaleLoader;
 
+/**
+ * Listened to Factions Plugin to chunckChange event.<br>
+ * If config enabled, remove any warps when faction <br>
+ * removes/deletes a chunk where a warp is set
+ * 
+ * @author Judgetread
+ * @version 1.0
+ */
 public class FactionsListener implements Listener {
 
 	/**
+	 * Constructor
+	 * 
 	 * @param pl
 	 */
 	public FactionsListener(PlayerWarpGUI p) {
 	}
 
+	/**
+	 * Catches when a Factions ownership is changed. Deletes any warps found in
+	 * the chunk.
+	 * 
+	 * @param e
+	 */
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void lossOfLand(EventFactionsChunksChange e) {
 
